@@ -43,8 +43,10 @@ alter table public.theme_definitions enable row level security;
 alter table public.tenant_theme_settings enable row level security;
 alter table public.theme_revisions enable row level security;
 
+create policy theme_definitions_public_read on public.theme_definitions for select to anon using(status='active');
 create policy theme_definitions_authenticated_read on public.theme_definitions for select to authenticated using(true);
 create policy theme_definitions_platform_manage on public.theme_definitions for all to authenticated using(public.is_platform_staff(array['platform_owner','platform_admin'])) with check(public.is_platform_staff(array['platform_owner','platform_admin']));
+create policy tenant_theme_public_read on public.tenant_theme_settings for select to anon using(exists(select 1 from public.tenants t where t.id=tenant_id and t.status in('active','grace_period','read_only','maintenance')));
 create policy tenant_theme_read on public.tenant_theme_settings for select to authenticated using(public.can_access_tenant(tenant_id,null));
 create policy tenant_theme_manage on public.tenant_theme_settings for all to authenticated using(public.can_access_tenant(tenant_id,array['super_admin','admin']::public.role_key[])) with check(public.can_access_tenant(tenant_id,array['super_admin','admin']::public.role_key[]));
 create policy theme_revisions_read on public.theme_revisions for select to authenticated using(public.can_access_tenant(tenant_id,array['super_admin','admin']::public.role_key[]));
