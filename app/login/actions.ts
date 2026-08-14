@@ -4,6 +4,7 @@ import { createHash, randomUUID } from 'crypto'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminSession } from '@/lib/security/admin-session'
 
 export type LoginState = { error?: string; nonce?: number }
 
@@ -83,6 +84,7 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
   const password = String(formData.get('password') ?? '')
   const captchaToken = String(formData.get('cf-turnstile-response') ?? '')
+  const rememberMe = String(formData.get('remember_me') ?? '') === 'on'
   const nonce = Date.now()
 
   if (invalidInput(email, password, captchaToken)) return { error: GENERIC_ERROR, nonce }
@@ -118,6 +120,13 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   if (!profile?.active || !['super_admin', 'admin', 'content_manager', 'viewer'].includes(profile.role)) {
     await supabase.auth.signOut()
     return { error: GENERIC_ERROR, nonce }
+  }
+
+  try {
+    await createAdminSession(userId, rememberMe)
+  } catch {
+    await supabase.auth.signOut()
+    return { error: 'ایجاد نشست امن انجام نشد. دوباره تلاش کنید.', nonce }
   }
 
   await supabase.rpc('reset_login_rate_limit', { p_key: fingerprint })
