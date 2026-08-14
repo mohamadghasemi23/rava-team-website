@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   audit:
@@ -21,33 +21,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Resolve current dependency graph
-        run: npm install --no-audit --no-fund
-      - name: Pin direct dependencies to resolved versions
-        run: |
-          node <<'NODE'
-          const fs=require('fs');
-          const pkg=require('./package.json');
-          const lock=require('./package-lock.json');
-          for(const group of ['dependencies','devDependencies']){
-            for(const name of Object.keys(pkg[group]||{})){
-              const row=lock.packages?.[`node_modules/${name}`];
-              if(!row?.version) throw new Error(`Missing resolved version for ${name}`);
-              pkg[group][name]=row.version;
-            }
-          }
-          fs.writeFileSync('package.json',JSON.stringify(pkg,null,2)+'\n');
-          NODE
-          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-      - name: Commit deterministic dependency files
-        run: |
-          if [ -n "$(git status --porcelain -- package.json package-lock.json)" ]; then
-            git config user.name "rava-ci"
-            git config user.email "actions@users.noreply.github.com"
-            git add package.json package-lock.json
-            git commit -m "Pin production dependencies"
-            git push
-          fi
+          cache: npm
       - name: Reproducible install audit
         run: npm ci --no-audit --no-fund
       - name: TypeScript audit
