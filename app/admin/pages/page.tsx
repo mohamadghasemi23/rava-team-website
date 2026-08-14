@@ -19,10 +19,12 @@ export default async function PagesAdminPage() {
 
   if (!profile?.active) redirect('/login')
 
-  const { data: pages = [] } = await supabase
+  const { data } = await supabase
     .from('pages')
     .select('id,title,slug,status,updated_at')
     .order('updated_at', { ascending: false })
+
+  const pages = data ?? []
 
   return (
     <main className="admin-shell">
