@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import AnalyticsTracker from './components/AnalyticsTracker'
 
 export const metadata: Metadata = {
   title: { default: 'RAVA TEAM', template: '%s | RAVA TEAM' },
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="fa" dir="rtl">
-      <body>{children}</body>
+      <body><AnalyticsTracker/>{children}</body>
     </html>
   )
 }
