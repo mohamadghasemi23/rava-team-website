@@ -17,9 +17,21 @@ export const ADMIN_HELP_REGISTRY:AdminHelpDefinition[]=[
  {key:'media.folder',area:'media',importance:'standard'},
  {key:'media.delete',area:'media',importance:'critical',warningRequired:true},
  {key:'seo.basics',area:'seo',importance:'standard'},
+ {key:'seo.auto',area:'seo',importance:'important'},
+ {key:'seo.managed_service',area:'seo',importance:'important'},
+ {key:'analytics.views',area:'analytics',importance:'standard'},
+ {key:'analytics.visitors',area:'analytics',importance:'standard'},
+ {key:'analytics.sessions',area:'analytics',importance:'standard'},
+ {key:'analytics.conversions',area:'analytics',importance:'standard'},
  {key:'logs.search',area:'observability',importance:'standard'},
  {key:'users.sessions',area:'users',importance:'critical',warningRequired:true},
  {key:'security.permissions',area:'security',importance:'critical',warningRequired:true},
+ {key:'tenant.active_context',area:'platform',importance:'important'},
+ {key:'tenant.switch',area:'platform',importance:'important'},
+ {key:'tenant.status',area:'platform',importance:'critical',warningRequired:true},
+ {key:'tenant.isolation',area:'security',importance:'critical',warningRequired:true},
+ {key:'platform.staff.role',area:'platform',importance:'critical',warningRequired:true},
+ {key:'platform.staff.scope',area:'platform',importance:'critical',warningRequired:true},
 ]
 
 export const ADMIN_HELP_KEYS=new Set(ADMIN_HELP_REGISTRY.map(x=>x.key))
@@ -29,6 +41,6 @@ export function isRegisteredAdminHelpKey(key:string){return ADMIN_HELP_KEYS.has(
  RAVA admin UX rule:
  - Every non-obvious admin operation must register a Help Key here.
  - Destructive/security-sensitive operations must use importance=critical and warningRequired=true.
- - Every registered key must have Persian help copy; English copy is strongly required and falls back to Persian if missing.
- - New admin features are not considered UX-complete until their contextual help is registered and attached near the operation.
+ - Every registered key must have Persian and English help copy.
+ - New admin features are not considered UX-complete until contextual help is registered and attached near the operation.
 */
