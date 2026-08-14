@@ -17,7 +17,7 @@ export default async function MediaAdminPage() {
 
   const { data, count } = await supabase
     .from('media_assets')
-    .select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at,folder', { count: 'exact' })
+    .select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at,folder,title,description,caption,credit', { count: 'exact' })
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .range(0, PAGE_SIZE - 1)
@@ -25,7 +25,10 @@ export default async function MediaAdminPage() {
   return <main className="admin-shell">
     <header className="admin-head">
       <div><span>RAVA CONTROL CENTER</span><h1>رسانه‌ها</h1></div>
-      <div className="admin-actions"><Link className="admin-link" href="/admin">داشبورد</Link></div>
+      <div className="admin-actions">
+        <Link className="admin-link" href="/admin/media/trash">سطل زباله</Link>
+        <Link className="admin-link" href="/admin">داشبورد</Link>
+      </div>
     </header>
     <MediaManager initialAssets={data ?? []} initialTotal={count ?? 0} userId={userId} pageSize={PAGE_SIZE}/>
   </main>
