@@ -3,6 +3,7 @@
 import Script from 'next/script'
 import { FormEvent, useActionState, useEffect, useState } from 'react'
 import { login, type LoginState } from './actions'
+import './login.css'
 
 const initialState: LoginState = {}
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -16,11 +17,16 @@ declare global {
 export default function LoginPage() {
   const [state, action, pending] = useActionState(login, initialState)
   const [clientError, setClientError] = useState('')
+  const [sessionExpired, setSessionExpired] = useState(false)
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || ''
 
   useEffect(() => {
     if (state.nonce) window.turnstile?.reset()
   }, [state.nonce])
+
+  useEffect(() => {
+    setSessionExpired(new URLSearchParams(window.location.search).get('reason') === 'session_expired')
+  }, [])
 
   function validateBeforeSubmit(event: FormEvent<HTMLFormElement>) {
     setClientError('')
@@ -50,6 +56,7 @@ export default function LoginPage() {
         <p className="auth-kicker">CONTROL CENTER</p>
         <h1 id="login-title">ورود به پنل مدیریت</h1>
         <p className="auth-copy">برای مدیریت سایت با حساب مدیریتی خود وارد شوید.</p>
+        {sessionExpired ? <p className="auth-session-note">نشست مدیریتی شما به دلایل امنیتی منقضی شده است. دوباره وارد شوید.</p> : null}
 
         <form action={action} className="auth-form" onSubmit={validateBeforeSubmit} noValidate>
           <label htmlFor="email">ایمیل</label>
