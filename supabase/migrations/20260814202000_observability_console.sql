@@ -26,30 +26,31 @@ declare
   v_after jsonb;
   v_summary text;
   v_cause text;
+  v_changed_fields jsonb := '[]'::jsonb;
 begin
   if tg_op = 'DELETE' then
     v_before := to_jsonb(old);
-    v_after := null;
     v_entity_id := coalesce(v_before->>'id', v_before->>'key', 'unknown');
+    select coalesce(jsonb_agg(k order by k), '[]'::jsonb) into v_changed_fields from jsonb_object_keys(v_before) k;
     v_summary := format('یک رکورد از بخش %s حذف شد.', tg_table_name);
     v_cause := 'این رویداد در اثر عملیات حذف توسط یک کاربر مجاز یا فرایند مدیریتی ثبت شده است.';
   elsif tg_op = 'INSERT' then
-    v_before := null;
     v_after := to_jsonb(new);
     v_entity_id := coalesce(v_after->>'id', v_after->>'key', 'unknown');
+    select coalesce(jsonb_agg(k order by k), '[]'::jsonb) into v_changed_fields from jsonb_object_keys(v_after) k;
     v_summary := format('یک رکورد جدید در بخش %s ایجاد شد.', tg_table_name);
     v_cause := 'این رویداد در اثر عملیات ایجاد اطلاعات جدید در پنل یا فرایند سیستم ثبت شده است.';
   else
     v_before := to_jsonb(old);
     v_after := to_jsonb(new);
     v_entity_id := coalesce(v_after->>'id', v_after->>'key', 'unknown');
+    select coalesce(jsonb_agg(k order by k), '[]'::jsonb)
+      into v_changed_fields
+      from jsonb_object_keys(v_after) k
+      where (v_before -> k) is distinct from (v_after -> k);
     v_summary := format('اطلاعات یک رکورد در بخش %s ویرایش شد.', tg_table_name);
     v_cause := 'این رویداد در اثر ذخیره تغییرات روی اطلاعات موجود ثبت شده است.';
   end if;
-
-  -- Strip fields that can be noisy or should never be duplicated into audit metadata.
-  if v_before is not null then v_before := v_before - 'metadata'; end if;
-  if v_after is not null then v_after := v_after - 'metadata'; end if;
 
   insert into public.system_events(
     event_id, category, severity, event_name, message, actor_user_id,
@@ -63,8 +64,7 @@ begin
       'entity_type', tg_table_name,
       'entity_id', v_entity_id,
       'operation', v_action,
-      'before', v_before,
-      'after', v_after
+      'changed_fields', v_changed_fields
     ),
     v_summary, v_cause
   );
@@ -76,7 +76,7 @@ $$;
 
 revoke all on function public.rava_audit_cms_change() from public;
 
--- Automatic audit coverage. New sensitive CMS tables should be added to this list as part of the security baseline.
+-- Automatic audit coverage. New sensitive CMS tables must be added here as part of the mandatory security baseline.
 do $$
 declare
   t text;
