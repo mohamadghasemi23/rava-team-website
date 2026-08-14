@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import MediaManager from './MediaManager'
+import VideoUploader from './VideoUploader'
 
 export const dynamic = 'force-dynamic'
 const PAGE_SIZE = 24
@@ -30,6 +31,7 @@ export default async function MediaAdminPage() {
         <Link className="admin-link" href="/admin">داشبورد</Link>
       </div>
     </header>
+    <VideoUploader userId={userId}/>
     <MediaManager initialAssets={data ?? []} initialTotal={count ?? 0} userId={userId} pageSize={PAGE_SIZE}/>
   </main>
 }
