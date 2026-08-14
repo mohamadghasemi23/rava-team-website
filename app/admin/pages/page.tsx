@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import ActionForm from '../components/ActionForm'
 import { createPage, deletePage, setPageStatus } from './actions'
 
 export const dynamic = 'force-dynamic'
@@ -35,11 +36,17 @@ export default async function PagesAdminPage() {
 
       <section className="admin-panel">
         <h2>ساخت صفحه جدید</h2>
-        <form action={createPage} className="admin-form admin-form-inline">
+        <ActionForm
+          action={createPage}
+          className="admin-form admin-form-inline"
+          confirmTitle="ساخت صفحه جدید"
+          confirmMessage="اطلاعات واردشده ثبت شود و صفحه جدید ساخته شود؟"
+          confirmLabel="بله، صفحه ساخته شود"
+        >
           <label>عنوان<input name="title" required placeholder="مثلاً خدمات طراحی سایت" /></label>
           <label>آدرس صفحه<input name="slug" required dir="ltr" placeholder="web-design" /></label>
           <button type="submit">ساخت صفحه</button>
-        </form>
+        </ActionForm>
       </section>
 
       <section className="admin-panel">
@@ -48,26 +55,40 @@ export default async function PagesAdminPage() {
           <div className="admin-empty">هنوز صفحه‌ای ساخته نشده. اولین صفحه را از فرم بالا بساز.</div>
         ) : (
           <div className="admin-list">
-            {pages.map((page) => (
-              <article className="admin-list-item" key={page.id}>
-                <div className="admin-list-main">
-                  <div><b>{page.title}</b><small dir="ltr">/{page.slug}</small></div>
-                  <span className={`status-pill status-${page.status}`}>{page.status}</span>
-                </div>
-                <div className="admin-row-actions">
-                  <Link className="admin-link" href={`/admin/pages/${page.id}`}>ویرایش</Link>
-                  <form action={setPageStatus}>
-                    <input type="hidden" name="id" value={page.id} />
-                    <input type="hidden" name="status" value={page.status === 'published' ? 'hidden' : 'published'} />
-                    <button className="admin-muted-button" type="submit">{page.status === 'published' ? 'مخفی کن' : 'منتشر کن'}</button>
-                  </form>
-                  <form action={deletePage}>
-                    <input type="hidden" name="id" value={page.id} />
-                    <button className="admin-danger-button" type="submit">حذف</button>
-                  </form>
-                </div>
-              </article>
-            ))}
+            {pages.map((page) => {
+              const isPublished = page.status === 'published'
+              return (
+                <article className="admin-list-item" key={page.id}>
+                  <div className="admin-list-main">
+                    <div><b>{page.title}</b><small dir="ltr">/{page.slug}</small></div>
+                    <span className={`status-pill status-${page.status}`}>{page.status}</span>
+                  </div>
+                  <div className="admin-row-actions">
+                    <Link className="admin-link" href={`/admin/pages/${page.id}`}>ویرایش</Link>
+                    <ActionForm
+                      action={setPageStatus}
+                      confirmTitle={isPublished ? 'مخفی کردن صفحه' : 'انتشار صفحه'}
+                      confirmMessage={isPublished ? `صفحه «${page.title}» از دید کاربران مخفی شود؟` : `صفحه «${page.title}» روی سایت منتشر شود؟`}
+                      confirmLabel={isPublished ? 'بله، مخفی شود' : 'بله، منتشر شود'}
+                    >
+                      <input type="hidden" name="id" value={page.id} />
+                      <input type="hidden" name="status" value={isPublished ? 'hidden' : 'published'} />
+                      <button className="admin-muted-button" type="submit">{isPublished ? 'مخفی کن' : 'منتشر کن'}</button>
+                    </ActionForm>
+                    <ActionForm
+                      action={deletePage}
+                      danger
+                      confirmTitle="حذف کامل صفحه"
+                      confirmMessage={`صفحه «${page.title}» و تمام محتوای وابسته به آن حذف شود؟ این عملیات قابل بازگشت نیست.`}
+                      confirmLabel="بله، برای همیشه حذف شود"
+                    >
+                      <input type="hidden" name="id" value={page.id} />
+                      <button className="admin-danger-button" type="submit">حذف</button>
+                    </ActionForm>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         )}
       </section>
