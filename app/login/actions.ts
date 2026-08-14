@@ -24,7 +24,8 @@ export async function login(_state:LoginState,formData:FormData):Promise<LoginSt
  if(!(await verifyTurnstile(captchaToken)))return fail('auth.login.captcha_failed')
  const{error}=await supabase.auth.signInWithPassword({email,password});if(error)return fail('auth.login.credentials_failed')
  const{data:claimsData,error:claimsError}=await supabase.auth.getClaims();const userId=claimsData?.claims?.sub;if(claimsError||!userId){await supabase.auth.signOut();return fail('auth.login.claims_failed',GENERIC_ERROR,'error')}
- const{data:profile}=await supabase.from('profiles').select('active,role').eq('id',userId).single();if(!profile?.active||!['super_admin','admin','content_manager','viewer'].includes(profile.role)){await supabase.auth.signOut();return fail('auth.login.unauthorized_profile')}
+ const{data:profile}=await supabase.from('profiles').select('active,role').eq('id',userId).single();if(!profile?.active||!['super_admin','admin','content_manager','crm','viewer'].includes(profile.role)){await supabase.auth.signOut();return fail('auth.login.unauthorized_profile')}
  try{await createAdminSession(userId,rememberMe)}catch(error){await supabase.auth.signOut();const errorId=await logEvent({category:'error',severity:'error',eventName:'auth.session.create_failed',message:'Secure admin session creation failed',route:'/login',method:'POST',actorUserId:userId,actorRole:profile.role,requestId,error,metadata:{rememberMe}});return{error:'ایجاد نشست امن انجام نشد. دوباره تلاش کنید.',errorId,nonce}}
+ await supabase.from('profiles').update({last_login_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq('id',userId)
  await supabase.rpc('reset_login_rate_limit',{p_key:fingerprint});await logEvent({category:'auth',severity:'info',eventName:'auth.login.success',message:'Admin logged in',route:'/login',method:'POST',actorUserId:userId,actorRole:profile.role,requestId,metadata:{rememberMe}});redirect('/admin')
 }
