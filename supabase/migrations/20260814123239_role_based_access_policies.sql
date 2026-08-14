@@ -1,0 +1,24 @@
+create or replace function public.current_role() returns public.role_key language sql stable security definer set search_path = public as $$ select role from public.profiles where id = auth.uid() and active = true; $$;
+create or replace function public.has_role(allowed public.role_key[]) returns boolean language sql stable security definer set search_path = public as $$ select coalesce(public.current_role() = any(allowed), false); $$;
+grant execute on function public.current_role() to authenticated;
+grant execute on function public.has_role(public.role_key[]) to authenticated;
+
+create policy "users read own profile or admins read profiles" on public.profiles for select to authenticated using (id = auth.uid() or public.has_role(array['super_admin','admin']::public.role_key[]));
+create policy "super admins manage profiles" on public.profiles for all to authenticated using (public.has_role(array['super_admin']::public.role_key[])) with check (public.has_role(array['super_admin']::public.role_key[]));
+create policy "staff read pages" on public.pages for select to authenticated using (public.has_role(array['super_admin','admin','content_manager','viewer']::public.role_key[]));
+create policy "content staff manage pages" on public.pages for all to authenticated using (public.has_role(array['super_admin','admin','content_manager']::public.role_key[])) with check (public.has_role(array['super_admin','admin','content_manager']::public.role_key[]));
+create policy "public read blocks of published pages" on public.page_blocks for select to anon using (visible and exists (select 1 from public.pages p where p.id = page_id and p.status = 'published'));
+create policy "staff read blocks" on public.page_blocks for select to authenticated using (public.has_role(array['super_admin','admin','content_manager','viewer']::public.role_key[]));
+create policy "content staff manage blocks" on public.page_blocks for all to authenticated using (public.has_role(array['super_admin','admin','content_manager']::public.role_key[])) with check (public.has_role(array['super_admin','admin','content_manager']::public.role_key[]));
+create policy "staff read media" on public.media_assets for select to authenticated using (public.has_role(array['super_admin','admin','content_manager','viewer']::public.role_key[]));
+create policy "content staff manage media" on public.media_assets for all to authenticated using (public.has_role(array['super_admin','admin','content_manager']::public.role_key[])) with check (public.has_role(array['super_admin','admin','content_manager']::public.role_key[]));
+create policy "staff read projects" on public.projects for select to authenticated using (public.has_role(array['super_admin','admin','content_manager','viewer']::public.role_key[]));
+create policy "content staff manage projects" on public.projects for all to authenticated using (public.has_role(array['super_admin','admin','content_manager']::public.role_key[])) with check (public.has_role(array['super_admin','admin','content_manager']::public.role_key[]));
+create policy "crm staff read leads" on public.leads for select to authenticated using (public.has_role(array['super_admin','admin','crm']::public.role_key[]));
+create policy "crm staff manage leads" on public.leads for all to authenticated using (public.has_role(array['super_admin','admin','crm']::public.role_key[])) with check (public.has_role(array['super_admin','admin','crm']::public.role_key[]));
+create policy "staff read settings" on public.site_settings for select to authenticated using (public.has_role(array['super_admin','admin','content_manager','viewer']::public.role_key[]));
+create policy "admins manage settings" on public.site_settings for all to authenticated using (public.has_role(array['super_admin','admin']::public.role_key[])) with check (public.has_role(array['super_admin','admin']::public.role_key[]));
+create policy "staff read revisions" on public.revisions for select to authenticated using (public.has_role(array['super_admin','admin','content_manager']::public.role_key[]));
+create policy "content staff create revisions" on public.revisions for insert to authenticated with check (public.has_role(array['super_admin','admin','content_manager']::public.role_key[]));
+create policy "admins read audit log" on public.audit_log for select to authenticated using (public.has_role(array['super_admin','admin']::public.role_key[]));
+create policy "authenticated staff create audit events" on public.audit_log for insert to authenticated with check (actor_id = auth.uid() and public.current_role() is not null);
