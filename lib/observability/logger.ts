@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { randomUUID } from 'crypto'
+import { explainError } from './error-explainer'
 
 type Category = 'audit'|'error'|'security'|'auth'|'system'|'performance'
 type Severity = 'debug'|'info'|'warning'|'error'|'critical'
@@ -9,6 +10,8 @@ type LogInput = {
   severity?: Severity
   eventName: string
   message?: string
+  summaryFa?: string
+  causeFa?: string
   route?: string
   method?: string
   actorUserId?: string | null
@@ -48,7 +51,12 @@ function errorFields(error: unknown) {
       error_stack: error.stack ? error.stack.slice(0,8000) : null,
     }
   }
-  return { error_name:'UnknownError',error_code:null,error_stack:String(error).slice(0,2000) }
+  const anyError = typeof error === 'object' && error !== null ? error as Record<string,unknown> : null
+  return {
+    error_name: anyError?.name ? String(anyError.name).slice(0,160) : 'UnknownError',
+    error_code: anyError?.code == null ? null : String(anyError.code).slice(0,160),
+    error_stack: String(anyError?.message ?? error).slice(0,2000)
+  }
 }
 
 function eventPrefix(category:Category){ return category === 'error' ? 'ERR' : category === 'security' ? 'SEC' : 'EVT' }
@@ -66,6 +74,10 @@ export async function logEvent(input: LogInput) {
 
   const admin = createClient(url, serviceKey, { auth:{ persistSession:false, autoRefreshToken:false } })
   const err = errorFields(input.error)
+  const explanation = input.category === 'error' || input.error
+    ? explainError(input.error ?? { name:input.eventName, code:err.error_code, message:input.message }, input.eventName)
+    : { summaryFa: input.summaryFa ?? input.message ?? 'یک رویداد در سیستم ثبت شد.', causeFa: input.causeFa ?? 'این رویداد در نتیجه اجرای یکی از فرایندهای سیستم یا عملیات مدیریتی ثبت شده است.' }
+
   const payload = {
     event_id:eventId,
     request_id:input.requestId ?? null,
@@ -73,6 +85,8 @@ export async function logEvent(input: LogInput) {
     severity:input.severity ?? (input.category==='error'?'error':'info'),
     event_name:input.eventName.slice(0,180),
     message:input.message?.slice(0,2000) ?? null,
+    summary_fa:(input.summaryFa ?? explanation.summaryFa).slice(0,2000),
+    cause_fa:(input.causeFa ?? explanation.causeFa).slice(0,3000),
     route:input.route?.slice(0,1000) ?? null,
     method:input.method?.slice(0,16) ?? null,
     actor_user_id:input.actorUserId ?? null,
