@@ -1,56 +1,159 @@
 'use client'
 
-import { ChangeEvent, useEffect, useMemo, useState } from 'react'
+import { ChangeEvent, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 
-type Asset = { id:string; storage_path:string; file_name:string; alt_text:string; mime_type:string }
-type Pending = { kind:'select'; asset:Asset } | { kind:'upload'; file:File } | null
+type Asset = {
+  id: string
+  storage_path: string
+  file_name: string
+  alt_text: string
+  mime_type: string
+  folder: string
+  title: string
+  caption: string
+}
+type Pending = { kind: 'select'; asset: Asset } | { kind: 'upload'; file: File } | null
 
-export default function MediaPicker({ name, defaultValue = '' }: { name:string; defaultValue?:string }) {
+const PAGE_SIZE = 18
+const FOLDERS = ['general', 'hero', 'projects', 'branding']
+
+export default function MediaPicker({ name, defaultValue = '' }: { name: string; defaultValue?: string }) {
   const supabase = useMemo(() => createClient(), [])
-  const [value,setValue]=useState(defaultValue)
-  const [open,setOpen]=useState(false)
-  const [assets,setAssets]=useState<Asset[]>([])
-  const [busy,setBusy]=useState(false)
-  const [message,setMessage]=useState('')
-  const [pending,setPending]=useState<Pending>(null)
-  const [toast,setToast]=useState('')
+  const [value, setValue] = useState(defaultValue)
+  const [open, setOpen] = useState(false)
+  const [assets, setAssets] = useState<Asset[]>([])
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [folder, setFolder] = useState('all')
+  const [mime, setMime] = useState('all')
+  const [busy, setBusy] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [message, setMessage] = useState('')
+  const [pending, setPending] = useState<Pending>(null)
+  const [toast, setToast] = useState('')
+  const [preview, setPreview] = useState<Asset | null>(null)
 
-  function publicUrl(path:string){return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl}
-  async function load(){const{data}=await supabase.from('media_assets').select('id,storage_path,file_name,alt_text,mime_type').is('deleted_at',null).order('created_at',{ascending:false});setAssets((data??[]) as Asset[])}
-  useEffect(()=>{if(open)load()},[open])
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  function publicUrl(path: string) { return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl }
+  function notify(text: string) { setToast(text); window.setTimeout(() => setToast(''), 2800) }
 
-  function notify(text:string){setToast(text);window.setTimeout(()=>setToast(''),2600)}
+  async function load(nextPage = 1, nextSearch = search, nextFolder = folder, nextMime = mime) {
+    setLoading(true); setMessage('')
+    let query = supabase
+      .from('media_assets')
+      .select('id,storage_path,file_name,alt_text,mime_type,folder,title,caption', { count: 'exact' })
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false })
 
-  function requestUpload(event:ChangeEvent<HTMLInputElement>){
-    const file=event.target.files?.[0];if(!file)return
-    event.target.value=''
-    if(!file.type.startsWith('image/')){setMessage('فقط فایل تصویری مجاز است.');return}
-    if(file.size>10*1024*1024){setMessage('حجم فایل باید کمتر از ۱۰ مگابایت باشد.');return}
-    setMessage('');setPending({kind:'upload',file})
+    const q = nextSearch.trim().replace(/[%_,()]/g, ' ')
+    if (q) query = query.or(`file_name.ilike.%${q}%,title.ilike.%${q}%,alt_text.ilike.%${q}%`)
+    if (nextFolder !== 'all') query = query.eq('folder', nextFolder)
+    if (nextMime !== 'all') query = query.eq('mime_type', nextMime)
+    const from = (nextPage - 1) * PAGE_SIZE
+    const { data, count, error } = await query.range(from, from + PAGE_SIZE - 1)
+    setLoading(false)
+    if (error) return setMessage(`بارگذاری کتابخانه انجام نشد: ${error.message}`)
+    setAssets((data ?? []) as Asset[])
+    setTotal(count ?? 0)
+    setPage(nextPage)
   }
 
-  async function uploadConfirmed(file:File){
-    setPending(null);setBusy(true);setMessage('')
-    const{data:userData}=await supabase.auth.getUser();const userId=userData.user?.id;if(!userId){setBusy(false);setMessage('نشست کاربری معتبر نیست.');return}
-    const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]+/g,'-');const path=`${userId}/${Date.now()}-${crypto.randomUUID()}-${safe}`
-    const up=await supabase.storage.from('rava-media').upload(path,file,{cacheControl:'31536000',contentType:file.type});if(up.error){setBusy(false);setMessage(`آپلود انجام نشد: ${up.error.message}`);return}
-    const ins=await supabase.from('media_assets').insert({storage_path:path,file_name:file.name,mime_type:file.type,alt_text:file.name.replace(/\.[^.]+$/,''),size_bytes:file.size,uploaded_by:userId}).select('id,storage_path,file_name,alt_text,mime_type').single();if(ins.error||!ins.data){await supabase.storage.from('rava-media').remove([path]);setBusy(false);setMessage(`ثبت فایل انجام نشد: ${ins.error?.message??'خطای ناشناخته'}`);return}
-    const asset=ins.data as Asset;setAssets(a=>[asset,...a]);setValue(publicUrl(asset.storage_path));setBusy(false);setOpen(false);notify('تصویر آپلود و برای این سکشن انتخاب شد.')
+  function openLibrary() {
+    setOpen(true)
+    load(1)
+  }
+  function applyFilters() { load(1, search, folder, mime) }
+  function resetFilters() {
+    setSearch(''); setFolder('all'); setMime('all')
+    load(1, '', 'all', 'all')
   }
 
-  function selectConfirmed(asset:Asset){setValue(publicUrl(asset.storage_path));setPending(null);setOpen(false);notify('تصویر از کتابخانه انتخاب شد. برای ثبت نهایی، تغییرات سکشن را ذخیره کن.')}
+  function requestUpload(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0]
+    if (!file) return
+    event.target.value = ''
+    if (!file.type.startsWith('image/')) return setMessage('فقط فایل تصویری مجاز است.')
+    if (file.size > 10 * 1024 * 1024) return setMessage('حجم فایل باید کمتر از ۱۰ مگابایت باشد.')
+    setMessage('')
+    setPending({ kind: 'upload', file })
+  }
+
+  async function uploadConfirmed(file: File) {
+    setPending(null); setBusy(true); setMessage('')
+    const { data: userData } = await supabase.auth.getUser()
+    const userId = userData.user?.id
+    if (!userId) { setBusy(false); setMessage('نشست کاربری معتبر نیست.'); return }
+
+    const safe = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-')
+    const path = `${userId}/${Date.now()}-${crypto.randomUUID()}-${safe}`
+    const up = await supabase.storage.from('rava-media').upload(path, file, { cacheControl: '31536000', contentType: file.type })
+    if (up.error) { setBusy(false); setMessage(`آپلود انجام نشد: ${up.error.message}`); return }
+
+    const clean = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ')
+    const ins = await supabase.from('media_assets').insert({
+      storage_path: path,
+      file_name: file.name,
+      mime_type: file.type,
+      alt_text: clean,
+      title: clean,
+      folder: folder !== 'all' ? folder : 'general',
+      size_bytes: file.size,
+      uploaded_by: userId,
+    }).select('id,storage_path,file_name,alt_text,mime_type,folder,title,caption').single()
+
+    if (ins.error || !ins.data) {
+      await supabase.storage.from('rava-media').remove([path])
+      setBusy(false); setMessage(`ثبت فایل انجام نشد: ${ins.error?.message ?? 'خطای ناشناخته'}`); return
+    }
+
+    const asset = ins.data as Asset
+    setValue(publicUrl(asset.storage_path))
+    setBusy(false); setOpen(false)
+    notify('تصویر آپلود و برای این سکشن انتخاب شد. برای ثبت نهایی، سکشن را ذخیره کن.')
+  }
+
+  function selectConfirmed(asset: Asset) {
+    setValue(publicUrl(asset.storage_path))
+    setPending(null); setPreview(null); setOpen(false)
+    notify('تصویر از کتابخانه انتخاب شد. برای ثبت نهایی، سکشن را ذخیره کن.')
+  }
 
   return <div className="admin-media-picker">
     <input type="hidden" name={name} value={value}/>
-    {value?<div className="admin-media-picker-preview"><img src={value} alt="تصویر انتخاب‌شده"/><button type="button" className="admin-muted-button" onClick={()=>{setValue('');notify('انتخاب تصویر پاک شد؛ برای ثبت نهایی سکشن را ذخیره کن.')}}>حذف انتخاب</button></div>:<div className="admin-empty">هنوز تصویری انتخاب نشده.</div>}
-    <button type="button" className="admin-muted-button" onClick={()=>setOpen(true)}>انتخاب / آپلود تصویر</button>
+    {value ? <div className="admin-media-picker-preview"><img src={value} alt="تصویر انتخاب‌شده"/><button type="button" className="admin-muted-button" onClick={() => { setValue(''); notify('انتخاب تصویر پاک شد؛ برای ثبت نهایی سکشن را ذخیره کن.') }}>حذف انتخاب</button></div> : <div className="admin-empty">هنوز تصویری انتخاب نشده.</div>}
+    <button type="button" className="admin-muted-button" onClick={openLibrary}>انتخاب / آپلود تصویر</button>
 
-    {open?<div className="admin-modal-backdrop" onMouseDown={()=>!busy&&setOpen(false)}><div className="admin-modal admin-media-modal" role="dialog" aria-modal="true" onMouseDown={e=>e.stopPropagation()}><h3>انتخاب تصویر</h3><p>از کتابخانه انتخاب کن یا تصویر جدید آپلود کن.</p><label className="admin-upload-button">{busy?'در حال آپلود…':'آپلود تصویر جدید'}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" disabled={busy} onChange={requestUpload}/></label>{message?<p className="auth-error">{message}</p>:null}<div className="admin-media-grid admin-media-picker-grid">{assets.map(asset=><button type="button" className="admin-media-card admin-media-select" key={asset.id} onClick={()=>setPending({kind:'select',asset})}><img src={publicUrl(asset.storage_path)} alt={asset.alt_text||asset.file_name}/><small>{asset.file_name}</small></button>)}</div><div className="admin-modal-actions"><Link className="admin-link" href="/admin/media">باز کردن کتابخانه کامل</Link><button type="button" className="admin-muted-button" onClick={()=>setOpen(false)}>بستن</button></div></div></div>:null}
+    {open ? <div className="admin-modal-backdrop" onMouseDown={() => !busy && setOpen(false)}>
+      <div className="admin-modal admin-media-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}>
+        <div className="admin-section-title"><div><h3>انتخاب تصویر</h3><p>جستجو، فیلتر و انتخاب از کتابخانه رسانه.</p></div><span>{total} فایل</span></div>
+        <div className="admin-media-picker-toolbar">
+          <input value={search} onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') applyFilters() }} placeholder="جستجو در نام، عنوان یا Alt…"/>
+          <select value={folder} onChange={(e) => setFolder(e.target.value)}><option value="all">همه پوشه‌ها</option>{FOLDERS.map((x) => <option key={x} value={x}>{x}</option>)}</select>
+          <select value={mime} onChange={(e) => setMime(e.target.value)}><option value="all">همه فرمت‌ها</option><option value="image/jpeg">JPEG</option><option value="image/png">PNG</option><option value="image/webp">WebP</option><option value="image/gif">GIF</option><option value="image/svg+xml">SVG</option></select>
+          <button type="button" className="admin-primary-button" disabled={loading} onClick={applyFilters}>اعمال</button>
+          <button type="button" className="admin-muted-button" disabled={loading} onClick={resetFilters}>پاک کردن</button>
+        </div>
+        <div className="admin-picker-topline"><label className="admin-upload-button">{busy ? 'در حال آپلود…' : 'آپلود تصویر جدید'}<input type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" disabled={busy} onChange={requestUpload}/></label><span>صفحه {page} از {totalPages}</span></div>
+        {message ? <p className="auth-error">{message}</p> : null}
+        {loading ? <div className="admin-empty">در حال بارگذاری کتابخانه…</div> : assets.length === 0 ? <div className="admin-empty">تصویری با این فیلتر پیدا نشد.</div> : <div className="admin-media-grid admin-media-picker-grid">
+          {assets.map((asset) => <article className="admin-media-card admin-picker-card" key={asset.id}>
+            <button type="button" className="admin-media-image-button" onClick={() => setPreview(asset)}><img src={publicUrl(asset.storage_path)} alt={asset.alt_text || asset.file_name}/></button>
+            <div className="admin-media-meta"><b>{asset.title || asset.file_name}</b><small>{asset.folder} · {asset.mime_type.replace('image/', '')}</small></div>
+            <div className="admin-media-actions"><button type="button" className="admin-primary-button" onClick={() => setPending({ kind: 'select', asset })}>انتخاب</button><button type="button" className="admin-muted-button" onClick={() => setPreview(asset)}>پیش‌نمایش</button></div>
+          </article>)}
+        </div>}
+        <div className="admin-pagination"><button type="button" className="admin-muted-button" disabled={page <= 1 || loading} onClick={() => load(page - 1)}>صفحه قبل</button><span>{page} / {totalPages}</span><button type="button" className="admin-muted-button" disabled={page >= totalPages || loading} onClick={() => load(page + 1)}>صفحه بعد</button></div>
+        <div className="admin-modal-actions"><Link className="admin-link" href="/admin/media">باز کردن کتابخانه کامل</Link><button type="button" className="admin-muted-button" onClick={() => setOpen(false)}>بستن</button></div>
+      </div>
+    </div> : null}
 
-    {pending?<div className="admin-modal-backdrop" onMouseDown={()=>!busy&&setPending(null)}><div className="admin-modal" role="dialog" aria-modal="true" onMouseDown={e=>e.stopPropagation()}><div className="admin-modal-icon">✓</div><h3>{pending.kind==='upload'?'تأیید آپلود':'تأیید انتخاب تصویر'}</h3><p>{pending.kind==='upload'?`تصویر «${pending.file.name}» روی سرور آپلود و برای این سکشن انتخاب شود؟`:`تصویر «${pending.asset.file_name}» برای این سکشن انتخاب شود؟`}</p><div className="admin-modal-actions"><button type="button" className="admin-primary-button" disabled={busy} onClick={()=>pending.kind==='upload'?uploadConfirmed(pending.file):selectConfirmed(pending.asset)}>بله، انجام شود</button><button type="button" className="admin-muted-button" disabled={busy} onClick={()=>setPending(null)}>انصراف</button></div></div></div>:null}
+    {preview ? <div className="admin-modal-backdrop" onMouseDown={() => setPreview(null)}><div className="admin-modal admin-media-preview-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><h3>{preview.title || preview.file_name}</h3><img className="admin-media-large-preview" src={publicUrl(preview.storage_path)} alt={preview.alt_text || preview.file_name}/><p>{preview.caption || preview.alt_text || preview.file_name}</p><div className="admin-modal-actions"><button type="button" className="admin-primary-button" onClick={() => setPending({ kind: 'select', asset: preview })}>انتخاب این تصویر</button><button type="button" className="admin-muted-button" onClick={() => setPreview(null)}>بستن</button></div></div></div> : null}
 
-    {toast?<div className="admin-toast admin-toast-success" role="status" aria-live="polite"><b>انجام شد</b><span>{toast}</span><button type="button" onClick={()=>setToast('')}>×</button></div>:null}
+    {pending ? <div className="admin-modal-backdrop" onMouseDown={() => !busy && setPending(null)}><div className="admin-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><div className="admin-modal-icon">✓</div><h3>{pending.kind === 'upload' ? 'تأیید آپلود' : 'تأیید انتخاب تصویر'}</h3><p>{pending.kind === 'upload' ? `تصویر «${pending.file.name}» روی سرور آپلود و برای این سکشن انتخاب شود؟` : `تصویر «${pending.asset.title || pending.asset.file_name}» برای این سکشن انتخاب شود؟`}</p><div className="admin-modal-actions"><button type="button" className="admin-primary-button" disabled={busy} onClick={() => pending.kind === 'upload' ? uploadConfirmed(pending.file) : selectConfirmed(pending.asset)}>بله، انجام شود</button><button type="button" className="admin-muted-button" disabled={busy} onClick={() => setPending(null)}>انصراف</button></div></div></div> : null}
+
+    {toast ? <div className="admin-toast admin-toast-success" role="status" aria-live="polite"><b>انجام شد</b><span>{toast}</span><button type="button" onClick={() => setToast('')}>×</button></div> : null}
   </div>
 }
