@@ -1,7 +1,7 @@
 'use server'
-import{revalidatePath}from'next/cache';import{getTenantContext}from'@/lib/platform/tenant-context'
+import{revalidatePath}from'next/cache';import{getTenantContext}from'@/lib/platform/tenant-context';import{canEditContent}from'@/lib/platform/capabilities'
 export type AdminActionState={ok?:boolean;message?:string;redirectTo?:string;nonce?:number}
-async function editor(){const a=await getTenantContext();if(!['super_admin','admin','content_manager'].includes(a.profile.role)&&!a.isPlatform)throw new Error('forbidden');return a}
+async function editor(){const a=await getTenantContext();if(!canEditContent(a))throw new Error('forbidden');return a}
 function slug(v:string){return v.trim().toLowerCase().replace(/^\/+|\/+$/g,'').replace(/\s+/g,'-').replace(/[^a-z0-9\u0600-\u06ff-]/g,'')}
 function err(e:{code?:string;message?:string}|null,f:string){if(e?.code==='23505')return'این آدرس در همین سایت قبلاً استفاده شده است.';return e?.message?`خطای سرور: ${e.message}`:f}
 export async function createPage(_:AdminActionState,f:FormData):Promise<AdminActionState>{const a=await editor(),title=String(f.get('title')||'').trim(),s=slug(String(f.get('slug')||''));if(!title||!s)return{ok:false,message:'عنوان و آدرس صفحه الزامی است.',nonce:Date.now()};const{data,error}=await a.s.from('pages').insert({tenant_id:a.tenantId,title,slug:s,status:'draft',created_by:a.userId,updated_by:a.userId}).select('id').single();if(error||!data)return{ok:false,message:err(error,'ساخت صفحه انجام نشد.'),nonce:Date.now()};revalidatePath('/admin/pages');return{ok:true,message:`صفحه «${title}» ساخته شد.`,redirectTo:`/admin/pages/${data.id}`,nonce:Date.now()}}
