@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import ActionForm from '../../components/ActionForm'
 import { deletePage, updatePage } from '../actions'
 
 export const dynamic = 'force-dynamic'
@@ -36,7 +37,13 @@ export default async function PageEditor({ params }: { params: Promise<{ id: str
       </header>
 
       <section className="admin-panel">
-        <form action={updatePage} className="admin-form">
+        <ActionForm
+          action={updatePage}
+          className="admin-form"
+          confirmTitle="ذخیره تغییرات صفحه"
+          confirmMessage={`تغییرات صفحه «${page.title}» روی سرور ذخیره شود؟`}
+          confirmLabel="بله، ذخیره شود"
+        >
           <input type="hidden" name="id" value={page.id} />
           <div className="admin-grid-2">
             <label>عنوان صفحه<input name="title" defaultValue={page.title} required /></label>
@@ -58,7 +65,7 @@ export default async function PageEditor({ params }: { params: Promise<{ id: str
             <button type="submit">ذخیره تغییرات</button>
             {page.status === 'published' ? <a className="admin-link" href={`/${page.slug}`} target="_blank">مشاهده صفحه</a> : null}
           </div>
-        </form>
+        </ActionForm>
       </section>
 
       <section className="admin-panel">
@@ -68,11 +75,17 @@ export default async function PageEditor({ params }: { params: Promise<{ id: str
 
       <section className="admin-panel admin-danger-zone">
         <h2>حذف صفحه</h2>
-        <p>این عملیات صفحه و Blockهای وابسته به آن را حذف می‌کند.</p>
-        <form action={deletePage}>
+        <p>این عملیات صفحه و Blockهای وابسته به آن را حذف می‌کند و قابل بازگشت نیست.</p>
+        <ActionForm
+          action={deletePage}
+          danger
+          confirmTitle="حذف کامل صفحه"
+          confirmMessage={`صفحه «${page.title}» و تمام محتوای وابسته به آن برای همیشه حذف شود؟`}
+          confirmLabel="بله، برای همیشه حذف شود"
+        >
           <input type="hidden" name="id" value={page.id} />
           <button className="admin-danger-button" type="submit">حذف کامل صفحه</button>
-        </form>
+        </ActionForm>
       </section>
     </main>
   )
