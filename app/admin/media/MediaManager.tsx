@@ -14,6 +14,11 @@ type Asset = {
 }
 
 type Toast = { ok: boolean; message: string } | null
+type ConfirmState =
+  | { kind: 'upload' }
+  | { kind: 'delete'; asset: Asset }
+  | { kind: 'alt'; asset: Asset; value: string }
+  | null
 
 export default function MediaManager({ initialAssets, userId }: { initialAssets: Asset[]; userId: string }) {
   const supabase = useMemo(() => createClient(), [])
@@ -22,7 +27,10 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
   const [alt, setAlt] = useState('')
   const [busy, setBusy] = useState(false)
   const [toast, setToast] = useState<Toast>(null)
-  const [deleteAsset, setDeleteAsset] = useState<Asset | null>(null)
+  const [confirmState, setConfirmState] = useState<ConfirmState>(null)
+  const [previewAsset, setPreviewAsset] = useState<Asset | null>(null)
+  const [altDrafts, setAltDrafts] = useState<Record<string, string>>(() => Object.fromEntries(initialAssets.map((a) => [a.id, a.alt_text])))
+  const [copiedId, setCopiedId] = useState<string | null>(null)
 
   function publicUrl(path: string) {
     return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl
@@ -42,10 +50,9 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
     if (!alt) setAlt(next.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '))
   }
 
-  async function upload() {
-    if (!file) return notify(false, 'ابتدا یک تصویر انتخاب کن.')
-    const confirmed = window.confirm(`تصویر «${file.name}» روی سرور آپلود شود؟`)
-    if (!confirmed) return
+  async function uploadConfirmed() {
+    if (!file) return
+    setConfirmState(null)
     setBusy(true)
     const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-')
     const path = `${userId}/${Date.now()}-${crypto.randomUUID()}-${safeName}`
@@ -67,7 +74,9 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
       return notify(false, `ثبت اطلاعات فایل انجام نشد: ${inserted.error?.message ?? 'خطای ناشناخته'}`)
     }
 
-    setAssets((current) => [inserted.data as Asset, ...current])
+    const asset = inserted.data as Asset
+    setAssets((current) => [asset, ...current])
+    setAltDrafts((current) => ({ ...current, [asset.id]: asset.alt_text }))
     setFile(null)
     setAlt('')
     setBusy(false)
@@ -76,26 +85,56 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
     notify(true, 'تصویر با موفقیت آپلود و در کتابخانه رسانه ثبت شد.')
   }
 
-  async function saveAlt(asset: Asset, value: string) {
-    const confirmed = window.confirm(`متن جایگزین تصویر «${asset.file_name}» ویرایش شود؟`)
-    if (!confirmed) return
+  async function saveAltConfirmed() {
+    if (!confirmState || confirmState.kind !== 'alt') return
+    const { asset, value } = confirmState
+    setConfirmState(null)
+    setBusy(true)
     const result = await supabase.from('media_assets').update({ alt_text: value }).eq('id', asset.id)
+    setBusy(false)
     if (result.error) return notify(false, `ویرایش انجام نشد: ${result.error.message}`)
     setAssets((current) => current.map((item) => item.id === asset.id ? { ...item, alt_text: value } : item))
-    notify(true, 'اطلاعات تصویر با موفقیت ویرایش شد.')
+    notify(true, 'Alt Text تصویر با موفقیت روی سرور ویرایش شد.')
   }
 
   async function removeConfirmed() {
-    if (!deleteAsset) return
+    if (!confirmState || confirmState.kind !== 'delete') return
+    const asset = confirmState.asset
+    setConfirmState(null)
     setBusy(true)
-    const storageResult = await supabase.storage.from('rava-media').remove([deleteAsset.storage_path])
-    if (storageResult.error) { setBusy(false); setDeleteAsset(null); return notify(false, `حذف فایل انجام نشد: ${storageResult.error.message}`) }
-    const dbResult = await supabase.from('media_assets').delete().eq('id', deleteAsset.id)
-    if (dbResult.error) { setBusy(false); setDeleteAsset(null); return notify(false, `حذف رکورد انجام نشد: ${dbResult.error.message}`) }
-    setAssets((current) => current.filter((item) => item.id !== deleteAsset.id))
+    const storageResult = await supabase.storage.from('rava-media').remove([asset.storage_path])
+    if (storageResult.error) { setBusy(false); return notify(false, `حذف فایل انجام نشد: ${storageResult.error.message}`) }
+    const dbResult = await supabase.from('media_assets').delete().eq('id', asset.id)
+    if (dbResult.error) { setBusy(false); return notify(false, `حذف رکورد انجام نشد: ${dbResult.error.message}`) }
+    setAssets((current) => current.filter((item) => item.id !== asset.id))
     setBusy(false)
-    setDeleteAsset(null)
-    notify(true, 'تصویر با موفقیت از کتابخانه رسانه حذف شد.')
+    notify(true, 'تصویر با موفقیت از Storage و کتابخانه رسانه حذف شد.')
+  }
+
+  async function copyUrl(asset: Asset) {
+    const url = publicUrl(asset.storage_path)
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopiedId(asset.id)
+      window.setTimeout(() => setCopiedId(null), 1800)
+      notify(true, 'لینک عمومی تصویر در کلیپ‌بورد کپی شد.')
+    } catch {
+      window.prompt('لینک تصویر را کپی کن:', url)
+    }
+  }
+
+  function confirmTitle() {
+    if (!confirmState) return ''
+    if (confirmState.kind === 'upload') return 'تأیید آپلود تصویر'
+    if (confirmState.kind === 'delete') return 'حذف تصویر'
+    return 'تأیید ویرایش Alt Text'
+  }
+
+  function confirmMessage() {
+    if (!confirmState) return ''
+    if (confirmState.kind === 'upload') return `تصویر «${file?.name ?? ''}» روی سرور آپلود و در کتابخانه ثبت شود؟`
+    if (confirmState.kind === 'delete') return `تصویر «${confirmState.asset.file_name}» برای همیشه از Storage و کتابخانه رسانه حذف شود؟`
+    return `Alt Text تصویر «${confirmState.asset.file_name}» به «${confirmState.value || 'بدون متن'}» تغییر کند؟`
   }
 
   return <>
@@ -106,7 +145,7 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
         <label>انتخاب فایل<input id="media-upload-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" onChange={onFile}/></label>
         <label>Alt Text<input value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="توضیح کوتاه و دقیق تصویر"/></label>
         {file ? <div className="admin-upload-preview"><img src={URL.createObjectURL(file)} alt="پیش‌نمایش فایل انتخاب‌شده"/><div><b>{file.name}</b><small>{Math.round(file.size / 1024)} KB</small></div></div> : null}
-        <button className="admin-primary-button" type="button" disabled={busy || !file} onClick={upload}>{busy ? 'در حال آپلود…' : 'آپلود و ثبت در کتابخانه'}</button>
+        <button className="admin-primary-button" type="button" disabled={busy || !file} onClick={() => setConfirmState({ kind: 'upload' })}>{busy ? 'در حال انجام عملیات…' : 'آپلود و ثبت در کتابخانه'}</button>
       </div>
     </section>
 
@@ -114,15 +153,23 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
       <div className="admin-section-title"><h2>کتابخانه رسانه</h2><span>{assets.length} فایل</span></div>
       {assets.length === 0 ? <div className="admin-empty">هنوز تصویری آپلود نشده.</div> : <div className="admin-media-grid">
         {assets.map((asset) => <article className="admin-media-card" key={asset.id}>
-          <img src={publicUrl(asset.storage_path)} alt={asset.alt_text || asset.file_name}/>
+          <button type="button" className="admin-media-image-button" onClick={() => setPreviewAsset(asset)} aria-label={`پیش‌نمایش ${asset.file_name}`}><img src={publicUrl(asset.storage_path)} alt={asset.alt_text || asset.file_name}/></button>
           <div className="admin-media-meta"><b>{asset.file_name}</b><small>{asset.mime_type}{asset.size_bytes ? ` · ${Math.round(asset.size_bytes / 1024)} KB` : ''}</small></div>
-          <label>Alt Text<input defaultValue={asset.alt_text} onBlur={(e) => { if (e.target.value !== asset.alt_text) saveAlt(asset, e.target.value) }}/></label>
-          <button type="button" className="admin-danger-button" onClick={() => setDeleteAsset(asset)}>حذف تصویر</button>
+          <label>Alt Text<input value={altDrafts[asset.id] ?? ''} onChange={(e) => setAltDrafts((current) => ({ ...current, [asset.id]: e.target.value }))}/></label>
+          <div className="admin-media-actions">
+            <button type="button" className="admin-primary-button" disabled={busy || (altDrafts[asset.id] ?? '') === asset.alt_text} onClick={() => setConfirmState({ kind: 'alt', asset, value: altDrafts[asset.id] ?? '' })}>ذخیره Alt</button>
+            <button type="button" className="admin-muted-button" onClick={() => setPreviewAsset(asset)}>پیش‌نمایش</button>
+            <button type="button" className="admin-muted-button" onClick={() => copyUrl(asset)}>{copiedId === asset.id ? 'کپی شد ✓' : 'کپی لینک'}</button>
+            <button type="button" className="admin-danger-button" onClick={() => setConfirmState({ kind: 'delete', asset })}>حذف تصویر</button>
+          </div>
         </article>)}
       </div>}
     </section>
 
-    {deleteAsset ? <div className="admin-modal-backdrop" onMouseDown={() => setDeleteAsset(null)}><div className="admin-modal admin-modal-danger" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><div className="admin-modal-icon">!</div><h3>حذف تصویر</h3><p>تصویر «{deleteAsset.file_name}» برای همیشه از Storage و کتابخانه رسانه حذف شود؟</p><div className="admin-modal-actions"><button type="button" className="admin-danger-button" disabled={busy} onClick={removeConfirmed}>بله، حذف شود</button><button type="button" className="admin-muted-button" onClick={() => setDeleteAsset(null)}>انصراف</button></div></div></div> : null}
-    {toast ? <div className={`admin-toast ${toast.ok ? 'admin-toast-success' : 'admin-toast-error'}`}><b>{toast.ok ? 'انجام شد' : 'خطا'}</b><span>{toast.message}</span><button type="button" onClick={() => setToast(null)}>×</button></div> : null}
+    {previewAsset ? <div className="admin-modal-backdrop" onMouseDown={() => setPreviewAsset(null)}><div className="admin-modal admin-media-preview-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><h3>{previewAsset.file_name}</h3><img className="admin-media-large-preview" src={publicUrl(previewAsset.storage_path)} alt={previewAsset.alt_text || previewAsset.file_name}/><p>{previewAsset.alt_text || 'Alt Text ثبت نشده است.'}</p><div className="admin-modal-actions"><button type="button" className="admin-muted-button" onClick={() => setPreviewAsset(null)}>بستن</button></div></div></div> : null}
+
+    {confirmState ? <div className="admin-modal-backdrop" onMouseDown={() => !busy && setConfirmState(null)}><div className={`admin-modal ${confirmState.kind === 'delete' ? 'admin-modal-danger' : ''}`} role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><div className="admin-modal-icon">{confirmState.kind === 'delete' ? '!' : '✓'}</div><h3>{confirmTitle()}</h3><p>{confirmMessage()}</p><div className="admin-modal-actions"><button type="button" className={confirmState.kind === 'delete' ? 'admin-danger-button' : 'admin-primary-button'} disabled={busy} onClick={confirmState.kind === 'upload' ? uploadConfirmed : confirmState.kind === 'delete' ? removeConfirmed : saveAltConfirmed}>{busy ? 'در حال انجام…' : 'بله، انجام شود'}</button><button type="button" className="admin-muted-button" disabled={busy} onClick={() => setConfirmState(null)}>انصراف</button></div></div></div> : null}
+
+    {toast ? <div className={`admin-toast ${toast.ok ? 'admin-toast-success' : 'admin-toast-error'}`} role="status" aria-live="polite"><b>{toast.ok ? 'انجام شد' : 'خطا'}</b><span>{toast.message}</span><button type="button" onClick={() => setToast(null)}>×</button></div> : null}
   </>
 }
