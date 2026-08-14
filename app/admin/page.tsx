@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
@@ -33,15 +34,16 @@ export default async function AdminPage() {
       </header>
 
       <section className="admin-stats" aria-label="آمار پنل">
-        <article><span>صفحات</span><b>{pages.count ?? 0}</b></article>
-        <article><span>پروژه‌ها</span><b>{projects.count ?? 0}</b></article>
-        <article><span>پیام‌ها</span><b>{leads.count ?? 0}</b></article>
-        <article><span>رسانه‌ها</span><b>{media.count ?? 0}</b></article>
+        <Link href="/admin/pages"><article><span>صفحات</span><b>{pages.count ?? 0}</b><small>مدیریت صفحات ←</small></article></Link>
+        <article><span>پروژه‌ها</span><b>{projects.count ?? 0}</b><small>به‌زودی</small></article>
+        <article><span>پیام‌ها</span><b>{leads.count ?? 0}</b><small>به‌زودی</small></article>
+        <article><span>رسانه‌ها</span><b>{media.count ?? 0}</b><small>به‌زودی</small></article>
       </section>
 
       <section className="admin-panel">
         <h2>Production CMS فعال است</h2>
-        <p>ورود شما با Supabase Auth تأیید شده و سطح دسترسی از دیتابیس خوانده می‌شود. در مرحله بعد ماژول‌های Pages، Projects، Media، Leads و Users به این داشبورد متصل می‌شوند.</p>
+        <p>ماژول Pages حالا فعال شده. از کارت «صفحات» واردش شو و اولین صفحه واقعی را بساز. بعد از Pages، به‌ترتیب Media، Projects، Leads و Users را کامل می‌کنیم.</p>
+        <Link className="admin-link" href="/admin/pages">ورود به مدیریت صفحات</Link>
       </section>
 
       <form action="/auth/signout" method="post"><button className="admin-signout" type="submit">خروج از پنل</button></form>
