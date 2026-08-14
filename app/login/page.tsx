@@ -25,9 +25,10 @@ export default function LoginPage() {
   function validateBeforeSubmit(event: FormEvent<HTMLFormElement>) {
     setClientError('')
     const form = event.currentTarget
-    const email = String(new FormData(form).get('email') || '').trim().toLowerCase()
-    const password = String(new FormData(form).get('password') || '')
-    const captcha = String(new FormData(form).get('cf-turnstile-response') || '')
+    const formData = new FormData(form)
+    const email = String(formData.get('email') || '').trim().toLowerCase()
+    const password = String(formData.get('password') || '')
+    const captcha = String(formData.get('cf-turnstile-response') || '')
 
     let message = ''
     if (!email || email.length > 254 || !EMAIL_RE.test(email)) message = 'یک ایمیل معتبر وارد کنید.'
@@ -55,6 +56,11 @@ export default function LoginPage() {
           <input id="email" name="email" type="email" autoComplete="email" required inputMode="email" maxLength={254} spellCheck={false} />
           <label htmlFor="password">رمز عبور</label>
           <input id="password" name="password" type="password" autoComplete="current-password" required minLength={8} maxLength={128} />
+
+          <label className="auth-remember" htmlFor="remember_me">
+            <input id="remember_me" name="remember_me" type="checkbox" />
+            <span><b>مرا به خاطر بسپار</b><small>رمز عبور ذخیره نمی‌شود؛ فقط نشست امن تا حداکثر ۷ روز معتبر می‌ماند.</small></span>
+          </label>
 
           {siteKey ? (
             <div className="auth-captcha-wrap">
