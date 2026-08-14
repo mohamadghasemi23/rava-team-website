@@ -17,7 +17,7 @@ export default async function MediaAdminPage() {
 
   const { data, count } = await supabase
     .from('media_assets')
-    .select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at', { count: 'exact' })
+    .select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at,folder', { count: 'exact' })
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .range(0, PAGE_SIZE - 1)
