@@ -1,0 +1,2 @@
+import Link from 'next/link';import ProjectForm from '../ProjectForm';import { createProject } from '../actions'
+export default function NewProject(){return <main className="admin-shell"><header className="admin-head"><div><span>PORTFOLIO CMS</span><h1>پروژه جدید</h1></div><Link className="admin-link" href="/admin/projects">بازگشت</Link></header><section className="admin-panel"><ProjectForm action={createProject}/></section></main>}
