@@ -25,7 +25,7 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Commit lockfile when missing or changed
         run: |
-          if ! git diff --quiet -- package-lock.json || [ ! -f package-lock.json ]; then
+          if [ -n "$(git status --porcelain -- package-lock.json)" ]; then
             git config user.name "rava-ci"
             git config user.email "actions@users.noreply.github.com"
             git add package-lock.json
