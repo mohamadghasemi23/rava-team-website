@@ -1,0 +1,30 @@
+name: Feature Branch Audit
+
+on:
+  push:
+    branches: [feature/media-scale]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: https://vpwmknzajfdarkqpbjih.supabase.co
+      NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_TEfk9ADRchfaB_yfDYqdwg_DRha4fUx
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: TypeScript audit
+        run: npx tsc --noEmit
+      - name: Production build audit
+        run: npm run build
