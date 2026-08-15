@@ -32,6 +32,12 @@ export const ADMIN_HELP_REGISTRY:AdminHelpDefinition[]=[
  {key:'tenant.isolation',area:'security',importance:'critical',warningRequired:true},
  {key:'platform.staff.role',area:'platform',importance:'critical',warningRequired:true},
  {key:'platform.staff.scope',area:'platform',importance:'critical',warningRequired:true},
+ {key:'theme.switch',area:'appearance',importance:'important'},
+ {key:'theme.publish',area:'appearance',importance:'critical',warningRequired:true},
+ {key:'theme.registry',area:'appearance',importance:'critical',warningRequired:true},
+ {key:'guidance.experience_mode',area:'guidance',importance:'standard'},
+ {key:'guidance.tours',area:'guidance',importance:'standard'},
+ {key:'guidance.help_center',area:'guidance',importance:'standard'},
 ]
 
 export const ADMIN_HELP_KEYS=new Set(ADMIN_HELP_REGISTRY.map(x=>x.key))
