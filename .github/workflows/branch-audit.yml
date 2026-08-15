@@ -24,6 +24,8 @@ jobs:
           cache: npm
       - name: Reproducible install audit
         run: npm ci --no-audit --no-fund
+      - name: Commerce architecture audit
+        run: npm run audit:commerce
       - name: TypeScript audit
         run: npx tsc --noEmit
       - name: Production build audit
