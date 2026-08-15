@@ -22,10 +22,15 @@ if(!all.includes("for update\n loop")&&!all.includes('for update\r\n loop'))fail
 if(!all.includes('coupon_not_eligible'))fail.push('Invalid/ineligible coupon rejection missing');
 if(!all.includes('promotion_evaluated'))fail.push('Promotion evaluation idempotency marker missing');
 if(!all.includes('grant execute on function public.create_storefront_order_v3(uuid,jsonb,jsonb,text,uuid,text) to service_role'))fail.push('Checkout V3 RPC must be service-role only');
-if(!checkout.includes("rpc('create_storefront_order_v3'"))fail.push('Storefront route must call promotion-aware checkout V3');
+if(!all.includes('create table if not exists public.tax_settings'))fail.push('Tenant tax settings foundation missing');
+if(!all.includes("enabled boolean not null default false"))fail.push('Tax engine must default to disabled');
+if(!all.includes("mode text not null default 'exclusive' check(mode in('exclusive','inclusive'))"))fail.push('Tax exclusive/inclusive modes missing');
+if(!all.includes('create_storefront_order_v4'))fail.push('Tax-aware checkout V4 RPC missing');
+if(!all.includes('grant execute on function public.create_storefront_order_v4(uuid,jsonb,jsonb,text,uuid,text) to service_role'))fail.push('Checkout V4 RPC must be service-role only');
+if(!checkout.includes("rpc('create_storefront_order_v4'"))fail.push('Storefront route must call tax-aware checkout V4');
 if(!checkout.includes('p_request_key'))fail.push('Checkout route must forward request idempotency key');
 if(!checkout.includes('p_coupon_code'))fail.push('Checkout route must pass coupon only to trusted server RPC');
-if(checkout.includes('discount_total:')||checkout.includes('grand_total:'))fail.push('Browser-provided checkout totals must never be forwarded');
+if(checkout.includes('discount_total:')||checkout.includes('grand_total:')||checkout.includes('tax_total:'))fail.push('Browser-provided checkout totals must never be forwarded');
 if(!checkoutUi.includes('crypto.randomUUID()'))fail.push('Checkout UI must generate a stable request key per submission attempt');
 if(!all.includes('variant_id uuid references public.product_variants'))fail.push('Inventory Pro must remain variant-aware');
 if(!all.includes('inventory_pro_variant_summary'))fail.push('Variant-level Inventory Pro summary missing');
