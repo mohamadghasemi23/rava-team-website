@@ -22,6 +22,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Commerce architecture audit
+        run: npm run audit:commerce
       - name: Type check
         run: npx tsc --noEmit
       - name: Build
