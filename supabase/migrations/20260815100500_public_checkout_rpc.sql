@@ -1,0 +1,23 @@
+create or replace function public.public_checkout_schema(p_tenant uuid)
+returns jsonb language sql stable security definer set search_path=public as $$
+ select case when public.has_entitlement(p_tenant,'commerce.core') and exists(select 1 from tenants where id=p_tenant and status='active') then jsonb_build_object(
+ 'settings',coalesce((select to_jsonb(s)-'tenant_id'-'updated_by' from checkout_settings s where s.tenant_id=p_tenant),'{}'::jsonb),
+ 'fields',coalesce((select jsonb_agg(jsonb_build_object('key',f.field_key,'type',f.field_type,'label_fa',f.label_fa,'label_en',f.label_en,'placeholder_fa',f.placeholder_fa,'placeholder_en',f.placeholder_en,'required',f.required,'max_length',f.max_length,'validation_rule',f.validation_rule,'options',f.options) order by f.sort_order) from checkout_fields f where f.tenant_id=p_tenant and f.enabled=true),'[]'::jsonb)
+ ) else null end $$;
+revoke all on function public.public_checkout_schema(uuid) from public;grant execute on function public.public_checkout_schema(uuid) to anon,authenticated;
+
+create or replace function public.create_storefront_order(p_tenant uuid,p_items jsonb,p_customer jsonb,p_ip_hash text)
+returns jsonb language plpgsql security definer set search_path=public as $$
+declare v_order uuid;v_currency text:='IRR';v_subtotal numeric:=0;v_item jsonb;v_variant record;v_qty int;v_count int;v_required record;v_value text;begin
+ if not public.has_entitlement(p_tenant,'commerce.core') or not exists(select 1 from tenants where id=p_tenant and status='active') then raise exception 'commerce_unavailable';end if;
+ if jsonb_typeof(p_items)<>'array' or jsonb_array_length(p_items)<1 or jsonb_array_length(p_items)>50 then raise exception 'invalid_items';end if;
+ if jsonb_typeof(p_customer)<>'object' then raise exception 'invalid_customer';end if;
+ select count(*) into v_count from checkout_attempts where tenant_id=p_tenant and ip_hash=p_ip_hash and created_at>now()-interval '10 minutes';if v_count>=10 then insert into checkout_attempts(tenant_id,session_hash,ip_hash,user_agent_hash,status,rejection_code)values(p_tenant,'server',p_ip_hash,'server','rate_limited','too_many_attempts');raise exception 'rate_limited';end if;
+ for v_required in select field_key,max_length,validation_rule from checkout_fields where tenant_id=p_tenant and enabled=true and required=true loop v_value=trim(coalesce(p_customer->>v_required.field_key,''));if v_value='' or length(v_value)>coalesce(v_required.max_length,2000) then raise exception 'invalid_required_field:%',v_required.field_key;end if;end loop;
+ insert into orders(tenant_id,status,payment_status,currency,subtotal,discount_total,shipping_total,tax_total,grand_total,customer_snapshot,shipping_address) values(p_tenant,'pending','unpaid','IRR',0,0,0,0,0,p_customer,p_customer) returning id into v_order;
+ for v_item in select * from jsonb_array_elements(p_items) loop v_qty=greatest(1,least(99,coalesce((v_item->>'quantity')::int,1)));select pv.id,pv.product_id,pv.sku,pv.title,pv.price,pv.currency,pv.inventory_quantity,pv.track_inventory,p.name into v_variant from product_variants pv join products p on p.id=pv.product_id and p.tenant_id=p_tenant and p.status='active' where pv.tenant_id=p_tenant and pv.id=(v_item->>'variantId')::uuid;if not found then raise exception 'invalid_variant';end if;if v_variant.track_inventory and v_variant.inventory_quantity<v_qty then raise exception 'insufficient_stock';end if;if v_subtotal=0 then v_currency=v_variant.currency;elsif v_currency<>v_variant.currency then raise exception 'mixed_currency';end if;v_subtotal=v_subtotal+(v_variant.price*v_qty);insert into order_items(tenant_id,order_id,product_id,variant_id,title,sku,quantity,unit_price,line_total,snapshot)values(p_tenant,v_order,v_variant.product_id,v_variant.id,v_variant.name,v_variant.sku,v_qty,v_variant.price,v_variant.price*v_qty,jsonb_build_object('variant_title',v_variant.title));end loop;
+ update orders set currency=v_currency,subtotal=v_subtotal,grand_total=v_subtotal,updated_at=now() where id=v_order;
+ insert into checkout_attempts(tenant_id,session_hash,ip_hash,user_agent_hash,status)values(p_tenant,'server',p_ip_hash,'server','order_created');
+ return jsonb_build_object('order_id',v_order,'subtotal',v_subtotal,'total',v_subtotal,'currency',v_currency,'payment_status','unpaid');
+exception when others then if v_order is not null then delete from orders where id=v_order;end if;raise;end $$;
+revoke all on function public.create_storefront_order(uuid,jsonb,jsonb,text) from public;grant execute on function public.create_storefront_order(uuid,jsonb,jsonb,text) to anon,authenticated;
