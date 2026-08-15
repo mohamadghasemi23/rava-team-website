@@ -1,0 +1,1 @@
+import 'server-only';import{registerPaymentProvider}from'./payments';import{mockPaymentProvider}from'./providers/mock';let ready=false;export function ensurePaymentProviders(){if(ready)return;registerPaymentProvider(mockPaymentProvider);ready=true}
