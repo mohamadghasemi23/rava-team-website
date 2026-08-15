@@ -66,7 +66,7 @@ create policy product_metrics_admin_read on public.product_metrics_daily for sel
 create policy commerce_metrics_admin_read on public.commerce_metrics_daily for select to authenticated using(public.can_access_tenant(tenant_id,null));
 -- No direct browser INSERT policy. Public storefront events must enter through trusted server endpoints with rate limits and payload allowlists.
 
-create or replace view public.product_commerce_summary as
+create or replace view public.product_commerce_summary with (security_invoker=true) as
 select p.tenant_id,p.id as product_id,p.name,p.slug,p.status,p.stock_quantity,
  coalesce(sum(m.views),0)::bigint as views,
  coalesce(sum(m.add_to_carts),0)::bigint as add_to_carts,
