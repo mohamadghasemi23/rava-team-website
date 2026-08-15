@@ -9,7 +9,7 @@ alter table public.shipping_methods add column if not exists price_per_kg numeri
 create or replace function public.shipping_quote(p_tenant uuid,p_items jsonb,p_customer jsonb)
 returns jsonb language plpgsql security definer set search_path=public as $$
 declare
- s public.shipping_settings%rowtype;i jsonb;v record;q int;subtotal numeric(18,4):=0;currency text;grams numeric(18,4):=0;weight_complete boolean:=true;
+ s public.shipping_settings%rowtype;i jsonb;v record;q int;subtotal numeric(18,4):=0;v_currency text;grams numeric(18,4):=0;weight_complete boolean:=true;
  country text:=upper(nullif(trim(coalesce(p_customer->>'country_code',p_customer->>'country','')),''));region text:=upper(nullif(trim(coalesce(p_customer->>'region_code',p_customer->>'state',p_customer->>'province','')),''));postal text:=upper(nullif(trim(coalesce(p_customer->>'postal_code','')),''));
  m record;zone_ok boolean;price numeric(18,4);out_methods jsonb:='[]'::jsonb;
 begin
@@ -19,10 +19,10 @@ begin
  for i in select * from jsonb_array_elements(p_items) loop
    begin q=(i->>'quantity')::int;exception when others then raise exception 'invalid_quantity';end;if q<1 or q>99 then raise exception 'invalid_quantity';end if;
    select pv.id,pv.price,pv.currency,pv.shipping_weight_grams into v from public.product_variants pv join public.products p on p.id=pv.product_id and p.tenant_id=p_tenant and p.status='active' where pv.id=(i->>'variantId')::uuid and pv.tenant_id=p_tenant;
-   if not found then raise exception 'invalid_variant';end if;if currency is null then currency=v.currency;elsif currency<>v.currency then raise exception 'mixed_currency';end if;
+   if not found then raise exception 'invalid_variant';end if;if v_currency is null then v_currency=v.currency;elsif v_currency<>v.currency then raise exception 'mixed_currency';end if;
    subtotal:=subtotal+(v.price*q);if v.shipping_weight_grams is null then weight_complete:=false;else grams:=grams+(v.shipping_weight_grams*q);end if;
  end loop;
- for m in select * from public.shipping_methods where tenant_id=p_tenant and enabled=true and upper(currency)=upper(coalesce(currency,s.default_currency)) and (min_order is null or subtotal>=min_order) and (max_order is null or subtotal<=max_order) order by sort_order,id loop
+ for m in select sm.* from public.shipping_methods sm where sm.tenant_id=p_tenant and sm.enabled=true and upper(sm.currency)=upper(coalesce(v_currency,s.default_currency)) and (sm.min_order is null or subtotal>=sm.min_order) and (sm.max_order is null or subtotal<=sm.max_order) order by sm.sort_order,sm.id loop
    if exists(select 1 from public.shipping_method_zones mz where mz.tenant_id=p_tenant and mz.method_id=m.id) then
      select exists(select 1 from public.shipping_method_zones mz join public.shipping_zones z on z.id=mz.zone_id and z.tenant_id=p_tenant and z.enabled=true where mz.tenant_id=p_tenant and mz.method_id=m.id and (cardinality(z.countries)=0 or country=any(z.countries)) and (cardinality(z.regions)=0 or region=any(z.regions)) and (cardinality(z.postal_prefixes)=0 or exists(select 1 from unnest(z.postal_prefixes) pref where postal like upper(pref)||'%'))) into zone_ok;
    else zone_ok:=true;end if;
@@ -33,9 +33,9 @@ begin
    else price:=m.base_price;end if;
    if (s.free_shipping_threshold is not null and subtotal>=s.free_shipping_threshold) or (m.free_over is not null and subtotal>=m.free_over) then price:=0;end if;
    price:=greatest(0,round(price,4));
-   out_methods:=out_methods||jsonb_build_array(jsonb_build_object('id',m.id,'code',m.code,'name_fa',m.name_fa,'name_en',m.name_en,'price',price,'currency',currency,'estimated_min_days',m.estimated_min_days,'estimated_max_days',m.estimated_max_days));
+   out_methods:=out_methods||jsonb_build_array(jsonb_build_object('id',m.id,'code',m.code,'name_fa',m.name_fa,'name_en',m.name_en,'price',price,'currency',v_currency,'estimated_min_days',m.estimated_min_days,'estimated_max_days',m.estimated_max_days));
  end loop;
- return jsonb_build_object('enabled',true,'currency',currency,'subtotal',subtotal,'destination',jsonb_build_object('country',country,'region',region,'postal_code',postal),'weight_grams',case when weight_complete then grams else null end,'methods',out_methods);
+ return jsonb_build_object('enabled',true,'currency',v_currency,'subtotal',subtotal,'destination',jsonb_build_object('country',country,'region',region,'postal_code',postal),'weight_grams',case when weight_complete then grams else null end,'methods',out_methods);
 end$$;
 revoke all on function public.shipping_quote(uuid,jsonb,jsonb) from public,anon,authenticated;
 grant execute on function public.shipping_quote(uuid,jsonb,jsonb) to service_role;
@@ -59,7 +59,6 @@ begin
  else
    update public.orders set shipping_total=case when shipping_enabled then ship else 0 end,metadata=coalesce(metadata,'{}'::jsonb)||jsonb_build_object('shipping_evaluated',true,'shipping_enabled',shipping_enabled,'shipping_method_id',case when shipping_enabled then p_shipping_method::text else null end,'shipping_quote',case when shipping_enabled then chosen else null end),updated_at=now() where id=v_order and tenant_id=p_tenant returning * into o;
  end if;
- -- Recalculate tax after the trusted shipping amount is committed.
  select * into t from public.tax_settings where tenant_id=p_tenant;
  if found and t.enabled and t.rate>0 then
    tax_base:=greatest(0,(o.subtotal-o.discount_total)+case when t.apply_to_shipping then o.shipping_total else 0 end);
