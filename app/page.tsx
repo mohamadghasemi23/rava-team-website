@@ -29,7 +29,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {sections.map(([kicker, title], index) => <section className="section" id={index===0?'services':index===1?'works':'about'} key={kicker}><div className="container"><span className="kicker">{kicker}</span><h2>{title}</h2><div className="placeholder-grid"><article/><article/><article/></div></div></section>)}
+      {sections.map(([kicker, title], index) => <section className="section" id={index===0?'services':index===1?'works':'about'} key={kicker}><div className="container"><span className="kicker">{kicker}</span><h2>{title}</h2><div className={index===1?'portfolio-grid':'placeholder-grid'}>{[0,1,2,3].slice(0,index===1?4:3).map(i=><article className={index===1?'portfolio-card':undefined} key={i}/>)}</div></div></section>)}
 
       <section className="section" id="contact"><div className="container cta"><span className="kicker">START A PROJECT</span><h2>Ready to be seen?</h2><p>فرم Lead در فاز بعدی مستقیماً به دیتابیس و Inbox پنل متصل می‌شود.</p></div></section>
     </main>
