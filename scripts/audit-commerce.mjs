@@ -16,8 +16,16 @@ if(!all.includes('grant execute on function public.create_storefront_order(uuid,
 if(!all.includes('create_storefront_order_v2'))fail.push('Idempotent checkout V2 RPC missing');
 if(!all.includes('checkout_order_requests'))fail.push('Checkout request idempotency ledger missing');
 if(!all.includes('grant execute on function public.create_storefront_order_v2(uuid,jsonb,jsonb,text,uuid) to service_role'))fail.push('Checkout V2 RPC must be explicitly granted to service_role');
-if(!checkout.includes("rpc('create_storefront_order_v2'"))fail.push('Storefront route must call idempotent checkout V2');
+if(!all.includes('create_storefront_order_v3'))fail.push('Promotion-aware checkout V3 RPC missing');
+if(!all.includes('promotion_redemptions'))fail.push('Promotion redemption ledger missing');
+if(!all.includes("for update\n loop")&&!all.includes('for update\r\n loop'))fail.push('Promotion usage must retain row locking for concurrency safety');
+if(!all.includes('coupon_not_eligible'))fail.push('Invalid/ineligible coupon rejection missing');
+if(!all.includes('promotion_evaluated'))fail.push('Promotion evaluation idempotency marker missing');
+if(!all.includes('grant execute on function public.create_storefront_order_v3(uuid,jsonb,jsonb,text,uuid,text) to service_role'))fail.push('Checkout V3 RPC must be service-role only');
+if(!checkout.includes("rpc('create_storefront_order_v3'"))fail.push('Storefront route must call promotion-aware checkout V3');
 if(!checkout.includes('p_request_key'))fail.push('Checkout route must forward request idempotency key');
+if(!checkout.includes('p_coupon_code'))fail.push('Checkout route must pass coupon only to trusted server RPC');
+if(checkout.includes('discount_total:')||checkout.includes('grand_total:'))fail.push('Browser-provided checkout totals must never be forwarded');
 if(!checkoutUi.includes('crypto.randomUUID()'))fail.push('Checkout UI must generate a stable request key per submission attempt');
 if(!all.includes('variant_id uuid references public.product_variants'))fail.push('Inventory Pro must remain variant-aware');
 if(!all.includes('inventory_pro_variant_summary'))fail.push('Variant-level Inventory Pro summary missing');
