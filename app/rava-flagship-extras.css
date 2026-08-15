@@ -1,0 +1,17 @@
+[data-theme="rava-creative-noir"] .rava-mobile-menu{display:none;position:relative;margin-inline-start:auto}
+[data-theme="rava-creative-noir"] .rava-mobile-menu summary{list-style:none;width:44px;height:44px;border:1px solid rgba(255,255,255,.12);border-radius:14px;display:grid;place-content:center;gap:6px;cursor:pointer;background:rgba(255,255,255,.025)}
+[data-theme="rava-creative-noir"] .rava-mobile-menu summary::-webkit-details-marker{display:none}
+[data-theme="rava-creative-noir"] .rava-mobile-menu summary span{width:18px;height:1px;background:var(--text);display:block;transition:transform .2s ease}
+[data-theme="rava-creative-noir"] .rava-mobile-menu[open] summary span:first-child{transform:translateY(3.5px) rotate(45deg)}
+[data-theme="rava-creative-noir"] .rava-mobile-menu[open] summary span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+[data-theme="rava-creative-noir"] .rava-mobile-panel{position:absolute;top:54px;left:0;width:min(86vw,340px);padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:22px;background:rgba(7,9,13,.96);backdrop-filter:blur(24px);box-shadow:0 30px 90px rgba(0,0,0,.55);display:grid;gap:4px}
+[data-theme="rava-creative-noir"] .rava-mobile-panel>a:not(.button){display:flex;justify-content:space-between;align-items:center;padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.07);font-size:18px}
+[data-theme="rava-creative-noir"] .rava-mobile-panel>a small{font:600 9px/1 var(--font-en,Arial);letter-spacing:.14em;color:var(--muted)}
+[data-theme="rava-creative-noir"] .rava-mobile-panel .button{margin-top:10px}
+[data-theme="rava-creative-noir"] .rava-footer-meta{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:24px;padding:28px 0 34px;border-top:1px solid rgba(255,255,255,.08)}
+[data-theme="rava-creative-noir"] .rava-footer-meta>div{display:grid;align-content:start;gap:8px;min-height:92px}
+[data-theme="rava-creative-noir"] .rava-footer-meta a,[data-theme="rava-creative-noir"] .rava-footer-meta span:not(.rava-footer-label){color:var(--muted);font-size:12px;line-height:1.8}
+[data-theme="rava-creative-noir"] .rava-footer-meta a{color:var(--text)}
+[data-theme="rava-creative-noir"] .rava-footer-label{font:600 9px/1 var(--font-en,Arial);letter-spacing:.18em;color:var(--primary);margin-bottom:4px}
+@media(max-width:900px){[data-theme="rava-creative-noir"] .desktop-start{display:none}[data-theme="rava-creative-noir"] .rava-mobile-menu{display:block}[data-theme="rava-creative-noir"] .rava-footer-meta{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){[data-theme="rava-creative-noir"] .rava-footer-meta{grid-template-columns:1fr;gap:16px}[data-theme="rava-creative-noir"] .rava-footer-meta>div{min-height:0;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.06)}}
