@@ -12,7 +12,10 @@ if(!orchestrator.includes('assertGatewayCompatible'))fail.push('Gateway currency
 if(!orchestrator.includes("has_entitlement")||!orchestrator.includes("commerce.core"))fail.push('Server-side commerce entitlement gate missing in payment orchestration');
 if(!all.includes('order_inventory_reservations'))fail.push('Atomic checkout inventory reservation foundation missing');
 if(!all.includes('revoke all on function public.create_storefront_order(uuid,jsonb,jsonb,text) from anon'))fail.push('Direct anonymous checkout RPC execution must remain revoked');
+if(!all.includes('grant execute on function public.create_storefront_order(uuid,jsonb,jsonb,text) to service_role'))fail.push('Checkout RPC must be explicitly granted to service_role');
+if(!all.includes('grant execute on function public.commit_verified_payment(uuid,text,text,timestamptz) to service_role'))fail.push('Payment commit RPC must be explicitly granted to service_role');
 if(!checkout.includes('createServiceClient'))fail.push('Storefront checkout writes must cross the trusted service boundary');
 if(!checkout.includes("'Cache-Control':'no-store'"))fail.push('Checkout responses must remain non-cacheable');
 if(!all.includes('payment.verified_inventory_exception'))fail.push('Verified-payment inventory exception reconciliation missing');
+for(const c of['product_variants_same_tenant_product_fk','cart_items_same_tenant_variant_fk','payment_transactions_same_tenant_order_fk','order_inventory_reservations_same_tenant_order_fk'])if(!all.includes(c))fail.push(`Cross-tenant integrity constraint missing: ${c}`);
 if(fail.length){console.error('\nRAVA Commerce Audit FAILED\n- '+fail.join('\n- '));process.exit(1)}console.log(`RAVA Commerce Audit OK · ${files.length} migrations checked`);
