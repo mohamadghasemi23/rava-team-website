@@ -1,7 +1,7 @@
 import fs from'node:fs';import path from'node:path';
 const root=process.cwd(),read=p=>fs.readFileSync(path.join(root,p),'utf8'),fail=[];const migrationDir=path.join(root,'supabase/migrations'),files=fs.readdirSync(migrationDir).filter(x=>x.endsWith('.sql')).sort();
 const prefixes=new Map();for(const f of files){const p=f.match(/^(\d{14})/i)?.[1];if(!p)continue;if(prefixes.has(p))fail.push(`Duplicate migration timestamp ${p}: ${prefixes.get(p)}, ${f}`);else prefixes.set(p,f)}
-const all=files.map(f=>read(`supabase/migrations/${f}`)).join('\n');const orchestrator=read('lib/commerce/payment-orchestrator.ts'),payments=read('lib/commerce/payments.ts'),checkout=read('app/api/storefront/checkout/route.ts'),checkoutUi=read('app/checkout/CheckoutForm.tsx');
+const all=files.map(f=>read(`supabase/migrations/${f}`)).join('\n');const orchestrator=read('lib/commerce/payment-orchestrator.ts'),payments=read('lib/commerce/payments.ts'),checkout=read('app/api/storefront/checkout/route.ts'),checkoutUi=read('app/checkout/CheckoutForm.tsx'),checkoutActions=read('app/admin/commerce/checkout/actions.ts');
 for(const key of['commerce.core','inventory.pro','procurement.pro','shipping.pro'])if(!all.includes(`'${key}'`))fail.push(`Missing commercial entitlement catalog key: ${key}`);
 if(!all.includes('payment_transactions_status_check'))fail.push('Payment legacy/new status reconciliation migration missing');
 if(!all.includes('numeric(20,4)'))fail.push('Global exact payment decimal schema missing');
@@ -35,6 +35,12 @@ if(!checkout.includes('p_shipping_method'))fail.push('Selected shipping method m
 if(checkout.includes('discount_total:')||checkout.includes('grand_total:')||checkout.includes('tax_total:')||checkout.includes('shipping_total:'))fail.push('Browser-provided checkout totals must never be forwarded');
 if(!checkoutUi.includes('shippingMethodId:selectedShipping'))fail.push('Checkout UI must send only a shipping method identifier, never a trusted shipping price');
 if(!checkoutUi.includes('crypto.randomUUID()'))fail.push('Checkout UI must generate a stable request key per submission attempt');
+if(!all.includes('commerce_config_revisions')||!all.includes('capture_commerce_config_revision'))fail.push('Mutable commerce configuration history/audit foundation missing');
+for(const trg of['tax_settings_revision','shipping_settings_revision','shipping_methods_revision','promotions_revision'])if(!all.includes(trg))fail.push(`Commercial configuration revision trigger missing: ${trg}`);
+if(!checkoutActions.includes('updateShippingMethod'))fail.push('Shipping commercial values must remain editable from admin');
+if(!checkoutActions.includes("enabled:f.get('enabled')==='on'"))fail.push('Shipping method enable/disable control missing');
+if(!checkoutActions.includes('saveTaxSettings')||!checkoutActions.includes('rate=Number'))fail.push('Tax rate must remain admin-configurable');
+if(!checkoutActions.includes('free_shipping_threshold')||!checkoutActions.includes('price_per_kg'))fail.push('Shipping thresholds/rates must remain admin-configurable');
 if(!all.includes('variant_id uuid references public.product_variants'))fail.push('Inventory Pro must remain variant-aware');
 if(!all.includes('inventory_pro_variant_summary'))fail.push('Variant-level Inventory Pro summary missing');
 if(!all.includes('grant execute on function public.commit_verified_payment(uuid,text,text,timestamptz) to service_role'))fail.push('Payment commit RPC must be explicitly granted to service_role');
