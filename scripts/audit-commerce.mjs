@@ -1,7 +1,7 @@
 import fs from'node:fs';import path from'node:path';
 const root=process.cwd(),read=p=>fs.readFileSync(path.join(root,p),'utf8'),fail=[];const migrationDir=path.join(root,'supabase/migrations'),files=fs.readdirSync(migrationDir).filter(x=>x.endsWith('.sql')).sort();
 const prefixes=new Map();for(const f of files){const p=f.match(/^(\d{14})/i)?.[1];if(!p)continue;if(prefixes.has(p))fail.push(`Duplicate migration timestamp ${p}: ${prefixes.get(p)}, ${f}`);else prefixes.set(p,f)}
-const all=files.map(f=>read(`supabase/migrations/${f}`)).join('\n');const orchestrator=read('lib/commerce/payment-orchestrator.ts'),payments=read('lib/commerce/payments.ts'),checkout=read('app/api/storefront/checkout/route.ts'),checkoutUi=read('app/checkout/CheckoutForm.tsx'),checkoutActions=read('app/admin/commerce/checkout/actions.ts');
+const all=files.map(f=>read(`supabase/migrations/${f}`)).join('\n');const orchestrator=read('lib/commerce/payment-orchestrator.ts'),payments=read('lib/commerce/payments.ts'),checkout=read('app/api/storefront/checkout/route.ts'),checkoutUi=read('app/checkout/CheckoutForm.tsx'),checkoutActions=read('app/admin/commerce/checkout/actions.ts'),orderActions=read('app/admin/commerce/orders/actions.ts'),orderUi=read('app/admin/commerce/orders/page.tsx');
 for(const key of['commerce.core','inventory.pro','procurement.pro','shipping.pro'])if(!all.includes(`'${key}'`))fail.push(`Missing commercial entitlement catalog key: ${key}`);
 if(!all.includes('payment_transactions_status_check'))fail.push('Payment legacy/new status reconciliation migration missing');
 if(!all.includes('numeric(20,4)'))fail.push('Global exact payment decimal schema missing');
@@ -41,6 +41,9 @@ if(!checkoutActions.includes('updateShippingMethod'))fail.push('Shipping commerc
 if(!checkoutActions.includes("enabled:f.get('enabled')==='on'"))fail.push('Shipping method enable/disable control missing');
 if(!checkoutActions.includes('saveTaxSettings')||!checkoutActions.includes('rate=Number'))fail.push('Tax rate must remain admin-configurable');
 if(!checkoutActions.includes('free_shipping_threshold')||!checkoutActions.includes('price_per_kg'))fail.push('Shipping thresholds/rates must remain admin-configurable');
+if(!all.includes('order_manual_overrides')||!all.includes('manual_override_order_state')||!all.includes('manual_override_payment_status'))fail.push('Auditable manual order override foundation missing');
+if(!orderActions.includes('manualOverrideOrder')||!orderActions.includes('manualOverridePayment')||!orderActions.includes('updateShipment')||!orderActions.includes('updateReturn'))fail.push('Manual order/shipment/return admin controls missing');
+if(!orderUi.includes('دلیل اجباری Override')||!orderUi.includes('Override دستی وضعیت پرداخت'))fail.push('Manual overrides must require visible reason/audit UX');
 if(!all.includes('variant_id uuid references public.product_variants'))fail.push('Inventory Pro must remain variant-aware');
 if(!all.includes('inventory_pro_variant_summary'))fail.push('Variant-level Inventory Pro summary missing');
 if(!all.includes('grant execute on function public.commit_verified_payment(uuid,text,text,timestamptz) to service_role'))fail.push('Payment commit RPC must be explicitly granted to service_role');
