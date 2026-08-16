@@ -1,0 +1,1 @@
+import'./customer-auth.css';import AuthForms from'./AuthForms';export const metadata={title:'حساب مشتری | Customer Account',robots:{index:false,follow:false}};export default function CustomerAuthPage(){return <AuthForms/>}
