@@ -1,0 +1,12 @@
+import fs from'node:fs';import path from'node:path';const root=process.cwd(),read=p=>fs.readFileSync(path.join(root,p),'utf8'),fail=[];const migrations=fs.readdirSync(path.join(root,'supabase/migrations')).filter(x=>x.endsWith('.sql')).map(x=>read(`supabase/migrations/${x}`)).join('\n');const service=read('lib/commerce/customer-account.ts'),checkout=read('app/api/storefront/checkout/route.ts'),account=read('app/account/page.tsx'),detail=read('app/account/orders/[id]/page.tsx'),actions=read('app/account/actions.ts'),help=read('lib/admin/help-registry.ts');
+for(const x of['customer_profiles','customer_addresses','account_customer_id','customer_order_history','customer_order_detail','request_customer_return','ensure_customer_profile','attach_order_to_customer'])if(!migrations.includes(x))fail.push(`Customer portal foundation missing: ${x}`);
+if(!migrations.includes('security definer')||!migrations.includes("auth.uid() is null"))fail.push('Customer order RPCs must enforce authenticated server-side ownership');
+if(!migrations.includes("account_customer_id=cid"))fail.push('Customer order access must use authenticated account_customer_id, not legacy customer_id');
+if(!service.includes("rpc('customer_order_detail'"))fail.push('Customer order detail must use narrow RPC, not direct orders query');
+if(service.includes("from('orders')"))fail.push('Customer account service must not directly query orders table');
+if(!checkout.includes("rpc('attach_order_to_customer'"))fail.push('Authenticated checkout orders must attach to the customer account');
+if(!checkout.includes("rpc('ensure_customer_profile'"))fail.push('Authenticated checkout must bootstrap/update customer profile');
+if(!actions.includes("rpc('request_customer_return'"))fail.push('Customer return requests must use ownership-checked RPC');
+if(!account.includes('/account/orders/')||!detail.includes('رهگیری مرسوله')||!detail.includes('ثبت درخواست مرجوعی'))fail.push('Customer post-purchase UX is incomplete');
+for(const k of['customers.account','customers.addresses','customers.order_history'])if(!help.includes(`'${k}'`))fail.push(`Customer help registry key missing: ${k}`);
+if(fail.length){console.error('\nRAVA Customer Portal Audit FAILED\n- '+fail.join('\n- '));process.exit(1)}console.log('RAVA Customer Portal Audit OK');
