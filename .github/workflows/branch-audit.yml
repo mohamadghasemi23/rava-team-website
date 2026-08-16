@@ -26,6 +26,8 @@ jobs:
         run: npm ci --no-audit --no-fund
       - name: Commerce architecture audit
         run: npm run audit:commerce
+      - name: Customer portal security audit
+        run: node scripts/audit-customer-portal.mjs
       - name: TypeScript audit
         run: npx tsc --noEmit
       - name: Production build audit
