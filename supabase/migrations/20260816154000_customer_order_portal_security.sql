@@ -1,0 +1,44 @@
+-- Customer order portal: expose only owned, tenant-scoped order data through narrow SECURITY DEFINER RPCs.
+drop function if exists public.customer_order_history(uuid);
+create or replace function public.customer_order_history(p_tenant uuid) returns jsonb language plpgsql security definer set search_path=public as $$
+declare cid uuid;result jsonb;
+begin
+ if auth.uid() is null then raise exception 'authentication_required';end if;
+ select id into cid from public.customer_profiles where tenant_id=p_tenant and user_id=auth.uid();if cid is null then return '[]'::jsonb;end if;
+ select coalesce(jsonb_agg(jsonb_build_object('id',o.id,'order_number',o.order_number,'status',o.status,'fulfillment_status',o.fulfillment_status,'payment_status',o.payment_status,'grand_total',o.grand_total,'currency',o.currency,'created_at',o.created_at,'updated_at',o.updated_at) order by o.created_at desc),'[]'::jsonb) into result from public.orders o where o.tenant_id=p_tenant and o.customer_id=cid;
+ return result;
+end$$;
+revoke all on function public.customer_order_history(uuid) from public,anon;grant execute on function public.customer_order_history(uuid) to authenticated;
+
+create or replace function public.customer_order_detail(p_tenant uuid,p_order uuid) returns jsonb language plpgsql security definer set search_path=public as $$
+declare cid uuid;o public.orders;result jsonb;
+begin
+ if auth.uid() is null then raise exception 'authentication_required';end if;
+ select id into cid from public.customer_profiles where tenant_id=p_tenant and user_id=auth.uid();if cid is null then raise exception 'customer_profile_not_found';end if;
+ select * into o from public.orders where id=p_order and tenant_id=p_tenant and customer_id=cid;if not found then raise exception 'order_not_found';end if;
+ select jsonb_build_object(
+ 'id',o.id,'order_number',o.order_number,'status',o.status,'fulfillment_status',o.fulfillment_status,'payment_status',o.payment_status,'subtotal',o.subtotal,'discount_total',o.discount_total,'shipping_total',o.shipping_total,'tax_total',o.tax_total,'grand_total',o.grand_total,'currency',o.currency,'shipping_address',o.shipping_address,'created_at',o.created_at,'updated_at',o.updated_at,
+ 'items',(select coalesce(jsonb_agg(jsonb_build_object('id',i.id,'title',i.title,'sku',i.sku,'quantity',i.quantity,'unit_price',i.unit_price,'line_total',i.line_total) order by i.id),'[]'::jsonb) from public.order_items i where i.order_id=o.id and i.tenant_id=o.tenant_id),
+ 'shipments',(select coalesce(jsonb_agg(jsonb_build_object('id',s.id,'carrier',s.carrier,'tracking_code',s.tracking_code,'tracking_url',s.tracking_url,'status',s.status,'shipped_at',s.shipped_at,'delivered_at',s.delivered_at,'created_at',s.created_at) order by s.created_at),'[]'::jsonb) from public.order_shipments s where s.order_id=o.id and s.tenant_id=o.tenant_id),
+ 'returns',(select coalesce(jsonb_agg(jsonb_build_object('id',r.id,'status',r.status,'reason',r.reason,'refund_amount',r.refund_amount,'currency',r.currency,'created_at',r.created_at,'updated_at',r.updated_at) order by r.created_at desc),'[]'::jsonb) from public.order_returns r where r.order_id=o.id and r.tenant_id=o.tenant_id),
+ 'refunds',(select coalesce(jsonb_agg(jsonb_build_object('id',r.id,'status',r.status,'amount',r.amount,'currency',r.currency,'provider_key',r.provider_key,'processed_at',r.processed_at,'created_at',r.created_at) order by r.created_at desc),'[]'::jsonb) from public.order_refunds r where r.order_id=o.id and r.tenant_id=o.tenant_id),
+ 'timeline',(select coalesce(jsonb_agg(jsonb_build_object('to_status',h.to_status,'to_fulfillment_status',h.to_fulfillment_status,'note',h.note,'created_at',h.created_at) order by h.created_at),'[]'::jsonb) from public.order_status_history h where h.order_id=o.id and h.tenant_id=o.tenant_id)
+ ) into result;
+ return result;
+end$$;
+revoke all on function public.customer_order_detail(uuid,uuid) from public,anon;grant execute on function public.customer_order_detail(uuid,uuid) to authenticated;
+
+create or replace function public.request_customer_return(p_tenant uuid,p_order uuid,p_reason text) returns uuid language plpgsql security definer set search_path=public as $$
+declare cid uuid;o public.orders;rid uuid:=gen_random_uuid();
+begin
+ if auth.uid() is null then raise exception 'authentication_required';end if;
+ if length(trim(coalesce(p_reason,'')))<5 then raise exception 'reason_required';end if;
+ select id into cid from public.customer_profiles where tenant_id=p_tenant and user_id=auth.uid();if cid is null then raise exception 'customer_profile_not_found';end if;
+ select * into o from public.orders where id=p_order and tenant_id=p_tenant and customer_id=cid for update;if not found then raise exception 'order_not_found';end if;
+ if o.status='cancelled' then raise exception 'cancelled_order_return_unavailable';end if;
+ if exists(select 1 from public.order_returns where tenant_id=p_tenant and order_id=p_order and status in('requested','approved','received')) then raise exception 'active_return_exists';end if;
+ insert into public.order_returns(id,tenant_id,order_id,status,reason,currency,created_at,updated_at) values(rid,p_tenant,p_order,'requested',left(trim(p_reason),500),o.currency,now(),now());
+ insert into public.event_logs(tenant_id,category,event_name,summary_fa,metadata) values(p_tenant,'audit','commerce.return.customer_requested','مشتری درخواست مرجوعی ثبت کرد.',jsonb_build_object('order_id',p_order,'return_id',rid,'customer_id',cid));
+ return rid;
+end$$;
+revoke all on function public.request_customer_return(uuid,uuid,text) from public,anon;grant execute on function public.request_customer_return(uuid,uuid,text) to authenticated;
