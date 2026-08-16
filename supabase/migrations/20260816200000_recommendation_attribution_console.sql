@@ -34,6 +34,11 @@ returns integer language plpgsql security definer set search_path=public as $$de
 end$$;
 revoke all on function public.attribute_recommendation_purchase(uuid,uuid) from public,anon,authenticated;grant execute on function public.attribute_recommendation_purchase(uuid,uuid) to service_role;
 
+create or replace function public.trg_attribute_recommendation_purchase() returns trigger language plpgsql security definer set search_path=public as $$begin
+ if new.payment_status in('paid','partially_refunded') and old.payment_status is distinct from new.payment_status then perform public.attribute_recommendation_purchase(new.tenant_id,new.id);end if;return new;end$$;
+drop trigger if exists orders_recommendation_attribution on public.orders;
+create trigger orders_recommendation_attribution after update of payment_status on public.orders for each row execute function public.trg_attribute_recommendation_purchase();
+
 create or replace view public.recommendation_performance_summary with(security_invoker=true) as
 select e.tenant_id,e.recommended_product_id,p.name,p.slug,e.placement,e.kind,
  count(*) filter(where e.event_type='impression')::bigint impressions,
