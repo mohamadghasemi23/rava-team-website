@@ -34,7 +34,7 @@ returns integer language plpgsql security definer set search_path=public as $$de
 end$$;
 revoke all on function public.attribute_recommendation_purchase(uuid,uuid) from public,anon,authenticated;grant execute on function public.attribute_recommendation_purchase(uuid,uuid) to service_role;
 
-create or replace view public.recommendation_performance_summary as
+create or replace view public.recommendation_performance_summary with(security_invoker=true) as
 select e.tenant_id,e.recommended_product_id,p.name,p.slug,e.placement,e.kind,
  count(*) filter(where e.event_type='impression')::bigint impressions,
  count(*) filter(where e.event_type='click')::bigint clicks,
@@ -44,6 +44,7 @@ select e.tenant_id,e.recommended_product_id,p.name,p.slug,e.placement,e.kind,
  case when count(*) filter(where e.event_type='impression')>0 then round(100.0*count(*) filter(where e.event_type='add_to_cart')/count(*) filter(where e.event_type='impression'),2) else 0 end add_rate
 from public.recommendation_events e left join public.products p on p.id=e.recommended_product_id and p.tenant_id=e.tenant_id
 group by e.tenant_id,e.recommended_product_id,p.name,p.slug,e.placement,e.kind;
+revoke all on public.recommendation_performance_summary from anon;grant select on public.recommendation_performance_summary to authenticated;
 
 insert into public.admin_help_items(help_key,title_fa,body_fa,warning_fa,title_en,body_en,warning_en,active) values
 ('commerce.recommendations.console','مدیریت فروش مکمل','در این بخش می‌توان برای هر محصول، مکمل یا ارتقای دستی تعریف کرد و سپس نمایش، کلیک، افزودن به سبد و خرید منتسب‌شده را اندازه گرفت. اولویت بالاتر زودتر نمایش داده می‌شود.','رابطه‌های دستی باید واقعاً مرتبط باشند؛ پیشنهاد زیاد یا نامرتبط نرخ تبدیل را پایین می‌آورد.','Recommendation merchandising','Define manual cross-sell and upsell relationships, then measure impressions, clicks, add-to-cart events and attributed purchases. Higher priority rules rank first.','Keep manual recommendations relevant and restrained; excessive or unrelated suggestions reduce conversion.',true)
