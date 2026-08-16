@@ -47,10 +47,11 @@ end$$;
 revoke all on function public.reconcile_return_inventory(uuid,uuid,bigint,uuid,integer,integer,text,uuid) from public,anon;grant execute on function public.reconcile_return_inventory(uuid,uuid,bigint,uuid,integer,integer,text,uuid) to authenticated;
 
 create or replace function public.record_refund_reconciliation(p_tenant uuid,p_order uuid,p_return uuid,p_source text,p_status text,p_amount numeric,p_currency text,p_reference text,p_note text,p_actor uuid default null) returns uuid language plpgsql security definer set search_path=public as $$
-declare o public.orders;successful numeric(20,4);rid uuid:=gen_random_uuid();
+declare o public.orders;successful numeric(20,4);return_successful numeric(20,4);rid uuid:=gen_random_uuid();
 begin
  if not public.can_access_tenant(p_tenant,null) then raise exception 'forbidden';end if;
  if p_source not in('manual','gateway','external') or p_status not in('planned','requested','processing','succeeded','failed','cancelled') then raise exception 'invalid_refund_state';end if;
+ if p_source='gateway' and coalesce(auth.role(),'anon')<>'service_role' then raise exception 'gateway_refund_requires_trusted_service';end if;
  if p_amount is null or p_amount<=0 or length(trim(coalesce(p_note,'')))<3 then raise exception 'invalid_refund';end if;
  select * into o from public.orders where id=p_order and tenant_id=p_tenant for update;if o.id is null then raise exception 'order_not_found';end if;
  if upper(p_currency)<>upper(o.currency) then raise exception 'refund_currency_mismatch';end if;
@@ -61,7 +62,10 @@ begin
  if p_status='succeeded' then
   successful:=successful+p_amount;
   update public.orders set payment_status=case when successful>=grand_total then 'refunded' else 'partially_refunded' end,updated_at=now() where id=p_order;
-  if p_return is not null then update public.order_returns set status='refunded',refund_amount=successful,currency=o.currency,updated_at=now() where id=p_return;end if;
+  if p_return is not null then
+   select coalesce(sum(amount),0) into return_successful from public.order_refund_reconciliations where tenant_id=p_tenant and return_id=p_return and status='succeeded';
+   update public.order_returns set status='refunded',refund_amount=return_successful,currency=o.currency,updated_at=now() where id=p_return;
+  end if;
  end if;
  return rid;
 end$$;
