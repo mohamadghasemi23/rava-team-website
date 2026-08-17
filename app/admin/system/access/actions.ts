@@ -45,18 +45,11 @@ export async function createRoleAction(_state: AccessActionState, formData: Form
   const nameFa = String(formData.get('name_fa') ?? '').trim()
   const nameEn = String(formData.get('name_en') ?? '').trim()
   if (!/^[a-z0-9_.:-]{2,80}$/.test(key) || nameFa.length < 2 || nameEn.length < 2) return { ok:false, message:'کلید و نام نقش معتبر نیست.', nonce:Date.now() }
-
   const supabase = await createClient()
   const { error } = await supabase.rpc('create_custom_role', {
-    p_scope_type: scopeType,
-    p_key: key,
-    p_name_fa: nameFa,
-    p_name_en: nameEn,
-    p_description_fa: String(formData.get('description_fa') ?? '').trim(),
-    p_description_en: String(formData.get('description_en') ?? '').trim(),
-    p_organization_id: organizationId,
-    p_site_id: siteId,
-    p_permission_keys: permissionKeys,
+    p_scope_type: scopeType, p_key: key, p_name_fa: nameFa, p_name_en: nameEn,
+    p_description_fa: String(formData.get('description_fa') ?? '').trim(), p_description_en: String(formData.get('description_en') ?? '').trim(),
+    p_organization_id: organizationId, p_site_id: siteId, p_permission_keys: permissionKeys,
   })
   if (error) return failure(error, 'access.role.create_failed', 'ساخت نقش انجام نشد.', { scopeType, organizationId, siteId, key })
   revalidatePath('/admin/system/access')
@@ -72,6 +65,23 @@ export async function updateRolePermissionsAction(_state: AccessActionState, for
   if (error) return failure(error, 'access.role.permissions_failed', 'تغییر Permissionهای نقش انجام نشد.', { roleId })
   revalidatePath('/admin/system/access')
   return { ok:true, message:'Permissionهای نقش ذخیره شدند.', nonce:Date.now() }
+}
+
+export async function addExistingMemberAction(_state: AccessActionState, formData: FormData): Promise<AccessActionState> {
+  const userId = String(formData.get('user_id') ?? '')
+  const scopeType = scope(formData.get('scope_type'))
+  const organizationId = optionalUuid(formData.get('organization_id'))
+  const siteId = optionalUuid(formData.get('site_id'))
+  const roleIds = formData.getAll('role_ids').map(String).filter(Boolean)
+  const isOwner = String(formData.get('is_owner') ?? '') === 'true'
+  if (!userId) return { ok:false, message:'کاربر را انتخاب کنید.', nonce:Date.now() }
+  const supabase = await createClient()
+  const { error } = await supabase.rpc('add_existing_member', {
+    p_user_id: userId, p_scope_type: scopeType, p_organization_id: organizationId, p_site_id: siteId, p_role_ids: roleIds, p_is_owner: isOwner,
+  })
+  if (error) return failure(error, 'access.membership.add_failed', 'افزودن کاربر به Scope انجام نشد.', { userId, scopeType, organizationId, siteId })
+  revalidatePath('/admin/system/access')
+  return { ok:true, message:'کاربر با Roleهای انتخاب‌شده به Scope اضافه شد.', nonce:Date.now() }
 }
 
 export async function assignMembershipRolesAction(_state: AccessActionState, formData: FormData): Promise<AccessActionState> {
@@ -96,13 +106,8 @@ export async function setPermissionOverrideAction(_state: AccessActionState, for
   if (!userId || !permissionKey) return { ok:false, message:'کاربر و Permission الزامی هستند.', nonce:Date.now() }
   const supabase = await createClient()
   const { error } = await supabase.rpc('set_permission_override', {
-    p_user_id: userId,
-    p_permission_key: permissionKey,
-    p_effect: effect,
-    p_scope_type: scopeType,
-    p_organization_id: organizationId,
-    p_site_id: siteId,
-    p_reason: String(formData.get('reason') ?? '').trim() || null,
+    p_user_id: userId, p_permission_key: permissionKey, p_effect: effect, p_scope_type: scopeType,
+    p_organization_id: organizationId, p_site_id: siteId, p_reason: String(formData.get('reason') ?? '').trim() || null,
     p_expires_at: expiresText ? new Date(expiresText).toISOString() : null,
   })
   if (error) return failure(error, 'access.override.set_failed', 'ثبت دسترسی اختصاصی انجام نشد.', { userId, permissionKey, effect, scopeType })
@@ -129,12 +134,7 @@ export async function createInvitationAction(_state: AccessActionState, formData
   if (!/^\S+@\S+\.\S+$/.test(email)) return { ok:false, message:'ایمیل معتبر نیست.', nonce:Date.now() }
   const supabase = await createClient()
   const { error } = await supabase.rpc('create_access_invitation', {
-    p_email: email,
-    p_scope_type: scopeType,
-    p_organization_id: organizationId,
-    p_site_id: siteId,
-    p_role_ids: roleIds,
-    p_expires_at: null,
+    p_email: email, p_scope_type: scopeType, p_organization_id: organizationId, p_site_id: siteId, p_role_ids: roleIds, p_expires_at: null,
   })
   if (error) return failure(error, 'access.invitation.create_failed', 'ثبت دعوت‌نامه انجام نشد.', { email, scopeType, organizationId, siteId })
   revalidatePath('/admin/system/access')
