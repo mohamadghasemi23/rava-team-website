@@ -63,10 +63,10 @@ const copy = {
   },
 }
 
-function itemMatches(item: NavItem, query: string) {
+function itemMatches(item: NavItem, query: string): boolean {
   if (!query) return true
   const haystack = [item.label.fa, item.label.en, ...item.keywords].join(' ').toLowerCase()
-  return haystack.includes(query.toLowerCase()) || item.children?.some((child) => itemMatches(child, query))
+  return haystack.includes(query.toLowerCase()) || Boolean(item.children?.some((child): boolean => itemMatches(child, query)))
 }
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {
