@@ -13,6 +13,7 @@ export type PlatformModule = {
 export const PLATFORM_MODULES = [
   { key: 'cms', name: { fa: 'مدیریت محتوا', en: 'CMS' }, category: 'content', core: true, commercialTier: 'core', status: 'active' },
   { key: 'media', name: { fa: 'رسانه', en: 'Media' }, category: 'content', core: true, commercialTier: 'core', status: 'active' },
+  { key: 'design', name: { fa: 'طراحی و قالب', en: 'Design & Theme' }, category: 'content', core: true, commercialTier: 'core', status: 'active' },
   { key: 'seo_core', name: { fa: 'سئوی پایه', en: 'SEO Core' }, category: 'growth', core: true, commercialTier: 'core', status: 'active' },
   { key: 'analytics_core', name: { fa: 'آمار پایه', en: 'Analytics Core' }, category: 'analytics', core: true, commercialTier: 'core', status: 'active' },
   { key: 'security', name: { fa: 'امنیت', en: 'Security' }, category: 'platform', core: true, commercialTier: 'core', status: 'active' },
