@@ -62,7 +62,7 @@ create or replace function public.customer_next_best_action(p_tenant uuid)
 returns jsonb language plpgsql security definer set search_path=public as $$
 declare
  u uuid:=auth.uid();cp public.customer_profiles;cfg public.next_best_action_settings;
- recent public.next_best_action_decisions;cart_row public.carts;promo public.promotions;rec record;
+ recent public.next_best_action_decisions;cart_row public.carts;promo public.promotions;rec record;source_product uuid;
  best_type text:='none';best_entity_type text;best_entity uuid;best_score numeric:=0;best_reason text:='فعلاً اقدام مفیدی لازم نیست';best_payload jsonb:='{}'::jsonb;
  marketing_allowed boolean:=false;marketing_count integer:=0;decision_id uuid;
 begin
@@ -71,17 +71,13 @@ begin
  if not found then raise exception 'customer_profile_required';end if;
  if not public.has_entitlement(p_tenant,'commerce.core') then raise exception 'commerce_core_required';end if;
  cfg:=public.next_best_action_settings_for(p_tenant);
- if not cfg.enabled then
-  return jsonb_build_object('action','none','reason','موتور اقدام بعدی برای این فروشگاه غیرفعال است');
- end if;
+ if not cfg.enabled then return jsonb_build_object('action','none','reason','موتور اقدام بعدی برای این فروشگاه غیرفعال است');end if;
 
- -- Avoid constantly changing/nagging the customer. Reuse a recent live decision.
+ -- Do not nag: keep a recent live decision stable for the configured cooldown.
  select * into recent from public.next_best_action_decisions
  where tenant_id=p_tenant and user_id=u and decided_at>now()-make_interval(mins=>cfg.decision_cooldown_minutes)
    and status in('proposed','shown') order by decided_at desc limit 1;
- if found then
-  return jsonb_build_object('decision_id',recent.id,'action',recent.action_type,'score',recent.score,'reason',recent.reason,'payload',recent.payload,'reused',true);
- end if;
+ if found then return jsonb_build_object('decision_id',recent.id,'action',recent.action_type,'score',recent.score,'reason',recent.reason,'payload',recent.payload,'reused',true);end if;
 
  select coalesce(marketing_email,false) or coalesce(marketing_sms,false) or coalesce(marketing_whatsapp,false) or coalesce(marketing_push,false)
  into marketing_allowed from public.customer_notification_preferences where tenant_id=p_tenant and user_id=u;
@@ -89,7 +85,7 @@ begin
  select count(*) into marketing_count from public.next_best_action_decisions
  where tenant_id=p_tenant and user_id=u and action_type in('promotion','continue_cart') and status in('shown','acted','converted') and decided_at>=now()-interval '7 days';
 
- -- Candidate 1: an abandoned cart. NBA only identifies it; existing Cart Recovery Pro remains the only outbound sender.
+ -- Candidate 1: abandoned cart. NBA identifies it; Cart Recovery Pro remains the only outbound sender.
  select * into cart_row from public.carts c where c.tenant_id=p_tenant and c.user_id=u and c.status='open' and c.abandoned_at is not null
    and exists(select 1 from public.cart_items ci where ci.tenant_id=p_tenant and ci.cart_id=c.id and ci.state='cart')
  order by c.abandoned_at desc limit 1;
@@ -114,19 +110,24 @@ begin
   best_payload:=jsonb_build_object('name',promo.name,'kind',promo.kind,'value',promo.value,'currency',promo.currency,'automatic',true);
  end if;
 
- -- Candidate 3: privacy-safe personalized recommendation. This is an on-site action and does not require marketing consent.
- select * into rec from public.personalized_product_recommendation_candidates(p_tenant,array[]::uuid[],'cross_sell',1);
- -- The candidate function needs source products, so use the strongest recent intent/view as the source.
- if not found then
-  select r.* into rec from (
-   select c.product_id from public.customer_product_intent_scores(p_tenant) c order by c.score desc limit 1
-  ) src cross join lateral public.personalized_product_recommendation_candidates(p_tenant,array[src.product_id],'cross_sell',1) r;
- end if;
- if found and cfg.recommendation_weight>best_score then
-  best_type:='recommend_product';best_entity_type:='product';best_entity:=rec.product_id;best_score:=cfg.recommendation_weight;
-  best_reason:=coalesce(rec.reason,'پیشنهاد متناسب با علاقه اخیر شما');
-  select jsonb_build_object('product_id',p.id,'slug',p.slug,'name',p.name) into best_payload from public.products p where p.tenant_id=p_tenant and p.id=rec.product_id and p.status='active';
-  if best_payload is null then best_type:='none';best_entity_type:=null;best_entity:=null;best_score:=0;best_reason:='فعلاً اقدام مفیدی لازم نیست';best_payload:='{}'::jsonb;end if;
+ -- Candidate 3: choose the strongest recent product signal, then ask the existing privacy-safe recommender for the next item.
+ select z.product_id into source_product from(
+  select e.product_id,
+   sum((case e.event_type when 'add_to_cart' then 4 when 'variant_interest' then 2.5 when 'image_engagement' then 1.5 else 1 end)*e.strength*greatest(.15,1-(extract(epoch from(now()-e.created_at))/86400.0/60.0)))::numeric signal,
+   max(e.created_at) last_at
+  from public.customer_product_intent_events e where e.tenant_id=p_tenant and e.user_id=u and e.created_at>=now()-interval '120 days' group by e.product_id
+  union all
+  select v.product_id,least(v.view_count,10)::numeric*.75 signal,v.last_viewed_at last_at
+  from public.customer_product_views v where v.tenant_id=p_tenant and v.user_id=u and v.last_viewed_at>=now()-interval '120 days'
+ )z group by z.product_id order by sum(z.signal) desc,max(z.last_at) desc limit 1;
+ if source_product is not null then
+  select r.* into rec from public.personalized_product_recommendation_candidates(p_tenant,array[source_product],'cross_sell',1) r;
+  if found and cfg.recommendation_weight>best_score then
+   best_type:='recommend_product';best_entity_type:='product';best_entity:=rec.product_id;best_score:=cfg.recommendation_weight;
+   best_reason:=coalesce(rec.reason,'پیشنهاد متناسب با علاقه اخیر شما');
+   select jsonb_build_object('product_id',p.id,'slug',p.slug,'name',p.name) into best_payload from public.products p where p.tenant_id=p_tenant and p.id=rec.product_id and p.status='active';
+   if best_payload is null then best_type:='none';best_entity_type:=null;best_entity:=null;best_score:=0;best_reason:='فعلاً اقدام مفیدی لازم نیست';best_payload:='{}'::jsonb;end if;
+  end if;
  end if;
 
  if best_score<cfg.min_score then best_type:='none';best_entity_type:=null;best_entity:=null;best_reason:='برای جلوگیری از مزاحمت، فعلاً اقدامی پیشنهاد نمی‌شود';best_payload:='{}'::jsonb;end if;
@@ -145,7 +146,7 @@ begin
  if p_event not in('shown','acted','dismissed') then raise exception 'invalid_event';end if;
  if not exists(select 1 from public.next_best_action_decisions where id=p_decision and tenant_id=p_tenant and user_id=auth.uid()) then raise exception 'decision_not_found';end if;
  update public.next_best_action_decisions set
-  status=case p_event when 'shown' then case when status='proposed' then 'shown' else status end when 'acted' then 'acted' when 'dismissed' then 'dismissed' end,
+  status=case p_event when 'shown' then case when status='proposed' then 'shown' else status end when 'acted' then case when status in('proposed','shown') then 'acted' else status end when 'dismissed' then case when status in('proposed','shown') then 'dismissed' else status end end,
   shown_at=case when p_event='shown' then coalesce(shown_at,now()) else shown_at end,
   acted_at=case when p_event='acted' then coalesce(acted_at,now()) else acted_at end,updated_at=now()
  where id=p_decision and tenant_id=p_tenant and user_id=auth.uid();
