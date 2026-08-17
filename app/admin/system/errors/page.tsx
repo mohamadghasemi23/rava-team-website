@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PERMISSIONS, requireAnyPermission } from '@/lib/authz/permissions'
+import { oneOf, sanitizePostgrestSearchTerm } from '@/lib/platform/postgrest-search'
 
 const PAGE_SIZE = 40
+const SEVERITIES = ['warning','error','critical'] as const
+const STATUSES = ['open','investigating','resolved','ignored'] as const
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -24,10 +27,10 @@ function paramsFor(current: URLSearchParams, page: number) {
 export default async function ErrorsPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
   await requireAnyPermission([PERMISSIONS.PLATFORM_AUDIT_VIEW, PERMISSIONS.ERRORS_VIEW])
   const params = (await searchParams) ?? {}
-  const q = one(params.q).trim()
-  const severity = one(params.severity)
-  const category = one(params.category).trim()
-  const status = one(params.status)
+  const q = sanitizePostgrestSearchTerm(one(params.q))
+  const severity = oneOf(one(params.severity), SEVERITIES)
+  const category = sanitizePostgrestSearchTerm(one(params.category), 80)
+  const status = oneOf(one(params.status), STATUSES)
   const page = pageNumber(one(params.page))
   const offset = (page - 1) * PAGE_SIZE
 
@@ -41,8 +44,9 @@ export default async function ErrorsPage({ searchParams }: { searchParams?: Prom
   if (status) query = query.eq('status', status)
   if (category) query = query.eq('category', category)
   if (q) {
-    const safe = q.replaceAll(',', '')
-    query = query.or(`event_type.ilike.%${safe}%,public_message.ilike.%${safe}%,technical_message.ilike.%${safe}%,error_id.eq.${safe}`)
+    const looksLikeUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(q)
+    const textFilters = `event_type.ilike.%${q}%,public_message.ilike.%${q}%,technical_message.ilike.%${q}%`
+    query = query.or(looksLikeUuid ? `${textFilters},error_id.eq.${q}` : textFilters)
   }
 
   const { data, count, error } = await query.range(offset, offset + PAGE_SIZE - 1)
@@ -62,8 +66,8 @@ export default async function ErrorsPage({ searchParams }: { searchParams?: Prom
 
     <section className="admin-panel">
       <form className="admin-form" method="get">
-        <label>جست‌وجو<input name="q" defaultValue={q} placeholder="Error ID، Event Type یا متن" /></label>
-        <label>دسته‌بندی<input name="category" defaultValue={category} placeholder="مثلاً database یا auth" /></label>
+        <label>جست‌وجو<input name="q" defaultValue={q} maxLength={120} placeholder="Error ID، Event Type یا متن" /></label>
+        <label>دسته‌بندی<input name="category" defaultValue={category} maxLength={80} placeholder="مثلاً database یا auth" /></label>
         <label>شدت<select name="severity" defaultValue={severity}><option value="">همه</option><option value="warning">Warning</option><option value="error">Error</option><option value="critical">Critical</option></select></label>
         <label>وضعیت<select name="status" defaultValue={status}><option value="">همه</option><option value="open">Open</option><option value="investigating">Investigating</option><option value="resolved">Resolved</option><option value="ignored">Ignored</option></select></label>
         <button className="admin-primary-button" type="submit">اعمال فیلتر</button>
