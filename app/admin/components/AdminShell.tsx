@@ -31,8 +31,8 @@ const navigation: NavItem[] = [
   },
   {
     label: { fa: 'مدیریت سیستم', en: 'System Management' }, icon: '⚙', keywords: ['system', 'security', 'logs', 'errors', 'سیستم', 'امنیت', 'لاگ', 'خطا'], children: [
-      { label: { fa: 'لاگ‌ها', en: 'Logs' }, icon: '≡', keywords: ['logs', 'audit', 'لاگ'], disabled: true },
-      { label: { fa: 'خطاها', en: 'Errors' }, icon: '!', keywords: ['errors', 'exceptions', 'خطا'], disabled: true },
+      { label: { fa: 'لاگ‌ها', en: 'Logs' }, href: '/admin/system/logs', icon: '≡', keywords: ['logs', 'audit', 'لاگ'] },
+      { label: { fa: 'خطاها', en: 'Errors' }, href: '/admin/system/errors', icon: '!', keywords: ['errors', 'exceptions', 'خطا'] },
       { label: { fa: 'دسترسی‌ها', en: 'Access Control' }, icon: '♙', keywords: ['roles', 'permissions', 'access', 'دسترسی', 'نقش'], disabled: true },
     ],
   },
