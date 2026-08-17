@@ -50,7 +50,7 @@ export default function HomePage() {
                 referrerPolicy="origin"
                 src="https://trustseal.enamad.ir/logo.aspx?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev"
                 alt="نماد اعتماد الکترونیکی RAVA TEAM"
-                code="XHzd3GoRDofutohK4DoiakcUJAxvtGev"
+                {...{ code: 'XHzd3GoRDofutohK4DoiakcUJAxvtGev' }}
               />
             </a>
           </div>
