@@ -33,7 +33,10 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
           <h1>{site.name}</h1>
           <p>{organization?.name ?? '—'} · {site.slug} · {site.primary_locale.toUpperCase()} · {site.default_currency} · {site.timezone}</p>
         </div>
-        <Link className="admin-muted-button" href="/admin/platform/sites">بازگشت به سایت‌ها</Link>
+        <div className="actions">
+          <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/design`}>Template & Design</Link>
+          <Link className="admin-muted-button" href="/admin/platform/sites">بازگشت به سایت‌ها</Link>
+        </div>
       </div>
 
       <div className="admin-stats">
