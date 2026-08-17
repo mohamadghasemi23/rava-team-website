@@ -4,6 +4,8 @@ const sections = [
   ['ABOUT RAVA', 'ما برای برندها فقط محتوا نمی‌سازیم؛ تصویر می‌سازیم.'],
 ]
 
+const enamadHtml = `<a referrerpolicy='origin' target='_blank' href='https://trustseal.enamad.ir/?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev' alt='' style='cursor:pointer' code='XHzd3GoRDofutohK4DoiakcUJAxvtGev'></a>`
+
 export default function HomePage() {
   return (
     <main>
@@ -39,21 +41,11 @@ export default function HomePage() {
             <a className="brand" href="#top">RAVA <b>TEAM</b></a>
             <p>استودیو خلاقیت، استراتژی و تولید محتوا</p>
           </div>
-          <div className="enamad-seal" aria-label="نماد اعتماد الکترونیکی">
-            <a
-              referrerPolicy="origin"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://trustseal.enamad.ir/?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev"
-            >
-              <img
-                referrerPolicy="origin"
-                src="https://trustseal.enamad.ir/logo.aspx?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev"
-                alt="نماد اعتماد الکترونیکی RAVA TEAM"
-                {...{ code: 'XHzd3GoRDofutohK4DoiakcUJAxvtGev' }}
-              />
-            </a>
-          </div>
+          <div
+            className="enamad-seal"
+            aria-label="نماد اعتماد الکترونیکی"
+            dangerouslySetInnerHTML={{ __html: enamadHtml }}
+          />
         </div>
       </footer>
     </main>
