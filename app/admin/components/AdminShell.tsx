@@ -33,32 +33,18 @@ const navigation: NavItem[] = [
     label: { fa: 'مدیریت سیستم', en: 'System Management' }, icon: '⚙', keywords: ['system', 'security', 'logs', 'errors', 'سیستم', 'امنیت', 'لاگ', 'خطا'], children: [
       { label: { fa: 'لاگ‌ها', en: 'Logs' }, href: '/admin/system/logs', icon: '≡', keywords: ['logs', 'audit', 'لاگ'] },
       { label: { fa: 'خطاها', en: 'Errors' }, href: '/admin/system/errors', icon: '!', keywords: ['errors', 'exceptions', 'خطا'] },
-      { label: { fa: 'دسترسی‌ها', en: 'Access Control' }, icon: '♙', keywords: ['roles', 'permissions', 'access', 'دسترسی', 'نقش'], disabled: true },
+      { label: { fa: 'دسترسی‌ها', en: 'Access Control' }, href: '/admin/system/access', icon: '♙', keywords: ['roles', 'permissions', 'access', 'دسترسی', 'نقش', 'کاربر'] },
     ],
   },
 ]
 
 const copy = {
   fa: {
-    controlCenter: 'مرکز کنترل RAVA',
-    search: 'جست‌وجو در پنل…',
-    noResult: 'نتیجه‌ای پیدا نشد.',
-    menu: 'منو',
-    close: 'بستن',
-    language: 'EN',
-    soon: 'به‌زودی',
-    helpTitle: 'راهنمای این بخش',
+    controlCenter: 'مرکز کنترل RAVA', search: 'جست‌وجو در پنل…', noResult: 'نتیجه‌ای پیدا نشد.', menu: 'منو', close: 'بستن', language: 'EN', soon: 'به‌زودی', helpTitle: 'راهنمای این بخش',
     helpText: 'این دکمه راهنمای همان بخش را بدون خروج از صفحه نمایش می‌دهد. متن‌های آموزشی به‌صورت فارسی و انگلیسی قابل نمایش خواهند بود.',
   },
   en: {
-    controlCenter: 'RAVA Control Center',
-    search: 'Search admin…',
-    noResult: 'No result found.',
-    menu: 'Menu',
-    close: 'Close',
-    language: 'FA',
-    soon: 'Soon',
-    helpTitle: 'Section help',
+    controlCenter: 'RAVA Control Center', search: 'Search admin…', noResult: 'No result found.', menu: 'Menu', close: 'Close', language: 'FA', soon: 'Soon', helpTitle: 'Section help',
     helpText: 'This control shows contextual help without leaving the current page. Training content can be displayed in Persian or English.',
   },
 }
@@ -80,7 +66,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     const saved = window.localStorage.getItem('rava-admin-language')
     if (saved === 'en' || saved === 'fa') setLanguage(saved)
   }, [])
-
   useEffect(() => setMobileOpen(false), [pathname])
 
   function toggleLanguage() {
@@ -96,18 +81,12 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
   return <div className="rava-admin-frame" dir={isRtl ? 'rtl' : 'ltr'}>
     <button className="rava-admin-mobile-trigger" type="button" onClick={() => setMobileOpen(true)} aria-label={t.menu}>☰</button>
     {mobileOpen && <button className="rava-admin-scrim" type="button" aria-label={t.close} onClick={() => setMobileOpen(false)} />}
-
     <aside className={`rava-admin-sidebar${mobileOpen ? ' is-open' : ''}`} aria-label={t.menu}>
       <div className="rava-admin-brand-row">
         <Link className="rava-admin-brand" href="/admin"><b>RAVA</b> TEAM<small>{t.controlCenter}</small></Link>
         <button className="rava-admin-close" type="button" onClick={() => setMobileOpen(false)} aria-label={t.close}>×</button>
       </div>
-
-      <label className="rava-admin-search">
-        <span>⌕</span>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.search} />
-      </label>
-
+      <label className="rava-admin-search"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t.search} /></label>
       <nav className="rava-admin-tree">
         {filteredNavigation.length === 0 && <p className="rava-admin-no-result">{t.noResult}</p>}
         {filteredNavigation.map((item) => {
@@ -126,20 +105,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </section>
         })}
       </nav>
-
       <div className="rava-admin-sidebar-footer">
         <button type="button" onClick={() => setHelpOpen(true)}>؟ <span>{t.helpTitle}</span></button>
         <button type="button" onClick={toggleLanguage}>文 <span>{t.language}</span></button>
       </div>
     </aside>
-
     <div className="rava-admin-content">{children}</div>
-
     {helpOpen && <div className="admin-modal-backdrop" role="presentation" onMouseDown={() => setHelpOpen(false)}>
       <section className="admin-modal rava-admin-help-modal" role="dialog" aria-modal="true" aria-labelledby="admin-help-title" onMouseDown={(event) => event.stopPropagation()}>
-        <div className="admin-modal-icon">؟</div>
-        <h3 id="admin-help-title">{t.helpTitle}</h3>
-        <p>{t.helpText}</p>
+        <div className="admin-modal-icon">؟</div><h3 id="admin-help-title">{t.helpTitle}</h3><p>{t.helpText}</p>
         <div className="admin-modal-actions"><button className="admin-primary-button" type="button" onClick={() => setHelpOpen(false)}>{t.close}</button></div>
       </section>
     </div>}
