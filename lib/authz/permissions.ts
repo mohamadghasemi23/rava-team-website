@@ -22,6 +22,9 @@ export const PERMISSIONS = {
   ANALYTICS_VIEW: 'analytics.view',
   COMMERCE_MANAGE: 'commerce.manage',
   LOGS_VIEW: 'logs.view',
+  ERRORS_VIEW: 'errors.view',
+  ERRORS_MANAGE: 'errors.manage',
+  SECURITY_EVENTS_VIEW: 'security.events.view',
   HELP_VIEW: 'help.view',
   HELP_MANAGE: 'help.manage',
 } as const
