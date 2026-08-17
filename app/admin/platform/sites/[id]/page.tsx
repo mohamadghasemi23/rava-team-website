@@ -24,6 +24,7 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
   ])
 
   const organization = Array.isArray(site.organizations) ? site.organizations[0] : site.organizations
+  const commerce = entitlements?.find((item) => item.module_key === 'commerce')
 
   return (
     <main className="admin-shell">
@@ -35,6 +36,9 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
         </div>
         <div className="actions">
           <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/design`}>Template & Design</Link>
+          {commerce?.enabled && ['active','trial','grace'].includes(commerce.status)
+            ? <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/commerce`}>Commerce</Link>
+            : <span className="admin-muted-button" title="Commerce Entitlement برای این سایت فعال نیست">Commerce غیرفعال</span>}
           <Link className="admin-muted-button" href="/admin/platform/sites">بازگشت به سایت‌ها</Link>
         </div>
       </div>
