@@ -65,6 +65,13 @@ export async function hasSitePermission(permission: PermissionKey, siteId: strin
   return !error && data === true
 }
 
+export async function hasAnySitePermission(permissions: readonly PermissionKey[], siteId: string) {
+  for (const permission of permissions) {
+    if (await hasSitePermission(permission, siteId)) return true
+  }
+  return false
+}
+
 export async function checkSiteEntitlement(siteId: string, moduleKey: string): Promise<EntitlementDecision> {
   const supabase = await createClient()
   const { data, error } = await supabase.rpc('check_site_entitlement_access', {
@@ -92,11 +99,11 @@ export async function checkSiteEntitlement(siteId: string, moduleKey: string): P
 export async function authorizeSiteFeature(input: {
   siteId: string
   moduleKey: string
-  permission: PermissionKey
+  permissions: readonly PermissionKey[]
   route?: string
   operation?: string
 }) {
-  const permissionAllowed = await hasSitePermission(input.permission, input.siteId)
+  const permissionAllowed = await hasAnySitePermission(input.permissions, input.siteId)
   if (!permissionAllowed) {
     await recordSecurityEvent({
       eventType: 'feature.access.blocked',
@@ -104,7 +111,7 @@ export async function authorizeSiteFeature(input: {
       siteId: input.siteId,
       route: input.route ?? null,
       severity: 'warning',
-      context: { moduleKey: input.moduleKey, permission: input.permission, operation: input.operation ?? null, reason: 'permission_denied' },
+      context: { moduleKey: input.moduleKey, permissions: [...input.permissions], operation: input.operation ?? null, reason: 'permission_denied' },
     })
     throw new FeatureAccessError('permission_denied', input.siteId, input.moduleKey)
   }
