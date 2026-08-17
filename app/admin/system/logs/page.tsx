@@ -1,8 +1,10 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PERMISSIONS, requireAnyPermission } from '@/lib/authz/permissions'
+import { oneOf, sanitizePostgrestSearchTerm } from '@/lib/platform/postgrest-search'
 
 const PAGE_SIZE = 40
+const SEVERITIES = ['debug','info','notice','warning','error','critical'] as const
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -24,8 +26,8 @@ function paramsFor(current: URLSearchParams, page: number) {
 export default async function LogsPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
   await requireAnyPermission([PERMISSIONS.PLATFORM_AUDIT_VIEW, PERMISSIONS.LOGS_VIEW])
   const params = (await searchParams) ?? {}
-  const q = one(params.q).trim()
-  const severity = one(params.severity)
+  const q = sanitizePostgrestSearchTerm(one(params.q))
+  const severity = oneOf(one(params.severity), SEVERITIES)
   const page = pageNumber(one(params.page))
   const offset = (page - 1) * PAGE_SIZE
 
@@ -36,7 +38,7 @@ export default async function LogsPage({ searchParams }: { searchParams?: Promis
     .order('created_at', { ascending: false })
 
   if (severity) query = query.eq('severity', severity)
-  if (q) query = query.or(`action.ilike.%${q.replaceAll(',', '')}%,entity_type.ilike.%${q.replaceAll(',', '')}%,entity_id.ilike.%${q.replaceAll(',', '')}%`)
+  if (q) query = query.or(`action.ilike.%${q}%,entity_type.ilike.%${q}%,entity_id.ilike.%${q}%`)
 
   const { data, count, error } = await query.range(offset, offset + PAGE_SIZE - 1)
   const rows = data ?? []
@@ -53,7 +55,7 @@ export default async function LogsPage({ searchParams }: { searchParams?: Promis
 
     <section className="admin-panel">
       <form className="admin-form" method="get">
-        <label>جست‌وجو<input name="q" defaultValue={q} placeholder="Action، Entity یا ID" /></label>
+        <label>جست‌وجو<input name="q" defaultValue={q} maxLength={120} placeholder="Action، Entity یا ID" /></label>
         <label>شدت
           <select name="severity" defaultValue={severity}>
             <option value="">همه</option><option value="debug">Debug</option><option value="info">Info</option><option value="notice">Notice</option><option value="warning">Warning</option><option value="error">Error</option><option value="critical">Critical</option>
