@@ -1,0 +1,69 @@
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+
+export const PERMISSIONS = {
+  PLATFORM_ORGANIZATIONS_MANAGE: 'platform.organizations.manage',
+  PLATFORM_SITES_MANAGE: 'platform.sites.manage',
+  PLATFORM_MODULES_MANAGE: 'platform.modules.manage',
+  PLATFORM_ROLES_MANAGE: 'platform.roles.manage',
+  PLATFORM_AUDIT_VIEW: 'platform.audit.view',
+  PLATFORM_HELP_MANAGE: 'platform.help.manage',
+  PLATFORM_SUPPORT_IMPERSONATE: 'platform.support.impersonate',
+  ORGANIZATIONS_VIEW: 'organizations.view',
+  ORGANIZATIONS_MANAGE: 'organizations.manage',
+  SITES_VIEW: 'sites.view',
+  SITES_MANAGE: 'sites.manage',
+  USERS_MANAGE: 'users.manage',
+  ROLES_MANAGE: 'roles.manage',
+  MODULES_MANAGE: 'modules.manage',
+  CMS_MANAGE: 'cms.manage',
+  MEDIA_MANAGE: 'media.manage',
+  SEO_MANAGE: 'seo.manage',
+  ANALYTICS_VIEW: 'analytics.view',
+  COMMERCE_MANAGE: 'commerce.manage',
+  LOGS_VIEW: 'logs.view',
+  HELP_VIEW: 'help.view',
+  HELP_MANAGE: 'help.manage',
+} as const
+
+export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
+
+export type PermissionScope = {
+  organizationId?: string | null
+  siteId?: string | null
+}
+
+export async function hasPermission(permission: PermissionKey, scope: PermissionScope = {}) {
+  const supabase = await createClient()
+  const { data: claimsData } = await supabase.auth.getClaims()
+  if (!claimsData?.claims?.sub) return false
+
+  const { data, error } = await supabase.rpc('has_permission', {
+    required_permission: permission,
+    organization_scope: scope.organizationId ?? null,
+    site_scope: scope.siteId ?? null,
+  })
+
+  if (error) return false
+  return data === true
+}
+
+export async function requirePermission(
+  permission: PermissionKey,
+  scope: PermissionScope = {},
+  deniedRedirect = '/admin',
+) {
+  const allowed = await hasPermission(permission, scope)
+  if (!allowed) redirect(deniedRedirect)
+}
+
+export async function requireAnyPermission(
+  permissions: readonly PermissionKey[],
+  scope: PermissionScope = {},
+  deniedRedirect = '/admin',
+) {
+  for (const permission of permissions) {
+    if (await hasPermission(permission, scope)) return
+  }
+  redirect(deniedRedirect)
+}
