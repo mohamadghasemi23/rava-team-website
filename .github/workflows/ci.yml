@@ -22,6 +22,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Feature standards
+        run: node scripts/verify-feature-standards.mjs
       - name: Type check
         run: npx tsc --noEmit
       - name: Build

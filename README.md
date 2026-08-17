@@ -1,33 +1,33 @@
-# RAVA TEAM — Production V1
+# RAVA TEAM Website / Platform
 
-Official production repository for the RAVA TEAM website and custom CMS, led by Mohammad Ghasemi.
+Production-oriented foundation for the RAVA TEAM multi-tenant website platform.
 
-## Stack
-- Next.js App Router + TypeScript
-- Supabase Postgres
-- Supabase Auth with cookie-based SSR
-- Supabase Storage (next phase)
-- Row Level Security from day one
+## Current architecture direction
 
-## Core CMS requirements
-- Full create/edit/delete/hide/publish control for site content
-- Dynamic Pages Builder with reusable blocks
-- Projects with dedicated pages and SEO
-- Media Library with previews, alt text and responsive variants
-- User management with roles and granular permissions
-- Leads/Inbox with assignment, statuses and internal notes
-- Revisions, trash/restore and audit history
-- Per-page SEO, sitemap, Open Graph and structured data
-- Responsive QA across mobile, tablet, laptop and desktop
-- Accessibility, security, validation, rate limiting and performance hardening
+RAVA is evolving from a single managed website into a multi-tenant SaaS platform with:
 
-## Database
-Initial schema is in `supabase/schema.sql`. RLS is enabled on every application table. Public policies only allow published pages/projects; private/admin policies are intentionally deferred until the first Super Admin is provisioned.
+- Organizations and Sites
+- Preview / Staging / Production environments
+- Module entitlements and commercial tiers
+- Scoped roles and granular permissions
+- Tenant-aware audit, error and security observability
+- Bilingual Help / Academy foundations
+- Owner Control Plane for provisioning and managing customer sites
 
-## Environment
-Copy `.env.example` to `.env.local` and fill in Supabase project credentials.
+## Development rule
 
-## Current milestone
-`Production V1 / Foundation`
+A feature is considered implemented only when its code exists in this repository and is represented by a real Git commit. Conversation-only designs are not treated as completed work.
 
-The existing V4 HTML prototype remains the UI/UX reference and will be migrated section-by-section into data-driven components.
+## Verification
+
+Pull requests must pass the repository CI TypeScript type-check and Next.js build before they are considered ready to merge.
+
+## Deployment
+
+Production deployment and production database migration application are separate actions and must not be performed without explicit approval.
+
+## Current platform-core work
+
+The active platform core introduces tenant-aware permission evaluation, safe audit/error event writers, structured error IDs, redacted log contexts, searchable Logs/Errors admin views, and safe 404/error boundaries.
+
+See `docs/MIGRATION_RUNBOOK.md` for deployment/migration operational notes.
