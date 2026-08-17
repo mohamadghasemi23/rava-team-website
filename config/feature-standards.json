@@ -36,7 +36,7 @@
     {
       "key": "help.academy",
       "route": "/admin/help",
-      "helpKey": "platform.owner.provision_site",
+      "helpKey": "platform.help.manage",
       "permissions": ["platform.help.manage", "help.view", "help.manage"],
       "moduleKey": "help",
       "bilingualHelp": true,
