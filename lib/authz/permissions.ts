@@ -10,6 +10,7 @@ export const PERMISSIONS = {
   PLATFORM_AUDIT_VIEW: 'platform.audit.view',
   PLATFORM_HELP_MANAGE: 'platform.help.manage',
   PLATFORM_SUPPORT_IMPERSONATE: 'platform.support.impersonate',
+  PLATFORM_BILLING_MANAGE: 'platform.billing.manage',
   ORGANIZATIONS_VIEW: 'organizations.view',
   ORGANIZATIONS_MANAGE: 'organizations.manage',
   SITES_VIEW: 'sites.view',
@@ -35,6 +36,11 @@ export const PERMISSIONS = {
   DESIGN_MANAGE: 'design.manage',
   DESIGN_PUBLISH: 'design.publish',
   DESIGN_ROLLBACK: 'design.rollback',
+  BILLING_VIEW: 'billing.view',
+  BILLING_MANAGE: 'billing.manage',
+  BILLING_ISSUE: 'billing.issue',
+  BILLING_PAYMENTS_MANAGE: 'billing.payments.manage',
+  USAGE_VIEW: 'usage.view',
 } as const
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
