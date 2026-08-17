@@ -10,9 +10,10 @@ type ContextHelp={key:string;estimated_minutes:number;translation?:{title:string
 
 const navigation:NavItem[]=[
   {label:{fa:'داشبورد',en:'Dashboard'},href:'/admin',icon:'⌂',keywords:['dashboard','home','داشبورد']},
-  {label:{fa:'کنترل مالک',en:'Owner Control'},icon:'◆',keywords:['owner','platform','tenant','customer','مالک','مشتری','سایت'],children:[
+  {label:{fa:'کنترل مالک',en:'Owner Control'},icon:'◆',keywords:['owner','platform','tenant','customer','billing','contract','مالک','مشتری','سایت','قرارداد','مالی'],children:[
     {label:{fa:'مشتری‌ها و سایت‌ها',en:'Customers & Sites'},href:'/admin/platform/sites',icon:'◈',keywords:['organizations','sites','tenants','customers','مشتری','سایت']},
     {label:{fa:'ساخت سایت جدید',en:'Provision Site'},href:'/admin/platform/sites/new',icon:'+',keywords:['new','provision','create site','ساخت سایت','مشتری جدید']},
+    {label:{fa:'قرارداد و Billing',en:'Contracts & Billing'},href:'/admin/platform/billing',icon:'¤',keywords:['billing','contract','invoice','usage','payment','قرارداد','صورتحساب','پرداخت','مصرف']},
   ]},
   {label:{fa:'محتوا',en:'Content'},icon:'◫',keywords:['content','cms','محتوا'],children:[
     {label:{fa:'صفحات',en:'Pages'},href:'/admin/pages',icon:'▤',keywords:['pages','page','صفحه','صفحات']},
