@@ -2,7 +2,8 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ActionForm from '@/app/admin/components/ActionForm'
 import { createClient } from '@/lib/supabase/server'
-import { PERMISSIONS, requireAnyPermission } from '@/lib/authz/permissions'
+import { PERMISSIONS } from '@/lib/authz/permissions'
+import { authorizeSiteFeature, FeatureAccessError } from '@/lib/entitlements/runtime'
 import { applyTemplateAction, publishDesignAction, rollbackDesignAction, saveDesignDraftAction } from './actions'
 
 function validUuid(value:string){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)}
@@ -14,7 +15,32 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
   const supabase=await createClient()
   const {data:site}=await supabase.from('sites').select('id,organization_id,name,slug,theme_config,settings').eq('id',id).maybeSingle()
   if(!site) notFound()
-  await requireAnyPermission([PERMISSIONS.PLATFORM_SITES_MANAGE,PERMISSIONS.DESIGN_MANAGE],{organizationId:site.organization_id,siteId:id})
+
+  try {
+    await authorizeSiteFeature({
+      siteId:id,
+      moduleKey:'design',
+      permissions:[PERMISSIONS.PLATFORM_SITES_MANAGE,PERMISSIONS.DESIGN_MANAGE],
+      route:`/admin/platform/sites/${id}/design`,
+      operation:'page.view',
+    })
+  } catch(error) {
+    if(!(error instanceof FeatureAccessError)) throw error
+    return <main className="admin-shell">
+      <header className="admin-head">
+        <div><span className="kicker">FEATURE GATE</span><h1>طراحی این سایت در دسترس نیست</h1><p>{site.name} · Runtime Entitlement Enforcement</p></div>
+        <Link className="admin-muted-button" href={`/admin/platform/sites/${id}`}>بازگشت به سایت</Link>
+      </header>
+      <section className="admin-panel">
+        <div className="admin-empty">
+          {error.code==='permission_denied'?'این حساب Permission لازم برای مدیریت طراحی این سایت را ندارد.':'Entitlement ماژول طراحی برای این سایت فعال نیست یا در وضعیت قابل استفاده قرار ندارد.'}
+        </div>
+        <div className="actions">
+          <Link className="admin-muted-button" href="/admin/platform/billing">بررسی قرارداد و Entitlement</Link>
+        </div>
+      </section>
+    </main>
+  }
 
   const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases}]=await Promise.all([
     supabase.from('template_catalog').select('id,key,name_fa,name_en,description_fa,industry_key,commercial_tier,is_public,status').eq('status','active').order('commercial_tier').order('name_fa'),
