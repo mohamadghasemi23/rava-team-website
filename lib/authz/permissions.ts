@@ -30,6 +30,11 @@ export const PERMISSIONS = {
   SECURITY_EVENTS_VIEW: 'security.events.view',
   HELP_VIEW: 'help.view',
   HELP_MANAGE: 'help.manage',
+  TEMPLATES_VIEW: 'templates.view',
+  TEMPLATES_MANAGE: 'templates.manage',
+  DESIGN_MANAGE: 'design.manage',
+  DESIGN_PUBLISH: 'design.publish',
+  DESIGN_ROLLBACK: 'design.rollback',
 } as const
 
 export type PermissionKey = (typeof PERMISSIONS)[keyof typeof PERMISSIONS]
