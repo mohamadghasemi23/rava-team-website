@@ -30,8 +30,10 @@ export const PLATFORM_MODULES = [
 
 export type PlatformModuleKey = (typeof PLATFORM_MODULES)[number]['key']
 
-export const CORE_MODULE_KEYS = PLATFORM_MODULES.filter((module) => module.core).map((module) => module.key)
+export const CORE_MODULE_KEYS: readonly PlatformModuleKey[] = PLATFORM_MODULES
+  .filter((module) => module.core)
+  .map((module) => module.key as PlatformModuleKey)
 
-export function isCoreModule(moduleKey: string) {
-  return CORE_MODULE_KEYS.includes(moduleKey as PlatformModuleKey)
+export function isCoreModule(moduleKey: string): moduleKey is PlatformModuleKey {
+  return CORE_MODULE_KEYS.some((key) => key === moduleKey)
 }
