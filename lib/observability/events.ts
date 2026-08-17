@@ -5,10 +5,17 @@ type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string
 export type LogSeverity = 'debug' | 'info' | 'notice' | 'warning' | 'error' | 'critical'
 
 const SENSITIVE_KEYS = /password|passcode|token|secret|cookie|authorization|api[_-]?key|session|credit|card|cvv|otp/i
+const SENSITIVE_MESSAGE_PATTERNS = [
+  /\bBearer\s+[A-Za-z0-9._~+\/-]+=*/gi,
+  /\b(password|passcode|token|secret|cookie|authorization|api[_-]?key|session|otp)\s*[:=]\s*([^\s,;]+)/gi,
+  /\b(sk|pk)_[A-Za-z0-9_-]{12,}\b/g,
+  /\beyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\b/g,
+]
 
 function sanitizeValue(value: unknown, depth = 0): JsonValue {
   if (depth > 5) return '[max-depth]'
-  if (value === null || typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return value
+  if (value === null || typeof value === 'number' || typeof value === 'boolean') return value
+  if (typeof value === 'string') return sanitizeTechnicalMessage(value)
   if (Array.isArray(value)) return value.slice(0, 100).map((entry) => sanitizeValue(entry, depth + 1))
   if (typeof value === 'object') {
     const source = value as Record<string, unknown>
@@ -18,7 +25,15 @@ function sanitizeValue(value: unknown, depth = 0): JsonValue {
     }
     return safe
   }
-  return String(value)
+  return sanitizeTechnicalMessage(String(value))
+}
+
+export function sanitizeTechnicalMessage(value: unknown) {
+  let safe = String(value ?? '')
+  for (const pattern of SENSITIVE_MESSAGE_PATTERNS) {
+    safe = safe.replace(pattern, (match, key: string | undefined) => key ? `${key}=[redacted]` : '[redacted]')
+  }
+  return safe.slice(0, 4000)
 }
 
 export function sanitizeLogContext(context: Record<string, unknown> = {}) {
@@ -33,7 +48,7 @@ export function createTraceContext(existingCorrelationId?: string | null) {
 }
 
 function errorFingerprint(error: unknown, eventType: string) {
-  const source = error instanceof Error ? `${error.name}:${error.message}` : String(error)
+  const source = error instanceof Error ? `${error.name}:${sanitizeTechnicalMessage(error.message)}` : sanitizeTechnicalMessage(error)
   return createHash('sha256').update(`${eventType}:${source}`).digest('hex').slice(0, 32)
 }
 
@@ -112,9 +127,9 @@ export async function recordErrorEvent(input: {
   probableCauses?: string[]
 }) {
   const supabase = await createClient()
-  const technicalMessage = input.error instanceof Error
-    ? `${input.error.name}: ${input.error.message}`
-    : String(input.error)
+  const technicalMessage = sanitizeTechnicalMessage(
+    input.error instanceof Error ? `${input.error.name}: ${input.error.message}` : input.error,
+  )
 
   return supabase.rpc('record_error_event', {
     p_category: input.category,
