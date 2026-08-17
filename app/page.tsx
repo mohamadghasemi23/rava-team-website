@@ -32,6 +32,30 @@ export default function HomePage() {
       {sections.map(([kicker, title], index) => <section className="section" id={index===0?'services':index===1?'works':'about'} key={kicker}><div className="container"><span className="kicker">{kicker}</span><h2>{title}</h2><div className="placeholder-grid"><article/><article/><article/></div></div></section>)}
 
       <section className="section" id="contact"><div className="container cta"><span className="kicker">START A PROJECT</span><h2>Ready to be seen?</h2><p>فرم Lead در فاز بعدی مستقیماً به دیتابیس و Inbox پنل متصل می‌شود.</p></div></section>
+
+      <footer className="site-footer">
+        <div className="container site-footer-inner">
+          <div className="site-footer-brand">
+            <a className="brand" href="#top">RAVA <b>TEAM</b></a>
+            <p>استودیو خلاقیت، استراتژی و تولید محتوا</p>
+          </div>
+          <div className="enamad-seal" aria-label="نماد اعتماد الکترونیکی">
+            <a
+              referrerPolicy="origin"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://trustseal.enamad.ir/?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev"
+            >
+              <img
+                referrerPolicy="origin"
+                src="https://trustseal.enamad.ir/logo.aspx?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev"
+                alt="نماد اعتماد الکترونیکی RAVA TEAM"
+                code="XHzd3GoRDofutohK4DoiakcUJAxvtGev"
+              />
+            </a>
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }
