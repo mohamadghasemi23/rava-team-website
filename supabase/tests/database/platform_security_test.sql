@@ -24,7 +24,17 @@ select is(
 insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
 values
 ('11111111-1111-4111-8111-111111111111','00000000-0000-0000-0000-000000000000','authenticated','authenticated','tenant-a@example.test',crypt('test-password-a',gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{"display_name":"Tenant A"}',now(),now()),
-('22222222-2222-4222-8222-222222222222','00000000-0000-0000-0000-000000000000','authenticated','authenticated','tenant-b@example.test',crypt('test-password-b',gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{"display_name":"Tenant B"}',now(),now());
+('22222222-2222-4222-8222-222222222222','00000000-0000-0000-0000-000000000000','authenticated','authenticated','tenant-b@example.test',crypt('test-password-b',gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{"display_name":"Tenant B"}',now(),now()),
+('33333333-3333-4333-8333-333333333333','00000000-0000-0000-0000-000000000000','authenticated','authenticated','platform-owner@example.test',crypt('test-password-owner',gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{"display_name":"Platform Owner"}',now(),now());
+
+-- Security guard triggers deliberately reject privileged fixture writes without an
+-- authenticated actor. Use a real test owner instead of disabling those triggers.
+update public.profiles
+set role = 'super_admin'
+where id = '33333333-3333-4333-8333-333333333333';
+
+select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',true);
+select set_config('request.jwt.claims','{"sub":"33333333-3333-4333-8333-333333333333","role":"authenticated"}',true);
 
 -- Bootstrap fixture setup through the repository's existing legacy owner bridge,
 -- then deliberately remove it before the isolation/escalation assertions.
