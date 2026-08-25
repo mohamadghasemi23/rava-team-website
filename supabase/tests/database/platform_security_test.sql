@@ -27,43 +27,43 @@ values
 ('22222222-2222-4222-8222-222222222222','00000000-0000-0000-0000-000000000000','authenticated','authenticated','tenant-b@example.test',crypt('test-password-b',gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{"display_name":"Tenant B"}',now(),now()),
 ('33333333-3333-4333-8333-333333333333','00000000-0000-0000-0000-000000000000','authenticated','authenticated','platform-owner@example.test',crypt('test-password-owner',gen_salt('bf')),now(),'{"provider":"email","providers":["email"]}','{"display_name":"Platform Owner"}',now(),now());
 
--- Security guard triggers deliberately reject privileged fixture writes without an
--- authenticated actor. Use a real test owner instead of disabling those triggers.
-update public.profiles
-set role = 'super_admin'
-where id = '33333333-3333-4333-8333-333333333333';
-
+-- Use an authenticated platform owner to seed fixtures through the same secure RPCs
+-- the application uses. RLS/guard triggers remain enabled throughout the test.
+update public.profiles set role='super_admin' where id='33333333-3333-4333-8333-333333333333';
+set local role authenticated;
 select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',true);
 select set_config('request.jwt.claims','{"sub":"33333333-3333-4333-8333-333333333333","role":"authenticated"}',true);
-
--- Bootstrap fixture setup through the repository's existing legacy owner bridge,
--- then deliberately remove it before the isolation/escalation assertions.
-update public.profiles set role='super_admin' where id='11111111-1111-4111-8111-111111111111';
-set local role authenticated;
-select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
-select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',true);
 
 insert into public.organizations(id,name,slug) values
 ('aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','Tenant A','tenant-a'),
 ('bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','Tenant B','tenant-b');
 
-insert into public.roles(id,scope_type,organization_id,key,name_fa,name_en) values
-('a1000000-0000-4000-8000-000000000001','organization','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','reader-a','خواننده A','Reader A'),
-('b1000000-0000-4000-8000-000000000001','organization','bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','reader-b','خواننده B','Reader B');
+do $$
+declare
+  role_a uuid;
+  role_b uuid;
+begin
+  role_a := public.create_custom_role(
+    'organization','reader-a','خواننده A','Reader A','','',
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',null,array['organizations.view']
+  );
+  role_b := public.create_custom_role(
+    'organization','reader-b','خواننده B','Reader B','','',
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',null,array['organizations.view']
+  );
+  perform public.add_existing_member(
+    '11111111-1111-4111-8111-111111111111','organization',
+    'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',null,array[role_a],false
+  );
+  perform public.add_existing_member(
+    '22222222-2222-4222-8222-222222222222','organization',
+    'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',null,array[role_b],false
+  );
+end $$;
 
-insert into public.role_permissions(role_id,permission_key) values
-('a1000000-0000-4000-8000-000000000001','organizations.view'),
-('b1000000-0000-4000-8000-000000000001','organizations.view');
-
-insert into public.memberships(id,user_id,scope_type,organization_id,status,joined_at) values
-('a2000000-0000-4000-8000-000000000001','11111111-1111-4111-8111-111111111111','organization','aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa','active',now()),
-('b2000000-0000-4000-8000-000000000001','22222222-2222-4222-8222-222222222222','organization','bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb','active',now());
-
-insert into public.membership_roles(membership_id,role_id) values
-('a2000000-0000-4000-8000-000000000001','a1000000-0000-4000-8000-000000000001'),
-('b2000000-0000-4000-8000-000000000001','b1000000-0000-4000-8000-000000000001');
-
-update public.profiles set role='viewer' where id='11111111-1111-4111-8111-111111111111';
+-- Drop to a normal tenant-scoped user for the actual isolation/escalation assertions.
+select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
+select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',true);
 
 select results_eq(
   $$select count(*)::bigint from public.organizations$$,
@@ -95,7 +95,7 @@ select throws_ok(
 );
 
 select throws_ok(
-  $$select public.create_access_invitation('intruder@example.test','organization','bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',null,array['b1000000-0000-4000-8000-000000000001'::uuid],now()+interval '1 day')$$,
+  $$select public.create_access_invitation('intruder@example.test','organization','bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',null,'{}'::uuid[],now()+interval '1 day')$$,
   'P0001',
   'permission denied',
   'tenant A cannot create an invitation in tenant B'
