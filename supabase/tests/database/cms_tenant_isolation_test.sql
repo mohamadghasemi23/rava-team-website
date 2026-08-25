@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(23);
+select plan(28);
 
 select ok((select relrowsecurity from pg_class where oid='public.pages'::regclass), 'pages has RLS enabled');
 select ok((select relrowsecurity from pg_class where oid='public.media_assets'::regclass), 'media_assets has RLS enabled');
@@ -30,6 +30,20 @@ select ok(
   and not has_table_privilege('anon','public.site_settings','SELECT')
   and not has_table_privilege('anon','public.revisions','SELECT'),
   'anon has no direct access to private CMS resources'
+);
+select ok(
+  exists(select 1 from storage.buckets where id='rava-media' and public and file_size_limit=10485760),
+  'website media bucket is public and limited to 10 MiB'
+);
+select results_eq(
+  $$select unnest(allowed_mime_types) from storage.buckets where id='rava-media' order by 1$$,
+  $$select mime from (values('image/gif'::text),('image/jpeg'::text),('image/png'::text),('image/webp'::text)) expected(mime)$$,
+  'media bucket excludes active SVG content'
+);
+select is(
+  (select count(*)::bigint from pg_policies where schemaname='storage' and tablename='objects' and policyname in ('rava_media_site_select','rava_media_site_insert','rava_media_site_delete')),
+  3::bigint,
+  'storage objects have site-aware media policies'
 );
 
 insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)
@@ -132,6 +146,16 @@ select lives_ok(
 select lives_ok(
   $$insert into public.projects(site_id,title,slug,status) values('ca111111-1111-4111-8111-111111111111','Second A Project','shared-project','draft')$$,
   'tenant A can create a project in its own site'
+);
+select lives_ok(
+  $$insert into storage.objects(bucket_id,name,owner_id) values('rava-media','ca111111-1111-4111-8111-111111111111/test.webp','c1111111-1111-4111-8111-111111111111')$$,
+  'tenant A can create a storage object in its own site folder'
+);
+select throws_ok(
+  $$insert into storage.objects(bucket_id,name,owner_id) values('rava-media','cb222222-2222-4222-8222-222222222222/attack.webp','c1111111-1111-4111-8111-111111111111')$$,
+  '42501',
+  'new row violates row-level security policy for table "objects"',
+  'tenant A cannot create a storage object in tenant B folder'
 );
 
 select * from finish();

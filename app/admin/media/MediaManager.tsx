@@ -2,6 +2,7 @@
 
 import { ChangeEvent, useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
+import { deleteMedia, updateMediaAlt, uploadMedia } from './actions'
 
 type Asset = {
   id: string
@@ -20,7 +21,7 @@ type ConfirmState =
   | { kind: 'alt'; asset: Asset; value: string }
   | null
 
-export default function MediaManager({ initialAssets, userId }: { initialAssets: Asset[]; userId: string }) {
+export default function MediaManager({ initialAssets, siteId }: { initialAssets: Asset[]; siteId: string }) {
   const supabase = useMemo(() => createClient(), [])
   const [assets, setAssets] = useState(initialAssets)
   const [file, setFile] = useState<File | null>(null)
@@ -44,7 +45,7 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
   function onFile(event: ChangeEvent<HTMLInputElement>) {
     const next = event.target.files?.[0] ?? null
     if (!next) return
-    if (!next.type.startsWith('image/')) return notify(false, 'فقط فایل تصویری مجاز است.')
+    if (!['image/jpeg','image/png','image/webp','image/gif'].includes(next.type)) return notify(false, 'فقط JPEG، PNG، WebP و GIF مجاز است.')
     if (next.size > 10 * 1024 * 1024) return notify(false, 'حجم فایل باید کمتر از ۱۰ مگابایت باشد.')
     setFile(next)
     if (!alt) setAlt(next.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '))
@@ -54,27 +55,10 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
     if (!file) return
     setConfirmState(null)
     setBusy(true)
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-')
-    const path = `${userId}/${Date.now()}-${crypto.randomUUID()}-${safeName}`
-    const uploaded = await supabase.storage.from('rava-media').upload(path, file, { cacheControl: '31536000', upsert: false, contentType: file.type })
-    if (uploaded.error) { setBusy(false); return notify(false, `آپلود انجام نشد: ${uploaded.error.message}`) }
-
-    const inserted = await supabase.from('media_assets').insert({
-      storage_path: path,
-      file_name: file.name,
-      mime_type: file.type,
-      alt_text: alt.trim(),
-      size_bytes: file.size,
-      uploaded_by: userId,
-    }).select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at').single()
-
-    if (inserted.error || !inserted.data) {
-      await supabase.storage.from('rava-media').remove([path])
-      setBusy(false)
-      return notify(false, `ثبت اطلاعات فایل انجام نشد: ${inserted.error?.message ?? 'خطای ناشناخته'}`)
-    }
-
-    const asset = inserted.data as Asset
+    const formData=new FormData();formData.set('site_id',siteId);formData.set('file',file);formData.set('alt_text',alt)
+    const result=await uploadMedia(formData)
+    if(!result.ok||!result.asset){setBusy(false);return notify(false,result.message)}
+    const asset=result.asset as Asset
     setAssets((current) => [asset, ...current])
     setAltDrafts((current) => ({ ...current, [asset.id]: asset.alt_text }))
     setFile(null)
@@ -90,9 +74,9 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
     const { asset, value } = confirmState
     setConfirmState(null)
     setBusy(true)
-    const result = await supabase.from('media_assets').update({ alt_text: value }).eq('id', asset.id)
+    const result = await updateMediaAlt(asset.id,value)
     setBusy(false)
-    if (result.error) return notify(false, `ویرایش انجام نشد: ${result.error.message}`)
+    if (!result.ok) return notify(false,result.message)
     setAssets((current) => current.map((item) => item.id === asset.id ? { ...item, alt_text: value } : item))
     notify(true, 'Alt Text تصویر با موفقیت روی سرور ویرایش شد.')
   }
@@ -102,10 +86,8 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
     const asset = confirmState.asset
     setConfirmState(null)
     setBusy(true)
-    const storageResult = await supabase.storage.from('rava-media').remove([asset.storage_path])
-    if (storageResult.error) { setBusy(false); return notify(false, `حذف فایل انجام نشد: ${storageResult.error.message}`) }
-    const dbResult = await supabase.from('media_assets').delete().eq('id', asset.id)
-    if (dbResult.error) { setBusy(false); return notify(false, `حذف رکورد انجام نشد: ${dbResult.error.message}`) }
+    const result=await deleteMedia(asset.id)
+    if(!result.ok){setBusy(false);return notify(false,result.message)}
     setAssets((current) => current.filter((item) => item.id !== asset.id))
     setBusy(false)
     notify(true, 'تصویر با موفقیت از Storage و کتابخانه رسانه حذف شد.')
@@ -142,7 +124,7 @@ export default function MediaManager({ initialAssets, userId }: { initialAssets:
       <h2>آپلود تصویر</h2>
       <p>تصویر را از گوشی یا کامپیوتر انتخاب کن. حداکثر حجم هر فایل ۱۰ مگابایت است.</p>
       <div className="admin-form">
-        <label>انتخاب فایل<input id="media-upload-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" onChange={onFile}/></label>
+        <label>انتخاب فایل<input id="media-upload-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={onFile}/></label>
         <label>Alt Text<input value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="توضیح کوتاه و دقیق تصویر"/></label>
         {file ? <div className="admin-upload-preview"><img src={URL.createObjectURL(file)} alt="پیش‌نمایش فایل انتخاب‌شده"/><div><b>{file.name}</b><small>{Math.round(file.size / 1024)} KB</small></div></div> : null}
         <button className="admin-primary-button" type="button" disabled={busy || !file} onClick={() => setConfirmState({ kind: 'upload' })}>{busy ? 'در حال انجام عملیات…' : 'آپلود و ثبت در کتابخانه'}</button>
