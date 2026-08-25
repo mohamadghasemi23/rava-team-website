@@ -10,6 +10,26 @@ permissions:
   contents: read
 
 jobs:
+  database:
+    name: PostgreSQL migrations and security tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.115.0
+      - name: Start local Supabase
+        run: supabase start
+      - name: Rebuild database from migrations
+        run: supabase db reset --local
+      - name: Lint database functions
+        run: supabase db lint --local --level error
+      - name: Run pgTAP security tests
+        run: supabase test db
+
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
