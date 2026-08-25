@@ -30,7 +30,6 @@ values
 -- Use an authenticated platform owner to seed fixtures through the same secure RPCs
 -- the application uses. RLS/guard triggers remain enabled throughout the test.
 update public.profiles set role='super_admin' where id='33333333-3333-4333-8333-333333333333';
-set local role authenticated;
 select set_config('request.jwt.claim.sub','33333333-3333-4333-8333-333333333333',true);
 select set_config('request.jwt.claims','{"sub":"33333333-3333-4333-8333-333333333333","role":"authenticated"}',true);
 
@@ -61,7 +60,10 @@ begin
   );
 end $$;
 
--- Drop to a normal tenant-scoped user for the actual isolation/escalation assertions.
+-- Drop to the authenticated database role and a normal tenant-scoped user for
+-- the actual isolation/escalation assertions. Fixture setup above runs as the
+-- migration owner so RLS cannot make the fixtures depend on the policies under test.
+set local role authenticated;
 select set_config('request.jwt.claim.sub','11111111-1111-4111-8111-111111111111',true);
 select set_config('request.jwt.claims','{"sub":"11111111-1111-4111-8111-111111111111","role":"authenticated"}',true);
 
