@@ -7,7 +7,7 @@ import { createClient } from '@/lib/supabase/client'
 type Asset = { id:string; storage_path:string; file_name:string; alt_text:string; mime_type:string }
 type Pending = { kind:'select'; asset:Asset } | { kind:'upload'; file:File } | null
 
-export default function MediaPicker({ name, defaultValue = '' }: { name:string; defaultValue?:string }) {
+export default function MediaPicker({ name, siteId, defaultValue = '' }: { name:string; siteId:string; defaultValue?:string }) {
   const supabase = useMemo(() => createClient(), [])
   const [value,setValue]=useState(defaultValue)
   const [open,setOpen]=useState(false)
@@ -18,7 +18,7 @@ export default function MediaPicker({ name, defaultValue = '' }: { name:string; 
   const [toast,setToast]=useState('')
 
   function publicUrl(path:string){return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl}
-  async function load(){const{data}=await supabase.from('media_assets').select('id,storage_path,file_name,alt_text,mime_type').is('deleted_at',null).order('created_at',{ascending:false});setAssets((data??[]) as Asset[])}
+  async function load(){const{data}=await supabase.from('media_assets').select('id,storage_path,file_name,alt_text,mime_type').eq('site_id',siteId).is('deleted_at',null).order('created_at',{ascending:false});setAssets((data??[]) as Asset[])}
   useEffect(()=>{if(open)load()},[open])
 
   function notify(text:string){setToast(text);window.setTimeout(()=>setToast(''),2600)}
@@ -34,9 +34,9 @@ export default function MediaPicker({ name, defaultValue = '' }: { name:string; 
   async function uploadConfirmed(file:File){
     setPending(null);setBusy(true);setMessage('')
     const{data:userData}=await supabase.auth.getUser();const userId=userData.user?.id;if(!userId){setBusy(false);setMessage('نشست کاربری معتبر نیست.');return}
-    const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]+/g,'-');const path=`${userId}/${Date.now()}-${crypto.randomUUID()}-${safe}`
+    const safe=file.name.toLowerCase().replace(/[^a-z0-9._-]+/g,'-');const path=`${siteId}/${userId}/${Date.now()}-${crypto.randomUUID()}-${safe}`
     const up=await supabase.storage.from('rava-media').upload(path,file,{cacheControl:'31536000',contentType:file.type});if(up.error){setBusy(false);setMessage(`آپلود انجام نشد: ${up.error.message}`);return}
-    const ins=await supabase.from('media_assets').insert({storage_path:path,file_name:file.name,mime_type:file.type,alt_text:file.name.replace(/\.[^.]+$/,''),size_bytes:file.size,uploaded_by:userId}).select('id,storage_path,file_name,alt_text,mime_type').single();if(ins.error||!ins.data){await supabase.storage.from('rava-media').remove([path]);setBusy(false);setMessage(`ثبت فایل انجام نشد: ${ins.error?.message??'خطای ناشناخته'}`);return}
+    const ins=await supabase.from('media_assets').insert({site_id:siteId,storage_path:path,file_name:file.name,mime_type:file.type,alt_text:file.name.replace(/\.[^.]+$/,''),size_bytes:file.size,uploaded_by:userId}).select('id,storage_path,file_name,alt_text,mime_type').single();if(ins.error||!ins.data){await supabase.storage.from('rava-media').remove([path]);setBusy(false);setMessage('ثبت فایل انجام نشد. دسترسی سایت یا اطلاعات فایل را بررسی کنید.');return}
     const asset=ins.data as Asset;setAssets(a=>[asset,...a]);setValue(publicUrl(asset.storage_path));setBusy(false);setOpen(false);notify('تصویر آپلود و برای این سکشن انتخاب شد.')
   }
 

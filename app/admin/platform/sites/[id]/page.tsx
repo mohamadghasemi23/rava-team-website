@@ -35,6 +35,7 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
           <p>{organization?.name ?? '—'} · {site.slug} · {site.primary_locale.toUpperCase()} · {site.default_currency} · {site.timezone}</p>
         </div>
         <div className="actions">
+          <Link className="admin-primary-button" href={`/admin/pages?site=${id}`}>محتوا و صفحات</Link>
           <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/design`}>Template & Design</Link>
           {commerce?.enabled && ['active','trial','grace'].includes(commerce.status)
             ? <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/commerce`}>Commerce</Link>

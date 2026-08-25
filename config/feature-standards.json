@@ -98,6 +98,22 @@
       "rlsOrSecureRpc": true
     },
     {
+      "key": "cms.pages",
+      "route": "/admin/pages",
+      "helpKey": "cms.pages.manage",
+      "permissions": ["cms.view", "cms.manage", "cms.publish"],
+      "moduleKey": "cms",
+      "bilingualHelp": true,
+      "contextualHelp": true,
+      "serverValidation": true,
+      "permissionEnforced": true,
+      "entitlementRequired": false,
+      "auditLogged": true,
+      "structuredErrors": true,
+      "tenantScoped": true,
+      "rlsOrSecureRpc": true
+    },
+    {
       "key": "commerce.core",
       "route": "/admin/platform/sites/:siteId/commerce",
       "helpKey": "commerce.core.manage",
