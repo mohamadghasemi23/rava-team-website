@@ -2,6 +2,8 @@
 
 This repository is the source of truth for RAVA TEAM / RAVA Platform.
 
+Before designing any Feature, you MUST read `docs/RAVA_PLATFORM_VISION.md`.
+
 ## Product context
 RAVA is a multi-tenant SaaS Website Operating System, not a single marketing website. Every implementation must preserve multi-tenancy, scoped authorization, commercial entitlements, localization, auditability, observability, versioning, testability and future API compatibility.
 
