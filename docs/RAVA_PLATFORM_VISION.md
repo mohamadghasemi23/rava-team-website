@@ -525,3 +525,15 @@ Do not optimize only for making a demo work. Optimize for:
 `Security + Maintainability + Scalability + Operational clarity + Commercial viability + Excellent Admin UX`
 
 Ideas may evolve indefinitely, but every implemented change must remain evidence-based, scoped, testable, reviewable, and honest.
+
+## 30. Approved services-first and non-empty-site strategy
+
+The first complete customer-site product is the **service-business website** experience. Commerce follows as a module on the same shared platform core after the service-site path is production-proven.
+
+RAVA TEAM / `ravateam.ir` is **Customer Zero** for the service-site product. It must use the same Tenant, Template, Content, Release, Permission, Entitlement, Audit, Staging, backup, and rollback paths intended for later customers; it must not become a bespoke bypass or separate architecture.
+
+RAVA must not hand off a blank site. New-site provisioning must combine a Site Type, Industry Pack, compatible Template Version, versioned Starter Content Pack, verified Brand Profile, and entitled Modules to create useful editable draft content appropriate to the customer's field.
+
+Starter content must be localizable, versioned, auditable, clearly mark samples/placeholders, and require customer verification for business facts. It must never fabricate customers, testimonials, credentials, awards, licenses, prices, results, or other claims. Pack upgrades must be diff-based and must not overwrite customer-edited or published content without explicit review and approval.
+
+The implementation order and acceptance gates are defined in `docs/SERVICES_FIRST_DELIVERY_PLAN.md`. Tenant-safe CMS scope is a prerequisite for installing starter content.
