@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(21);
+select plan(23);
 
 select ok((select relrowsecurity from pg_class where oid='public.pages'::regclass), 'pages has RLS enabled');
 select ok((select relrowsecurity from pg_class where oid='public.media_assets'::regclass), 'media_assets has RLS enabled');
@@ -18,6 +18,18 @@ select is(
   (select count(*)::bigint from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='private' and p.proname in ('can_view_site_content','can_manage_site_resource') and has_function_privilege('anon',p.oid,'EXECUTE')),
   0::bigint,
   'anon cannot execute CMS scope helpers'
+);
+
+select ok(
+  has_table_privilege('authenticated','public.pages','SELECT'),
+  'authenticated receives base pages SELECT for RLS enforcement'
+);
+select ok(
+  not has_table_privilege('anon','public.leads','SELECT')
+  and not has_table_privilege('anon','public.media_assets','SELECT')
+  and not has_table_privilege('anon','public.site_settings','SELECT')
+  and not has_table_privilege('anon','public.revisions','SELECT'),
+  'anon has no direct access to private CMS resources'
 );
 
 insert into auth.users(id,instance_id,aud,role,email,encrypted_password,email_confirmed_at,raw_app_meta_data,raw_user_meta_data,created_at,updated_at)

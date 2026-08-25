@@ -85,6 +85,13 @@ $$;
 revoke all on function private.can_manage_site_resource(uuid,text) from public,anon,authenticated;
 grant execute on function private.can_manage_site_resource(uuid,text) to authenticated;
 
+-- Explicit Data API grants keep behavior portable across Supabase CLI and self-hosted defaults.
+revoke all on public.pages,public.page_blocks,public.media_assets,public.projects,public.leads,public.site_settings,public.revisions from anon;
+grant select on public.pages,public.page_blocks,public.projects to anon;
+grant select,insert,update,delete on public.pages,public.page_blocks,public.media_assets,public.projects,public.leads,public.site_settings to authenticated;
+grant select,insert on public.revisions to authenticated;
+revoke update,delete on public.revisions from authenticated;
+
 -- Remove legacy global-role policies. Legacy NULL-scoped administration is kept
 -- only for platform site managers; tenant users can access only their site scope.
 drop policy if exists "staff read pages" on public.pages;
