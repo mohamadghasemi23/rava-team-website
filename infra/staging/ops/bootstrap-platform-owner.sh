@@ -85,6 +85,8 @@ end $$;
 update public.profiles
 set display_name=:'display_name',role='super_admin',active=true,updated_at=now()
 where id=:'actor_id'::uuid;
+select set_config('request.jwt.claim.sub',:'actor_id',true);
+select set_config('request.jwt.claims',jsonb_build_object('sub',:'actor_id','role','authenticated')::text,true);
 insert into public.memberships(user_id,scope_type,status,is_owner,invited_by,joined_at)
 values(:'actor_id'::uuid,'platform','active',true,:'actor_id'::uuid,now())
 on conflict do nothing;
