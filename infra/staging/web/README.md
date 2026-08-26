@@ -15,4 +15,6 @@ This stack keeps the Next.js application and Supabase gateway behind Caddy. Unti
 
 Before switching a tag, record the current image from `docker compose ps`. Build the new commit-tagged image, start the stack, and require both healthchecks plus HTTP, login, admin authorization, and database isolation tests. Rollback sets `RAVA_IMAGE_TAG` to the recorded previous tag and recreates only the app service. DNS remains unchanged until an explicitly approved Production cutover.
 
-The operations scripts in `../ops` provide a read-only health check and dry-run-first image cleanup. Cleanup refuses to run unless both web containers are healthy and preserves the running image plus `rollback-baseline`.
+The operations scripts in `../ops` provide a read-only health check, a full read-only runtime gate, a temporary-database restore test, and dry-run-first image cleanup. Cleanup refuses to run unless both web containers are healthy and preserves the running image plus `rollback-baseline`.
+
+Run `verify-staging-gates.sh` from the repository root to verify the local web, Auth, REST, Storage, admin redirect, loopback binding, and absence of a Netlify runtime URL. Run `restore-test-postgres.sh` with the privileges used by the backup service; it verifies the latest checksum, restores into a uniquely named temporary database, validates PostgreSQL 17 and RLS, runs every database test, and removes only that temporary database on exit.

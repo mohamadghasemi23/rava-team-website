@@ -35,6 +35,8 @@ Apply migrations in lexical order with `psql -X -v ON_ERROR_STOP=1`. Run both pg
 
 A restore test requires a separate temporary database and the `supabase_admin` role because the self-hosted Supabase `postgres` role is intentionally not a full superuser. After restore, validate PostgreSQL version, expected tables, privileged RPC ACLs, and the pgTAP suite before deleting the temporary database.
 
+From a clean repository checkout, execute `infra/staging/ops/restore-test-postgres.sh` with Docker and backup-directory access. The script refuses an unhealthy database, verifies the matching SHA-256 manifest, uses only a uniquely named `rava_restore_test_*` database, runs all repository database tests, and drops only that temporary database on exit. Execute `infra/staging/ops/verify-staging-gates.sh` separately for the read-only Web/Auth/API/Storage and Netlify-independence gate.
+
 Local backup is not disaster recovery. Configure an encrypted off-box destination and periodically test restoration from that copy before Production approval.
 
 ## Rollback
