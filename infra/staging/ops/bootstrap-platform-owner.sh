@@ -103,8 +103,8 @@ then
 fi
 unset service_role
 
-owner_ready=$(docker exec "$db_container" psql -XAt -U supabase_admin -d postgres -v actor_id="$user_id" \
-  -c "select count(*) from public.profiles where id=:'actor_id'::uuid and active and role='super_admin'" 2>/dev/null)
+owner_ready=$(docker exec "$db_container" psql -XAt -U supabase_admin -d postgres \
+  -c "select count(*) from public.profiles where id='$user_id'::uuid and active and role='super_admin'" 2>/dev/null)
 [ "$owner_ready" = 1 ] || { echo 'owner profile verification failed' >&2; exit 1; }
 
 printf 'platform owner bootstrap completed and audited: user_id=%s\n' "$user_id"
