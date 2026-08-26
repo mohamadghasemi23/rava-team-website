@@ -2,6 +2,22 @@
   "schemaVersion": 1,
   "features": [
     {
+      "key": "admin.guided_experience",
+      "route": "/admin",
+      "helpKey": "admin.guided_experience",
+      "permissions": ["platform.sites.manage"],
+      "moduleKey": "help",
+      "bilingualHelp": true,
+      "contextualHelp": true,
+      "serverValidation": true,
+      "permissionEnforced": true,
+      "entitlementRequired": false,
+      "auditLogged": true,
+      "structuredErrors": true,
+      "tenantScoped": true,
+      "rlsOrSecureRpc": true
+    },
+    {
       "key": "owner.provisioning",
       "route": "/admin/platform/sites/new",
       "helpKey": "platform.owner.provision_site",
