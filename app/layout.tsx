@@ -3,14 +3,14 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: { default: 'RAVA TEAM', template: '%s | RAVA TEAM' },
-  description: 'RAVA TEAM — Creative studio for strategy, branding and content production.',
+  description: 'RAVA TEAM — طراحی، محتوا و تکنولوژی برای ساخت وب‌سایت و زیرساخت رشد دیجیتال کسب‌وکارها.',
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   other: {
     enamad: '۴۰۹۷۸۳۱۶',
   },
   openGraph: {
     title: 'RAVA TEAM',
-    description: 'Creative studio for strategy, branding and content production.',
+    description: 'Design, content and technology for professional websites and scalable digital growth.',
     type: 'website',
   },
 }
