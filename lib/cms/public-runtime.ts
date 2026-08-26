@@ -22,7 +22,7 @@ function normalizedHostname(value: string) {
 
 function normalizedSlug(value: string) {
   const slug = value.trim().toLowerCase().replace(/^\/+|\/+$/g, '')
-  return slug.length <= 180 && slug.length > 0 && ![/\\?#\s]/.test(slug) ? slug : ''
+  return slug.length <= 180 && slug.length > 0 && !/[\/\\?#\s]/.test(slug) ? slug : ''
 }
 
 export async function getRequestSiteHostname() {
