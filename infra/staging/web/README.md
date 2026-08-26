@@ -14,3 +14,5 @@ This stack keeps the Next.js application and Supabase gateway behind Caddy. Unti
 ## Verification and rollback
 
 Before switching a tag, record the current image from `docker compose ps`. Build the new commit-tagged image, start the stack, and require both healthchecks plus HTTP, login, admin authorization, and database isolation tests. Rollback sets `RAVA_IMAGE_TAG` to the recorded previous tag and recreates only the app service. DNS remains unchanged until an explicitly approved Production cutover.
+
+The operations scripts in `../ops` provide a read-only health check and dry-run-first image cleanup. Cleanup refuses to run unless both web containers are healthy and preserves the running image plus `rollback-baseline`.
