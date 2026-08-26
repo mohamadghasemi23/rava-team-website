@@ -130,6 +130,22 @@
       "rlsOrSecureRpc": true
     },
     {
+      "key": "starter.pack.catalog",
+      "route": "/internal/starter-pack-catalog",
+      "helpKey": "starter.pack.catalog",
+      "permissions": ["starter_packs.view", "starter_packs.manage", "starter_packs.install"],
+      "moduleKey": "cms",
+      "bilingualHelp": true,
+      "contextualHelp": false,
+      "serverValidation": true,
+      "permissionEnforced": true,
+      "entitlementRequired": false,
+      "auditLogged": true,
+      "structuredErrors": true,
+      "tenantScoped": true,
+      "rlsOrSecureRpc": true
+    },
+    {
       "key": "commerce.core",
       "route": "/admin/platform/sites/:siteId/commerce",
       "helpKey": "commerce.core.manage",
