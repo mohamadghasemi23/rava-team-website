@@ -9,7 +9,7 @@ const allowedInfrastructure=new Set([
 // Existing pages are removed from this list only after both locales are verified.
 // New files are never added: CI must reject new one-language admin UI.
 const legacyMigrationQueue=new Set([
-  'media/MediaManager.tsx','pages/[id]/page.tsx','pages/page.tsx',
+  'media/MediaManager.tsx','pages/[id]/page.tsx',
   'platform/billing/[id]/page.tsx','platform/billing/page.tsx',
   'platform/sites/[id]/commerce/page.tsx','platform/sites/[id]/design/page.tsx',
   'platform/sites/[id]/page.tsx','platform/sites/new/page.tsx',
