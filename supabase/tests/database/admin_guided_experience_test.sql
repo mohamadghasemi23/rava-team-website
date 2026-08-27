@@ -1,7 +1,7 @@
 begin;
 
 create extension if not exists pgtap with schema extensions;
-select plan(4);
+select plan(5);
 
 select is(
   (select count(*)::bigint from public.help_topics where key='admin.guided_experience' and status='published'),
@@ -18,9 +18,15 @@ select is(
   1::bigint,
   'dashboard contextual help binding exists'
 );
-select ok(
-  (select jsonb_array_length(steps)>=8 from public.help_translations t join public.help_topics h on h.id=t.topic_id where h.key='admin.guided_experience' and t.locale='fa'),
-  'Persian setup help includes the complete numbered journey'
+select is(
+  (select jsonb_array_length(steps) from public.help_translations t join public.help_topics h on h.id=t.topic_id where h.key='admin.guided_experience' and t.locale='fa'),
+  5,
+  'Persian setup help matches the simplified five-step journey'
+);
+select is(
+  (select count(*)::bigint from public.help_translations t join public.help_topics h on h.id=t.topic_id where h.key='platform.owner.provision_site' and t.locale in('fa','en') and t.body_markdown like '%/admin/platform/sites/new%'),
+  2::bigint,
+  'site creation help is bilingual and links to the simplified route'
 );
 
 select * from finish();
