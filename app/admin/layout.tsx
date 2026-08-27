@@ -1,3 +1,6 @@
+import '@fontsource-variable/vazirmatn'
+import '@fontsource-variable/estedad'
+import '@fontsource-variable/noto-sans-arabic'
 import './admin-media.css'
 import './admin-shell.css'
 import './admin-experience.css'
