@@ -3,13 +3,6 @@ name: rava-web-staging
 services:
   app:
     image: rava-web:${RAVA_IMAGE_TAG:?set RAVA_IMAGE_TAG}
-    build:
-      context: ../../..
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_SUPABASE_URL: ${STAGING_PUBLIC_ORIGIN:?set STAGING_PUBLIC_ORIGIN}
-        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${SUPABASE_PUBLISHABLE_KEY:?set SUPABASE_PUBLISHABLE_KEY}
-        NEXT_PUBLIC_SITE_URL: ${STAGING_PUBLIC_ORIGIN:?set STAGING_PUBLIC_ORIGIN}
     restart: unless-stopped
     environment:
       SUPABASE_INTERNAL_URL: http://supabase-envoy:8000

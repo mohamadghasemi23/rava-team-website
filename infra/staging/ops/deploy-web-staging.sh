@@ -4,6 +4,7 @@ set -eu
 repo_dir=${RAVA_REPO_DIR:-/home/ravaops/projects/rava-team-website}
 compose_file=${RAVA_WEB_COMPOSE_FILE:-$repo_dir/infra/staging/web/compose.yml}
 app_container=${RAVA_WEB_APP_CONTAINER:-rava-web-staging-app-1}
+registry_image=${RAVA_STAGING_REGISTRY_IMAGE:-ghcr.io/mohamadghasemi23/rava-team-website}
 new_tag=${1:-}
 
 [ "$(id -u)" -eq 0 ] || { echo 'run this Staging deployment as root' >&2; exit 1; }
@@ -26,12 +27,15 @@ publishable_key=$(docker inspect "$app_container" --format '{{range .Config.Env}
 [ -n "$public_origin" ] && [ -n "$publishable_key" ] || { echo 'public Staging build configuration is missing' >&2; exit 1; }
 export STAGING_PUBLIC_ORIGIN="$public_origin" SUPABASE_PUBLISHABLE_KEY="$publishable_key"
 
-docker tag "$previous_image" rava-web:rollback-admin-p0
-docker build \
-  --build-arg "NEXT_PUBLIC_SUPABASE_URL=$public_origin" \
-  --build-arg "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$publishable_key" \
-  --build-arg "NEXT_PUBLIC_SITE_URL=$public_origin" \
-  -t "rava-web:$new_tag" .
+remote_image="$registry_image:$head_sha"
+docker pull "$remote_image"
+image_revision=$(docker image inspect "$remote_image" --format '{{index .Config.Labels "org.opencontainers.image.revision"}}')
+image_source=$(docker image inspect "$remote_image" --format '{{index .Config.Labels "org.opencontainers.image.source"}}')
+[ "$image_revision" = "$head_sha" ] || { echo 'registry image revision does not match repository HEAD' >&2; exit 1; }
+[ "$image_source" = 'https://github.com/mohamadghasemi23/rava-team-website' ] || { echo 'registry image source is not the RAVA repository' >&2; exit 1; }
+
+docker tag "$previous_image" rava-web:rollback-staging
+docker tag "$remote_image" "rava-web:$new_tag"
 
 rollback() {
   echo "Staging gate failed; rolling app back to $previous_image" >&2
@@ -56,4 +60,4 @@ if [ "${health:-}" != healthy ] || ! "$repo_dir/infra/staging/ops/verify-staging
 fi
 trap - INT TERM HUP
 unset publishable_key SUPABASE_PUBLISHABLE_KEY
-printf 'Staging web deployment passed: previous=%s current=rava-web:%s rollback=rava-web:rollback-admin-p0\n' "$previous_image" "$new_tag"
+printf 'Staging web deployment passed: previous=%s current=rava-web:%s rollback=rava-web:rollback-staging\n' "$previous_image" "$new_tag"
