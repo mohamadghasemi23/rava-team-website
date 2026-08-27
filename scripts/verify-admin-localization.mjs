@@ -23,6 +23,11 @@ for(const file of walk(adminRoot).filter(file=>file.endsWith('.tsx'))){
 for(const legacy of legacyMigrationQueue){
   if(!fs.existsSync(path.join(adminRoot,legacy)))errors.push(`${legacy}: stale localization migration entry`)
 }
+for(const file of walk(adminRoot).filter(file=>file.endsWith('actions.ts'))){
+  const relative=path.relative(adminRoot,file).split(path.sep).join('/')
+  const source=fs.readFileSync(file,'utf8')
+  if(!source.includes('getAdminLocale'))errors.push(`${relative}: Server Action messages must use the centralized locale runtime`)
+}
 if(errors.length){
   console.error('\nRAVA admin localization verification failed:\n')
   for(const error of errors)console.error(`- ${error}`)
