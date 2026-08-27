@@ -2,6 +2,7 @@
 
 import { provisionOrganizationSite } from '@/lib/platform/provisioning'
 import { createTraceContext, recordAuditEvent, recordErrorEvent } from '@/lib/observability/events'
+import {getAdminLocale} from '@/lib/i18n/admin-locale'
 
 export type ProvisionActionState = {
   ok?: boolean
@@ -11,7 +12,7 @@ export type ProvisionActionState = {
   errorId?: string
 }
 
-const messages: Record<string, string> = {
+const messagesFa: Record<string, string> = {
   authentication_required: 'برای ساخت سایت باید دوباره وارد حساب مدیریتی شوید.',
   permission_denied: 'این حساب اجازه ساخت مشتری یا سایت جدید را ندارد.',
   invalid_organization_name: 'نام مشتری معتبر نیست.',
@@ -26,8 +27,10 @@ const messages: Record<string, string> = {
   invalid_provisioning_result: 'ساخت سایت کامل نشد. شناسه خطا را برای بررسی نگه دارید.',
   provisioning_failed: 'ساخت سایت انجام نشد. جزئیات فنی برای کاربر نمایش داده نمی‌شود.',
 }
+const messagesEn:Record<string,string>={authentication_required:'Sign in again before creating a site.',permission_denied:'This account cannot create customers or sites.',invalid_organization_name:'The customer name is invalid.',invalid_organization_slug:'The customer identifier is invalid.',invalid_site_name:'The site name is invalid.',invalid_site_slug:'The site identifier is invalid.',invalid_locale:'The primary language is invalid.',invalid_currency:'The currency is invalid.',invalid_timezone:'The time zone is invalid.',invalid_provisioning_input:'The site provisioning details are invalid.',organization_or_site_already_exists:'The customer or site identifier is already in use.',invalid_provisioning_result:'Site provisioning did not complete. Keep the Error ID for investigation.',provisioning_failed:'The site could not be created. Technical details are not exposed to users.'}
 
 export async function provisionSiteAction(_state: ProvisionActionState, formData: FormData): Promise<ProvisionActionState> {
+  const locale=await getAdminLocale(),messages=locale==='fa'?messagesFa:messagesEn
   const trace = createTraceContext()
   const requested = {
     organizationName: String(formData.get('organization_name') ?? ''),
@@ -57,7 +60,7 @@ export async function provisionSiteAction(_state: ProvisionActionState, formData
 
     return {
       ok: true,
-      message: `مشتری و سایت با موفقیت ساخته شدند. Site ID: ${result.siteId}`,
+      message: locale==='fa'?`مشتری و سایت با موفقیت ساخته شدند. شناسه سایت: ${result.siteId}`:`Customer and site created successfully. Site ID: ${result.siteId}`,
       redirectTo: `/admin/platform/sites/${result.siteId}`,
       nonce: Date.now(),
     }
@@ -88,7 +91,7 @@ export async function provisionSiteAction(_state: ProvisionActionState, formData
     const errorId = first && typeof first === 'object' && 'error_id' in first ? String(first.error_id) : undefined
     return {
       ok: false,
-      message: errorId ? `${messages[key] ?? messages.provisioning_failed} شناسه خطا: ${errorId}` : messages[key] ?? messages.provisioning_failed,
+      message: errorId ? `${messages[key] ?? messages.provisioning_failed} ${locale==='fa'?'شناسه خطا':'Error ID'}: ${errorId}` : messages[key] ?? messages.provisioning_failed,
       errorId,
       nonce: Date.now(),
     }
