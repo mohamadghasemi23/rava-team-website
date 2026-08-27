@@ -21,7 +21,7 @@ export default function MediaPicker({ name, siteId, defaultValue = '' }: { name:
   const [toast,setToast]=useState('')
 
   function publicUrl(path:string){return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl}
-  async function load(){const{data}=await supabase.from('media_assets').select('id,storage_path,file_name,alt_text,mime_type').eq('site_id',siteId).is('deleted_at',null).order('created_at',{ascending:false});setAssets((data??[]) as Asset[])}
+  async function load(){const{data}=await supabase.from('media_assets').select('id,storage_path,file_name,alt_text,mime_type').eq('site_id',siteId).eq('media_kind','image').is('deleted_at',null).order('created_at',{ascending:false});setAssets((data??[]) as Asset[])}
   useEffect(()=>{if(open)load()},[open])
 
   function notify(text:string){setToast(text);window.setTimeout(()=>setToast(''),2600)}

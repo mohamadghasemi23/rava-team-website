@@ -7,10 +7,11 @@ import {getAdminLocale} from '@/lib/i18n/admin-locale'
 
 export const dynamic='force-dynamic'
 const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+const PAGE_SIZE=12
 
-export default async function MediaAdminPage({searchParams}:{searchParams:Promise<{site?:string}>}){
+export default async function MediaAdminPage({searchParams}:{searchParams:Promise<{site?:string;q?:string;type?:string;page?:string}>}){
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
-  const{site:requestedSite}=await searchParams;const supabase=await createClient();const{data:claims,error}=await supabase.auth.getClaims();const userId=claims?.claims?.sub
+  const params=await searchParams,{site:requestedSite}=params;const supabase=await createClient();const{data:claims,error}=await supabase.auth.getClaims();const userId=claims?.claims?.sub
   if(error||!userId)redirect('/login')
   const{data:profile}=await supabase.from('profiles').select('active').eq('id',userId).single();if(!profile?.active)redirect('/login')
   const{data:sites}=await supabase.from('sites').select('id,organization_id,name,slug,status').order('name')
@@ -20,6 +21,12 @@ export default async function MediaAdminPage({searchParams}:{searchParams:Promis
   }
   if(!UUID_RE.test(requestedSite))notFound();const site=sites?.find(item=>item.id===requestedSite);if(!site)notFound()
   await requirePermission(PERMISSIONS.MEDIA_MANAGE,{organizationId:site.organization_id,siteId:site.id})
-  const{data}=await supabase.from('media_assets').select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at').eq('site_id',site.id).is('deleted_at',null).order('created_at',{ascending:false})
-  return <main className="admin-shell"><header className="admin-head"><div><span>{l('مرکز مدیریت راوا','RAVA CONTROL CENTER')}</span><h1>{l(`رسانه‌های ${site.name}`,`${site.name} media`)}</h1><p>{l('سایت فعال:','Active site:')} <b>{site.name}</b> · <span dir="ltr">{site.slug}</span></p></div><div className="admin-actions"><Link className="admin-link" href="/admin/media">{l('تغییر سایت','Change site')}</Link><Link className="admin-link" href={`/admin/pages?site=${site.id}`}>{l('صفحات سایت','Site pages')}</Link></div></header><MediaManager initialAssets={data??[]} siteId={site.id}/></main>
+  const query=String(params.q??'').slice(0,80).replace(/[^\p{L}\p{N}\s._-]/gu,' ').replace(/\s+/g,' ').trim(),kind=params.type==='image'||params.type==='video'?params.type:'all',requestedPage=Math.max(1,Number.parseInt(params.page??'1',10)||1)
+  let mediaQuery=supabase.from('media_assets').select('id,storage_path,file_name,mime_type,media_kind,alt_text,size_bytes,duration_seconds,created_at',{count:'exact'}).eq('site_id',site.id).is('deleted_at',null)
+  if(query)mediaQuery=mediaQuery.textSearch('search_vector',query,{config:'simple',type:'plain'})
+  if(kind!=='all')mediaQuery=mediaQuery.eq('media_kind',kind)
+  const from=(requestedPage-1)*PAGE_SIZE,{data,count}=await mediaQuery.order('created_at',{ascending:false}).range(from,from+PAGE_SIZE-1),total=count??0,totalPages=Math.max(1,Math.ceil(total/PAGE_SIZE)),page=Math.min(requestedPage,totalPages)
+  if(page!==requestedPage){const target=new URLSearchParams({site:site.id});if(query)target.set('q',query);if(kind!=='all')target.set('type',kind);target.set('page',String(page));redirect(`/admin/media?${target}`)}
+  const pageHref=(targetPage:number)=>{const target=new URLSearchParams({site:site.id,page:String(targetPage)});if(query)target.set('q',query);if(kind!=='all')target.set('type',kind);return`/admin/media?${target}`}
+  return <main className="admin-shell"><header className="admin-head"><div><span>{l('مرکز مدیریت راوا','RAVA CONTROL CENTER')}</span><h1>{l(`رسانه‌های ${site.name}`,`${site.name} media`)}</h1><p>{l('سایت فعال:','Active site:')} <b>{site.name}</b> · <span dir="ltr">{site.slug}</span></p></div><div className="admin-actions">{(sites?.length??0)>1?<Link className="admin-link" href="/admin/media">{l('تغییر سایت','Change site')}</Link>:null}<Link className="admin-link" href={`/admin/pages?site=${site.id}`}>{l('صفحات سایت','Site pages')}</Link></div></header><section className="admin-panel"><form className="admin-media-search" method="get"><input type="hidden" name="site" value={site.id}/><label>{l('جست‌وجوی رسانه','Search media')}<input name="q" defaultValue={query} maxLength={80} placeholder={l('نام فایل یا متن جایگزین','File name or alternative text')}/></label><label>{l('نوع رسانه','Media type')}<select name="type" defaultValue={kind}><option value="all">{l('همه رسانه‌ها','All media')}</option><option value="image">{l('تصویرها','Images')}</option><option value="video">{l('ویدیوها','Videos')}</option></select></label><button className="admin-primary-button" type="submit">{l('جست‌وجو','Search')}</button>{query||kind!=='all'?<Link className="admin-muted-button" href={`/admin/media?site=${site.id}`}>{l('پاک‌کردن فیلتر','Clear filters')}</Link>:null}</form></section><MediaManager initialAssets={data??[]} siteId={site.id} total={total}/>{totalPages>1?<nav className="admin-pagination" aria-label={l('صفحه‌بندی رسانه‌ها','Media pagination')}><Link aria-disabled={page===1} className={page===1?'is-disabled':''} href={pageHref(Math.max(1,page-1))}>{l('صفحه قبل','Previous')}</Link><span>{l(`صفحه ${page} از ${totalPages}`,`Page ${page} of ${totalPages}`)}</span><Link aria-disabled={page===totalPages} className={page===totalPages?'is-disabled':''} href={pageHref(Math.min(totalPages,page+1))}>{l('صفحه بعد','Next')}</Link></nav>:null}</main>
 }

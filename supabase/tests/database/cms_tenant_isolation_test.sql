@@ -32,13 +32,13 @@ select ok(
   'anon has no direct access to private CMS resources'
 );
 select ok(
-  exists(select 1 from storage.buckets where id='rava-media' and public and file_size_limit=10485760),
-  'website media bucket is public and limited to 10 MiB'
+  exists(select 1 from storage.buckets where id='rava-media' and public and file_size_limit=104857600),
+  'website media bucket is public and limited to 100 MiB'
 );
 select results_eq(
   $$select unnest(allowed_mime_types) from storage.buckets where id='rava-media' order by 1$$,
-  $$select mime from (values('image/gif'::text),('image/jpeg'::text),('image/png'::text),('image/webp'::text)) expected(mime)$$,
-  'media bucket excludes active SVG content'
+  $$select mime from (values('image/gif'::text),('image/jpeg'::text),('image/png'::text),('image/webp'::text),('video/mp4'::text),('video/webm'::text)) expected(mime)$$,
+  'media bucket excludes active SVG content and allows safe image and video formats'
 );
 select is(
   (select count(*)::bigint from pg_policies where schemaname='storage' and tablename='objects' and policyname in ('rava_media_site_select','rava_media_site_insert','rava_media_site_delete')),
