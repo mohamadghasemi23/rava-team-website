@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { PERMISSIONS, requireAnyPermission } from '@/lib/authz/permissions'
 import { oneOf, sanitizePostgrestSearchTerm } from '@/lib/platform/postgrest-search'
+import {getAdminLocale} from '@/lib/i18n/admin-locale'
 
 const PAGE_SIZE = 40
 const SEVERITIES = ['debug','info','notice','warning','error','critical'] as const
@@ -24,6 +25,8 @@ function paramsFor(current: URLSearchParams, page: number) {
 }
 
 export default async function LogsPage({ searchParams }: { searchParams?: Promise<SearchParams> }) {
+  const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
+  const severityLabel=(value:string)=>({debug:l('اشکال‌زدایی','Debug'),info:l('اطلاع','Information'),notice:l('توجه','Notice'),warning:l('هشدار','Warning'),error:l('خطا','Error'),critical:l('بحرانی','Critical')}[value]??value)
   await requireAnyPermission([PERMISSIONS.PLATFORM_AUDIT_VIEW, PERMISSIONS.LOGS_VIEW])
   const params = (await searchParams) ?? {}
   const q = sanitizePostgrestSearchTerm(one(params.q))
@@ -49,34 +52,34 @@ export default async function LogsPage({ searchParams }: { searchParams?: Promis
 
   return <main className="admin-shell">
     <header className="admin-head">
-      <div><span className="kicker">OBSERVABILITY</span><h1>لاگ‌ها و ممیزی</h1><p>ردیابی عملیات مهم سیستم؛ چه کسی، چه زمانی و روی چه بخشی تغییر ایجاد کرده است.</p></div>
-      <Link className="admin-primary-button" href="/admin/system/errors">مشاهده خطاها</Link>
+      <div><span className="kicker">{l('پایش و رهگیری','OBSERVABILITY')}</span><h1>{l('گزارش فعالیت‌ها','Activity log')}</h1><p>{l('عملیات مهم سامانه را همراه با زمان، اجراکننده و بخش تغییرکرده بررسی کنید.','Trace important platform operations, including who acted, when, and what changed.')}</p></div>
+      <Link className="admin-primary-button" href="/admin/system/errors">{l('مشاهده خطاها','View errors')}</Link>
     </header>
 
     <section className="admin-panel">
       <form className="admin-form" method="get">
-        <label>جست‌وجو<input name="q" defaultValue={q} maxLength={120} placeholder="Action، Entity یا ID" /></label>
-        <label>شدت
+        <label>{l('جست‌وجو','Search')}<input name="q" defaultValue={q} maxLength={120} placeholder={l('عملیات، نوع داده یا شناسه','Action, entity, or identifier')} /></label>
+        <label>{l('شدت','Severity')}
           <select name="severity" defaultValue={severity}>
-            <option value="">همه</option><option value="debug">Debug</option><option value="info">Info</option><option value="notice">Notice</option><option value="warning">Warning</option><option value="error">Error</option><option value="critical">Critical</option>
+            <option value="">{l('همه','All')}</option>{SEVERITIES.map(value=><option value={value} key={value}>{severityLabel(value)}</option>)}
           </select>
         </label>
-        <button className="admin-primary-button" type="submit">اعمال فیلتر</button>
+        <button className="admin-primary-button" type="submit">{l('اعمال فیلتر','Apply filters')}</button>
       </form>
     </section>
 
     <section className="admin-panel">
-      <div className="admin-section-title"><h2>Audit Trail</h2><span>{count ?? 0} رکورد</span></div>
-      {error ? <div className="admin-empty">خواندن لاگ‌ها انجام نشد. جزئیات فنی برای کاربر نمایش داده نمی‌شود.</div> : null}
-      {!error && rows.length === 0 ? <div className="admin-empty">لاگی مطابق فیلتر فعلی وجود ندارد.</div> : null}
-      {rows.length > 0 ? <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>ID</th><th>زمان</th><th>عملیات</th><th>Entity</th><th>Severity</th><th>Correlation</th></tr></thead><tbody>
-        {rows.map((row) => <tr key={row.id}><td>#{row.id}</td><td>{new Date(row.created_at).toLocaleString('fa-IR')}</td><td><b>{row.action}</b></td><td>{row.entity_type}{row.entity_id ? ` · ${row.entity_id}` : ''}</td><td>{row.severity}</td><td><code>{row.correlation_id ? String(row.correlation_id).slice(0, 8) : '—'}</code></td></tr>)}
+      <div className="admin-section-title"><h2>{l('تاریخچه ممیزی','Audit trail')}</h2><span>{count ?? 0} {l('رکورد','records')}</span></div>
+      {error ? <div className="admin-empty">{l('خواندن گزارش‌ها انجام نشد. جزئیات فنی برای کاربر نمایش داده نمی‌شود.','Activity records could not be loaded. Technical details are not exposed to users.')}</div> : null}
+      {!error && rows.length === 0 ? <div className="admin-empty">{l('گزارشی مطابق فیلتر فعلی وجود ندارد.','No activity matches the current filters.')}</div> : null}
+      {rows.length > 0 ? <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>{l('شناسه','ID')}</th><th>{l('زمان','Time')}</th><th>{l('عملیات','Action')}</th><th>{l('نوع داده','Entity')}</th><th>{l('شدت','Severity')}</th><th>{l('شناسه پیگیری','Correlation')}</th></tr></thead><tbody>
+        {rows.map((row) => <tr key={row.id}><td>#{row.id}</td><td>{new Date(row.created_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</td><td><b>{row.action}</b></td><td>{row.entity_type}{row.entity_id ? ` · ${row.entity_id}` : ''}</td><td>{severityLabel(row.severity)}</td><td><code>{row.correlation_id ? String(row.correlation_id).slice(0, 8) : '—'}</code></td></tr>)}
       </tbody></table></div> : null}
 
       <div className="admin-pagination">
-        {page > 1 ? <Link className="admin-muted-button" href={paramsFor(current, page - 1)}>قبلی</Link> : <span />}
-        <span>صفحه {page} از {totalPages}</span>
-        {page < totalPages ? <Link className="admin-muted-button" href={paramsFor(current, page + 1)}>بعدی</Link> : <span />}
+        {page > 1 ? <Link className="admin-muted-button" href={paramsFor(current, page - 1)}>{l('قبلی','Previous')}</Link> : <span />}
+        <span>{l(`صفحه ${page} از ${totalPages}`,`Page ${page} of ${totalPages}`)}</span>
+        {page < totalPages ? <Link className="admin-muted-button" href={paramsFor(current, page + 1)}>{l('بعدی','Next')}</Link> : <span />}
       </div>
     </section>
   </main>

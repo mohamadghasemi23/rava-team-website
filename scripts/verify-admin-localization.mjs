@@ -14,7 +14,7 @@ const legacyMigrationQueue=new Set([
   'platform/sites/[id]/commerce/page.tsx','platform/sites/[id]/design/page.tsx',
   'platform/sites/[id]/page.tsx','platform/sites/[id]/starter/StarterWizard.tsx',
   'platform/sites/[id]/starter/page.tsx','platform/sites/new/page.tsx',
-  'system/access/page.tsx','system/errors/page.tsx','system/logs/page.tsx',
+  'system/access/page.tsx',
 ])
 
 function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{const full=path.join(dir,entry.name);return entry.isDirectory()?walk(full):[full]})}
