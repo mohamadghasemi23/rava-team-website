@@ -12,8 +12,7 @@ const legacyMigrationQueue=new Set([
   'media/MediaManager.tsx','pages/[id]/page.tsx','pages/page.tsx',
   'platform/billing/[id]/page.tsx','platform/billing/page.tsx',
   'platform/sites/[id]/commerce/page.tsx','platform/sites/[id]/design/page.tsx',
-  'platform/sites/[id]/page.tsx','platform/sites/[id]/starter/StarterWizard.tsx',
-  'platform/sites/[id]/starter/page.tsx','platform/sites/new/page.tsx',
+  'platform/sites/[id]/page.tsx','platform/sites/new/page.tsx',
   'system/access/page.tsx',
 ])
 
