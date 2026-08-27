@@ -24,6 +24,7 @@ printf '%s\n' "$previous_tag" | grep -Eq '^[A-Za-z0-9_.-]+$' || { echo 'current 
 public_origin=$(docker inspect "$app_container" --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -n 's/^NEXT_PUBLIC_SUPABASE_URL=//p' | head -1)
 publishable_key=$(docker inspect "$app_container" --format '{{range .Config.Env}}{{println .}}{{end}}' | sed -n 's/^NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=//p' | head -1)
 [ -n "$public_origin" ] && [ -n "$publishable_key" ] || { echo 'public Staging build configuration is missing' >&2; exit 1; }
+export STAGING_PUBLIC_ORIGIN="$public_origin" SUPABASE_PUBLISHABLE_KEY="$publishable_key"
 
 docker tag "$previous_image" rava-web:rollback-admin-p0
 docker build \
@@ -34,13 +35,12 @@ docker build \
 
 rollback() {
   echo "Staging gate failed; rolling app back to $previous_image" >&2
-  RAVA_IMAGE_TAG="$previous_tag" STAGING_PUBLIC_ORIGIN="$public_origin" SUPABASE_PUBLISHABLE_KEY="$publishable_key" \
-    docker compose -f "$compose_file" up -d --no-deps app
+  RAVA_IMAGE_TAG="$previous_tag" docker compose -f "$compose_file" up -d --no-deps app
 }
 trap rollback INT TERM HUP
 
-RAVA_IMAGE_TAG="$new_tag" STAGING_PUBLIC_ORIGIN="$public_origin" SUPABASE_PUBLISHABLE_KEY="$publishable_key" \
-  docker compose -f "$compose_file" up -d --no-deps app
+export RAVA_IMAGE_TAG="$new_tag"
+docker compose -f "$compose_file" up -d --no-deps app
 
 attempt=0
 while [ "$attempt" -lt 30 ]; do
@@ -55,5 +55,5 @@ if [ "${health:-}" != healthy ] || ! "$repo_dir/infra/staging/ops/verify-staging
   exit 1
 fi
 trap - INT TERM HUP
-unset publishable_key
+unset publishable_key SUPABASE_PUBLISHABLE_KEY
 printf 'Staging web deployment passed: previous=%s current=rava-web:%s rollback=rava-web:rollback-admin-p0\n' "$previous_image" "$new_tag"
