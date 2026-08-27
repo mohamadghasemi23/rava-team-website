@@ -12,6 +12,8 @@ function pretty(value:unknown){return JSON.stringify(value??{},null,2)}
 
 export default async function SiteDesignPage({params}:{params:Promise<{id:string}>}){
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
+  const sourceLabel=(value:string)=>({template:l('قالب','Template'),manual:l('ویرایش دستی','Manual edit'),rollback:l('بازگردانی','Rollback'),starter:l('راه‌اندازی اولیه','Starter setup')}[value]??l('منبع سیستمی','System source'))
+  const releaseStatus=(value:string)=>({published:l('منتشرشده','Published'),active:l('فعال','Active'),superseded:l('جایگزین‌شده','Superseded'),rolled_back:l('بازگردانی‌شده','Rolled back')}[value]??l('وضعیت نامشخص','Unknown status'))
   const {id}=await params
   if(!validUuid(id)) notFound()
   const supabase=await createClient()
@@ -113,14 +115,14 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>{l('نسخه','Revision')}</th><th>{l('منبع','Source')}</th><th>{l('قالب','Template')}</th><th>{l('زمان','Time')}</th><th>{l('یادداشت','Note')}</th></tr></thead><tbody>{(revisions??[]).map((revision)=>{
         const template=(templates??[]).find((item)=>item.id===revision.template_id)
         const version=(versions??[]).find((item)=>item.id===revision.template_version_id)
-        return <tr key={revision.id}><td>#{revision.revision}{revision.id===state?.current_revision_id?` · ${l('فعلی','CURRENT')}`:''}</td><td>{revision.source}</td><td>{locale==='fa'?template?.name_fa:template?.name_en??'—'}{version?` v${version.version}`:''}</td><td>{new Date(revision.created_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</td><td>{revision.note??'—'}</td></tr>
+        return <tr key={revision.id}><td>#{revision.revision}{revision.id===state?.current_revision_id?` · ${l('فعلی','CURRENT')}`:''}</td><td>{sourceLabel(revision.source)}</td><td>{locale==='fa'?template?.name_fa:template?.name_en??'—'}{version?` v${version.version}`:''}</td><td>{new Date(revision.created_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</td><td>{revision.note??'—'}</td></tr>
       })}</tbody></table></div>
     </section>
 
     <section className="admin-panel">
       <div className="admin-section-title"><div><h2>{l('تاریخچه انتشار و بازگشت','Release history and rollback')}</h2><p>{l('بازگشت تاریخچه را پاک نمی‌کند؛ از نسخه انتخاب‌شده یک نسخه و انتشار جدید می‌سازد.','Rollback preserves history and creates a new revision and release from the selected snapshot.')}</p></div><span>{releases?.length??0}</span></div>
       <div className="admin-access-grid">{(releases??[]).map((release)=><article className="admin-access-card" key={release.id}>
-        <div><b>{l('انتشار','Release')} #{release.release_number}</b><small>{release.status} · {new Date(release.published_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</small><small>{release.release_note??l('بدون یادداشت','No note')}</small></div>
+        <div><b>{l('انتشار','Release')} #{release.release_number}</b><small>{releaseStatus(release.status)} · {new Date(release.published_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</small><small>{release.release_note??l('بدون یادداشت','No note')}</small></div>
         {release.id===state?.published_release_id?<p className="admin-warning-text">{l('این انتشار هم‌اکنون فعال است.','This release is currently active.')}</p>:<ActionForm action={rollbackDesignAction} danger confirmTitle={l('بازگردانی طراحی','Roll back design')} confirmMessage={l(`طراحی به نسخه انتشار شماره ${release.release_number} برگردد و انتشار جدید ساخته شود؟`,`Restore release #${release.release_number} and create a new release?`)}>
           <input type="hidden" name="site_id" value={id}/><input type="hidden" name="target_release_id" value={release.id}/>
           <label>{l('یادداشت بازگشت','Rollback note')}<input name="release_note" maxLength={1000} defaultValue={l(`بازگشت به انتشار شماره ${release.release_number}`,`Rollback to release #${release.release_number}`)}/></label>

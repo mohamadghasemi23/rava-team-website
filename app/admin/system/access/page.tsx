@@ -57,6 +57,7 @@ export default async function AccessControlPage() {
     active: l('فعال', 'Active'), pending: l('در انتظار', 'Pending'), revoked: l('لغوشده', 'Revoked'),
     accepted: l('پذیرفته‌شده', 'Accepted'), expired: l('منقضی‌شده', 'Expired'),
   }[status] ?? (locale === 'fa' ? 'وضعیت نامشخص' : 'Unknown status'))
+  const riskLabel=(risk:string)=>({low:l('کم','Low'),medium:l('متوسط','Medium'),high:l('زیاد','High'),critical:l('بحرانی','Critical')}[risk]??l('نامشخص','Unknown'))
 
   return <main className="admin-shell">
     <header className="admin-head">
@@ -74,7 +75,7 @@ export default async function AccessControlPage() {
         <label>{l('نام انگلیسی نقش','English role name')}<input name="name_en" placeholder="SEO Manager" required /></label>
         <label>{l('توضیح فارسی','Persian description')}<textarea name="description_fa" rows={2} /></label>
         <label>{l('توضیح انگلیسی','English description')}<textarea name="description_en" rows={2} /></label>
-        <fieldset className="admin-permission-grid"><legend>{l('مجوزها','Permissions')}</legend>{permissions.map((permission) => <label className="admin-check" key={permission.key}><input type="checkbox" name="permission_keys" value={permission.key}/><span><b>{locale==='fa'?permission.name_fa:permission.name_en}</b><small>{permission.key} · {permission.risk_level}</small></span></label>)}</fieldset>
+        <fieldset className="admin-permission-grid"><legend>{l('مجوزها','Permissions')}</legend>{permissions.map((permission) => <label className="admin-check" key={permission.key}><input type="checkbox" name="permission_keys" value={permission.key}/><span><b>{locale==='fa'?permission.name_fa:permission.name_en}</b><small>{locale==='fa'?riskLabel(permission.risk_level):`${permission.key} · ${riskLabel(permission.risk_level)}`}</small></span></label>)}</fieldset>
         <button className="admin-primary-button" type="submit">{l('ساخت نقش','Create role')}</button>
       </ActionForm>
     </section>
@@ -84,10 +85,10 @@ export default async function AccessControlPage() {
       <div className="admin-access-grid">{roles.map((role) => {
         const selected = new Set(rolePermissions.filter((entry) => entry.role_id === role.id).map((entry) => entry.permission_key))
         return <article className="admin-access-card" key={role.id}>
-          <div><b>{locale==='fa'?role.name_fa:role.name_en}</b><small>{role.key}</small><small>{scopeLabel(role.scope_type, role.organization_id, role.site_id, organizations, sites,locale)}</small></div>
+          <div><b>{locale==='fa'?role.name_fa:role.name_en}</b>{locale==='en'?<small>{role.key}</small>:null}<small>{scopeLabel(role.scope_type, role.organization_id, role.site_id, organizations, sites,locale)}</small></div>
           {role.immutable ? <p className="admin-warning-text">{l('نقش سیستمی است و برای حفظ امنیت از این صفحه تغییر نمی‌کند.','This system role cannot be changed here to preserve platform security.')}</p> : <ActionForm action={updateRolePermissionsAction} confirmTitle={l('تغییر مجوزهای نقش','Change role permissions')} confirmMessage={l(`مجوزهای «${role.name_fa}» جایگزین شوند؟`,`Replace permissions for “${role.name_en}”?`)}>
             <input type="hidden" name="role_id" value={role.id}/>
-            <div className="admin-compact-checks">{permissions.map((permission) => <label className="admin-check" key={permission.key}><input type="checkbox" name="permission_keys" value={permission.key} defaultChecked={selected.has(permission.key)}/><span><b>{locale==='fa'?permission.name_fa:permission.name_en}</b><small>{permission.key}</small></span></label>)}</div>
+            <div className="admin-compact-checks">{permissions.map((permission) => <label className="admin-check" key={permission.key}><input type="checkbox" name="permission_keys" value={permission.key} defaultChecked={selected.has(permission.key)}/><span><b>{locale==='fa'?permission.name_fa:permission.name_en}</b>{locale==='en'?<small>{permission.key}</small>:null}</span></label>)}</div>
             <button className="admin-primary-button" type="submit">{l('ذخیره مجوزها','Save permissions')}</button>
           </ActionForm>}
         </article>

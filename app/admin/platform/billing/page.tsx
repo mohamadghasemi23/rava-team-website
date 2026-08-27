@@ -15,6 +15,8 @@ export default async function BillingPage(){
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
   const money=(value:number,currency:string)=>`${new Intl.NumberFormat(locale==='fa'?'fa-IR':'en-US').format(value)} ${currency}`
   const statusLabel=(value:string)=>({active:l('فعال','Active'),draft:l('پیش‌نویس','Draft'),issued:l('صادرشده','Issued'),partially_paid:l('نیمه‌پرداخت‌شده','Partially paid'),paid:l('پرداخت‌شده','Paid'),overdue:l('سررسیدگذشته','Overdue'),cancelled:l('لغوشده','Cancelled')}[value]??value)
+  const tierLabel=(value:string)=>({core:l('پایه','Core'),premium:l('حرفه‌ای','Premium'),enterprise:l('سازمانی','Enterprise'),custom:l('سفارشی','Custom')}[value]??l('سفارشی','Custom'))
+  const intervalLabel=(value:string)=>({monthly:l('ماهانه','Monthly'),quarterly:l('سه‌ماهه','Quarterly'),yearly:l('سالانه','Yearly'),custom:l('سفارشی','Custom')}[value]??l('سفارشی','Custom'))
   await requireAnyPermission([PERMISSIONS.PLATFORM_BILLING_MANAGE,PERMISSIONS.BILLING_VIEW,PERMISSIONS.BILLING_MANAGE])
   const supabase=await createClient()
   const [orgRes,siteRes,planRes,contractRes,invoiceRes]=await Promise.all([
@@ -47,7 +49,7 @@ export default async function BillingPage(){
       <ActionForm action={createContractAction} className="admin-form" confirmTitle={l('ساخت قرارداد','Create contract')} confirmMessage={l('قرارداد با طرح و سایت‌های انتخاب‌شده ساخته شود؟','Create this contract with the selected plan and sites?')}>
         <label>{l('مشتری','Customer')}<select name="organization_id" required defaultValue=""><option value="" disabled>{l('انتخاب مشتری','Select customer')}</option>{organizations.map(o=><option key={o.id} value={o.id}>{o.name}</option>)}</select></label>
         <label>{l('شماره قرارداد','Contract number')}<input name="contract_number" required placeholder="RAVA-1405-001" /></label>
-        <label>{l('طرح','Plan')}<select name="plan_id" defaultValue=""><option value="">{l('سفارشی','Custom')}</option>{plans.map(p=><option key={p.id} value={p.id}>{locale==='fa'?p.name_fa:p.name_en} · {p.commercial_tier}</option>)}</select></label>
+        <label>{l('طرح','Plan')}<select name="plan_id" defaultValue=""><option value="">{l('سفارشی','Custom')}</option>{plans.map(p=><option key={p.id} value={p.id}>{locale==='fa'?p.name_fa:p.name_en} · {tierLabel(p.commercial_tier)}</option>)}</select></label>
         <label>{l('واحد پول','Currency')}<input name="currency" defaultValue="IRR" maxLength={3}/></label>
         <label>{l('مبلغ پایه در کوچک‌ترین واحد پول','Base amount in minor units')}<input name="base_amount_minor" type="number" min="0" defaultValue="0"/></label>
         <label>{l('دوره صورتحساب','Billing interval')}<select name="billing_interval" defaultValue="monthly"><option value="monthly">{l('ماهانه','Monthly')}</option><option value="quarterly">{l('سه‌ماهه','Quarterly')}</option><option value="yearly">{l('سالانه','Yearly')}</option><option value="custom">{l('سفارشی','Custom')}</option></select></label>
@@ -61,7 +63,7 @@ export default async function BillingPage(){
 
     <section className="admin-panel">
       <div className="admin-section-title"><div><h2>{l('فهرست طرح‌ها','Plan catalog')}</h2><p>{l('قیمت طرح مرجع است و مبلغ واقعی هر قرارداد می‌تواند مستقل باشد.','Plan pricing is a reference; each contract may define an independent amount.')}</p></div><span>{plans.length} {l('طرح','plans')}</span></div>
-      <div className="admin-access-grid">{plans.map(plan=><article className="admin-access-card" key={plan.id}><div><b>{locale==='fa'?plan.name_fa:plan.name_en}</b><small>{plan.key}</small><small>{plan.commercial_tier} · {plan.billing_interval}</small></div><strong>{money(plan.base_price_minor,plan.currency)}</strong></article>)}</div>
+      <div className="admin-access-grid">{plans.map(plan=><article className="admin-access-card" key={plan.id}><div><b>{locale==='fa'?plan.name_fa:plan.name_en}</b>{locale==='en'?<small>{plan.key}</small>:null}<small>{tierLabel(plan.commercial_tier)} · {intervalLabel(plan.billing_interval)}</small></div><strong>{money(plan.base_price_minor,plan.currency)}</strong></article>)}</div>
     </section>
 
     <section className="admin-panel">

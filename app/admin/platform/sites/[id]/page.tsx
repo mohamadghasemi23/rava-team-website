@@ -8,6 +8,9 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
   const statusLabel=(value:string)=>({active:l('فعال','Active'),inactive:l('غیرفعال','Inactive'),draft:l('پیش‌نویس','Draft'),trial:l('آزمایشی','Trial'),grace:l('مهلت تمدید','Grace period'),suspended:l('تعلیق‌شده','Suspended')}[value]??value)
   const environmentLabel=(value:string)=>({preview:l('پیش‌نمایش','Preview'),staging:l('آزمایشی','Staging'),production:l('اصلی','Production')}[value]??value)
+  const sslLabel=(value:string)=>({active:l('فعال','Active'),pending:l('در انتظار','Pending'),failed:l('ناموفق','Failed'),disabled:l('غیرفعال','Disabled')}[value]??l('نامشخص','Unknown'))
+  const tierLabel=(value:string)=>({core:l('پایه','Core'),premium:l('حرفه‌ای','Premium'),enterprise:l('سازمانی','Enterprise'),custom:l('سفارشی','Custom')}[value]??l('سفارشی','Custom'))
+  const moduleLabel=(value:string)=>({cms:l('مدیریت محتوا','Content management'),design:l('طراحی','Design'),commerce:l('فروشگاه','Commerce'),media:l('رسانه','Media'),analytics:l('آمار و تحلیل','Analytics')}[value]??(locale==='fa'?'بخش سفارشی':value))
   const { id } = await params
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) notFound()
 
@@ -74,7 +77,7 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
           <div className="admin-list">
             {domains.map((domain) => (
               <article className="admin-list-row" key={domain.id}>
-                <div><b dir="ltr">{domain.hostname}</b><small>{domain.is_primary ? l('دامنه اصلی','Primary') : l('دامنه جایگزین','Alias')} · {l('گواهی امنیتی','SSL')}: {domain.ssl_status}</small></div>
+                <div><b dir="ltr">{domain.hostname}</b><small>{domain.is_primary ? l('دامنه اصلی','Primary') : l('دامنه جایگزین','Alias')} · {l('گواهی امنیتی','SSL')}: {sslLabel(domain.ssl_status)}</small></div>
               </article>
             ))}
           </div>
@@ -87,7 +90,7 @@ export default async function PlatformSiteDetailPage({ params }: { params: Promi
           <div className="admin-list">
             {entitlements.map((item) => (
               <article className="admin-list-row" key={item.module_key}>
-                <div><b>{item.module_key}</b><small>{item.tier} · {statusLabel(item.status)}</small></div>
+                <div><b>{moduleLabel(item.module_key)}</b><small>{tierLabel(item.tier)} · {statusLabel(item.status)}</small></div>
                 <span>{item.enabled ? l('فعال','Active') : l('غیرفعال','Inactive')}</span>
               </article>
             ))}
