@@ -11,9 +11,9 @@ printf '%s\n' "$new_tag" | grep -Eq '^[0-9a-f]{7,40}$' || { echo 'usage: deploy-
 [ -f "$compose_file" ] || { echo 'Staging compose file is missing' >&2; exit 1; }
 
 cd "$repo_dir"
-head_sha=$(git rev-parse HEAD)
+head_sha=$(git -c safe.directory="$repo_dir" rev-parse HEAD)
 case "$head_sha" in "$new_tag"*) ;; *) echo 'requested tag does not match repository HEAD' >&2; exit 1 ;; esac
-[ -z "$(git status --porcelain)" ] || { echo 'working tree is not clean; refusing deployment' >&2; exit 1; }
+[ -z "$(git -c safe.directory="$repo_dir" status --porcelain)" ] || { echo 'working tree is not clean; refusing deployment' >&2; exit 1; }
 
 previous_image=$(docker inspect "$app_container" --format '{{.Config.Image}}' 2>/dev/null)
 previous_health=$(docker inspect "$app_container" --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' 2>/dev/null)
