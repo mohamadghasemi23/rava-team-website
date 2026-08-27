@@ -18,7 +18,7 @@ async function translator(){const locale=await getAdminLocale();return{locale,l:
 async function failure(error:unknown,eventType:string,siteId:string,message:string,context:Record<string,unknown>={}):Promise<CommerceActionState>{
   const{locale}=await translator()
   const trace=createTraceContext()
-  const logged=await recordErrorEvent({error,category:'commerce',eventType,publicMessage:message,siteId,route:`/admin/platform/sites/${siteId}/commerce`,context,requestId:trace.requestId,correlationId:trace.correlationId,severity:'warning',explanationFa:'عملیات فروشگاه کامل نشد. علت می‌تواند دسترسی، Entitlement، ورودی نامعتبر یا خطای تراکنش باشد.',explanationEn:'The commerce operation did not complete because of permission, entitlement, validation, or transaction failure.'})
+  const logged=await recordErrorEvent({error,category:'commerce',eventType,publicMessage:message,siteId,route:`/admin/platform/sites/${siteId}/commerce`,context,requestId:trace.requestId,correlationId:trace.correlationId,severity:'warning',explanationFa:'عملیات فروشگاه کامل نشد. علت می‌تواند دسترسی، امکان تجاری، ورودی نامعتبر یا خطای تراکنش باشد.',explanationEn:'The commerce operation did not complete because of permission, entitlement, validation, or transaction failure.'})
   const first=Array.isArray(logged.data)?logged.data[0]:logged.data
   const errorId=first&&typeof first==='object'&&'error_id'in first?String(first.error_id):undefined
   return {ok:false,message:errorId?`${message} ${locale==='fa'?'شناسه خطا':'Error ID'}: ${errorId}`:message,errorId,nonce:Date.now()}
