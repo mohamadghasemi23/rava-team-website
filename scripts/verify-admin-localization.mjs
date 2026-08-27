@@ -12,7 +12,6 @@ const legacyMigrationQueue=new Set([
   'pages/[id]/page.tsx',
   'platform/billing/[id]/page.tsx','platform/billing/page.tsx',
   'platform/sites/[id]/commerce/page.tsx','platform/sites/[id]/design/page.tsx',
-  'platform/sites/[id]/page.tsx',
   'system/access/page.tsx',
 ])
 
