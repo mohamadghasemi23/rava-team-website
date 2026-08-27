@@ -208,6 +208,38 @@
       "structuredErrors": true,
       "tenantScoped": true,
       "rlsOrSecureRpc": true
+    },
+    {
+      "key": "platform.sites.console",
+      "route": "/admin/platform/sites",
+      "helpKey": "platform.sites.manage",
+      "permissions": ["platform.sites.manage"],
+      "moduleKey": "help",
+      "bilingualHelp": true,
+      "contextualHelp": true,
+      "serverValidation": true,
+      "permissionEnforced": true,
+      "entitlementRequired": false,
+      "auditLogged": true,
+      "structuredErrors": true,
+      "tenantScoped": true,
+      "rlsOrSecureRpc": true
+    },
+    {
+      "key": "platform.observability.console",
+      "route": "/admin/system/logs",
+      "helpKey": "platform.observability.review",
+      "permissions": ["platform.audit.view", "logs.view", "errors.view", "errors.manage"],
+      "moduleKey": "help",
+      "bilingualHelp": true,
+      "contextualHelp": true,
+      "serverValidation": true,
+      "permissionEnforced": true,
+      "entitlementRequired": false,
+      "auditLogged": true,
+      "structuredErrors": true,
+      "tenantScoped": true,
+      "rlsOrSecureRpc": true
     }
   ]
 }
