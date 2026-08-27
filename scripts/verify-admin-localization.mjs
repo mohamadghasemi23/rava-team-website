@@ -9,7 +9,6 @@ const allowedInfrastructure=new Set([
 // Existing pages are removed from this list only after both locales are verified.
 // New files are never added: CI must reject new one-language admin UI.
 const legacyMigrationQueue=new Set([
-  'system/access/page.tsx',
 ])
 
 function walk(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{const full=path.join(dir,entry.name);return entry.isDirectory()?walk(full):[full]})}
