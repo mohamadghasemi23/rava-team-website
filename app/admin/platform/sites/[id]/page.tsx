@@ -1,102 +1,28 @@
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
-import { PERMISSIONS, requirePermission } from '@/lib/authz/permissions'
+import {notFound} from 'next/navigation'
+import {createClient} from '@/lib/supabase/server'
+import {PERMISSIONS,requirePermission} from '@/lib/authz/permissions'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 
-export default async function PlatformSiteDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
-  const statusLabel=(value:string)=>({active:l('فعال','Active'),inactive:l('غیرفعال','Inactive'),draft:l('پیش‌نویس','Draft'),trial:l('آزمایشی','Trial'),grace:l('مهلت تمدید','Grace period'),suspended:l('تعلیق‌شده','Suspended')}[value]??value)
-  const environmentLabel=(value:string)=>({preview:l('پیش‌نمایش','Preview'),staging:l('آزمایشی','Staging'),production:l('اصلی','Production')}[value]??value)
-  const sslLabel=(value:string)=>({active:l('فعال','Active'),pending:l('در انتظار','Pending'),failed:l('ناموفق','Failed'),disabled:l('غیرفعال','Disabled')}[value]??l('نامشخص','Unknown'))
-  const tierLabel=(value:string)=>({core:l('پایه','Core'),premium:l('حرفه‌ای','Premium'),enterprise:l('سازمانی','Enterprise'),custom:l('سفارشی','Custom')}[value]??l('سفارشی','Custom'))
-  const moduleLabel=(value:string)=>({cms:l('مدیریت محتوا','Content management'),design:l('طراحی','Design'),commerce:l('فروشگاه','Commerce'),media:l('رسانه','Media'),analytics:l('آمار و تحلیل','Analytics')}[value]??(locale==='fa'?'بخش سفارشی':value))
-  const { id } = await params
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) notFound()
-
-  const supabase = await createClient()
-  const { data: site } = await supabase
-    .from('sites')
-    .select('id,organization_id,name,slug,status,primary_locale,default_currency,timezone,theme_config,settings,created_at,organizations(id,name,slug,status)')
-    .eq('id', id)
-    .maybeSingle()
-
-  if (!site) notFound()
-  await requirePermission(PERMISSIONS.PLATFORM_SITES_MANAGE, { organizationId: site.organization_id, siteId: site.id })
-
-  const [{ data: environments }, { data: domains }, { data: entitlements }] = await Promise.all([
-    supabase.from('site_environments').select('id,kind,active,updated_at').eq('site_id', id).order('kind'),
-    supabase.from('site_domains').select('id,hostname,is_primary,verified_at,ssl_status').eq('site_id', id).order('is_primary', { ascending: false }),
-    supabase.from('site_entitlements').select('module_key,status,tier,enabled,limits,ends_at,grace_until').eq('site_id', id).order('module_key'),
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+export default async function PlatformSiteDetailPage({params}:{params:Promise<{id:string}>}){
+  const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en,{id}=await params;if(!uuid.test(id))notFound()
+  const supabase=await createClient(),{data:site}=await supabase.from('sites').select('id,organization_id,name,slug,status,primary_locale,default_currency,timezone,organizations(id,name)').eq('id',id).maybeSingle();if(!site)notFound()
+  await requirePermission(PERMISSIONS.PLATFORM_SITES_MANAGE,{organizationId:site.organization_id,siteId:site.id})
+  const[{data:environments},{data:domains},{data:entitlements},{count:pages}]=await Promise.all([
+    supabase.from('site_environments').select('id,kind,active').eq('site_id',id).order('kind'),
+    supabase.from('site_domains').select('id,hostname,is_primary,verified_at,ssl_status').eq('site_id',id).order('is_primary',{ascending:false}),
+    supabase.from('site_entitlements').select('module_key,status,tier,enabled').eq('site_id',id).order('module_key'),
+    supabase.from('pages').select('id',{count:'exact',head:true}).eq('site_id',id),
   ])
-
-  const organization = Array.isArray(site.organizations) ? site.organizations[0] : site.organizations
-  const commerce = entitlements?.find((item) => item.module_key === 'commerce')
-
-  return (
-    <main className="admin-shell">
-      <div className="admin-head">
-        <div>
-          <span className="eyebrow">{l('مرکز مدیریت سایت راوا','RAVA SITE CONTROL')}</span>
-          <h1>{site.name}</h1>
-          <p>{organization?.name ?? '—'} · {site.slug} · {site.primary_locale.toUpperCase()} · {site.default_currency} · {site.timezone}</p>
-        </div>
-        <div className="actions">
-          <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/starter`}>{l('راه‌اندازی اولیه','Starter setup')}</Link>
-          <Link className="admin-primary-button" href={`/admin/pages?site=${id}`}>{l('محتوا و صفحه‌ها','Content and pages')}</Link>
-          <Link className="admin-primary-button" href={`/admin/media?site=${id}`}>{l('کتابخانه رسانه','Media library')}</Link>
-          <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/design`}>{l('قالب و طراحی','Template and design')}</Link>
-          {commerce?.enabled && ['active','trial','grace'].includes(commerce.status)
-            ? <Link className="admin-primary-button" href={`/admin/platform/sites/${id}/commerce`}>{l('فروشگاه','Commerce')}</Link>
-            : <span className="admin-muted-button" title={l('امکان فروشگاه برای این سایت فعال نیست','Commerce is not enabled for this site')}>{l('فروشگاه غیرفعال','Commerce unavailable')}</span>}
-          <Link className="admin-muted-button" href="/admin/platform/sites">{l('بازگشت به سایت‌ها','Back to sites')}</Link>
-        </div>
-      </div>
-
-      <div className="admin-stats">
-        <div><strong>{statusLabel(site.status)}</strong><span>{l('وضعیت سایت','Site status')}</span></div>
-        <div><strong>{environments?.length ?? 0}</strong><span>{l('محیط','Environments')}</span></div>
-        <div><strong>{domains?.length ?? 0}</strong><span>{l('دامنه','Domains')}</span></div>
-        <div><strong>{entitlements?.filter((item) => item.enabled).length ?? 0}</strong><span>{l('بخش فعال','Enabled modules')}</span></div>
-      </div>
-
-      <section className="admin-panel">
-        <h2>{l('محیط‌ها','Environments')}</h2>
-        <div className="admin-list">
-          {environments?.map((environment) => (
-            <article className="admin-list-row" key={environment.id}>
-              <div><b>{environmentLabel(environment.kind)}</b><small>{environment.active ? l('فعال','Active') : l('غیرفعال','Inactive')}</small></div>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="admin-panel">
-        <h2>{l('دامنه‌ها','Domains')}</h2>
-        {!domains?.length ? <div className="admin-empty">{l('هنوز دامنه‌ای متصل نشده است.','No domains have been connected yet.')}</div> : (
-          <div className="admin-list">
-            {domains.map((domain) => (
-              <article className="admin-list-row" key={domain.id}>
-                <div><b dir="ltr">{domain.hostname}</b><small>{domain.is_primary ? l('دامنه اصلی','Primary') : l('دامنه جایگزین','Alias')} · {l('گواهی امنیتی','SSL')}: {sslLabel(domain.ssl_status)}</small></div>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <section className="admin-panel">
-        <h2>{l('بخش‌ها و امکانات فعال','Modules and entitlements')}</h2>
-        {!entitlements?.length ? <div className="admin-empty">{l('هیچ بخشی برای سایت ثبت نشده است.','No modules are registered for this site.')}</div> : (
-          <div className="admin-list">
-            {entitlements.map((item) => (
-              <article className="admin-list-row" key={item.module_key}>
-                <div><b>{moduleLabel(item.module_key)}</b><small>{tierLabel(item.tier)} · {statusLabel(item.status)}</small></div>
-                <span>{item.enabled ? l('فعال','Active') : l('غیرفعال','Inactive')}</span>
-              </article>
-            ))}
-          </div>
-        )}
-      </section>
-    </main>
-  )
+  const organization=Array.isArray(site.organizations)?site.organizations[0]:site.organizations,commerce=entitlements?.find(item=>item.module_key==='commerce'),hasContent=(pages??0)>0
+  const statusLabel=(value:string)=>({active:l('فعال','Active'),inactive:l('غیرفعال','Inactive'),draft:l('پیش‌نویس','Draft'),trial:l('آزمایشی','Trial'),grace:l('مهلت تمدید','Grace period'),suspended:l('تعلیق‌شده','Suspended')}[value]??l('نامشخص','Unknown'))
+  const environmentLabel=(value:string)=>({preview:l('پیش‌نمایش','Preview'),staging:l('آزمایشی','Staging'),production:l('اصلی','Production')}[value]??l('سفارشی','Custom'))
+  const moduleLabel=(value:string)=>({cms:l('محتوا و صفحه‌ها','Content and pages'),design:l('ظاهر و قالب','Appearance and templates'),commerce:l('فروشگاه','Commerce'),media:l('رسانه‌ها','Media'),analytics:l('آمار و تحلیل','Analytics')}[value]??l('امکان سفارشی','Custom capability'))
+  const nextEyebrow=hasContent?l('قدم بعدی پیشنهادی','RECOMMENDED NEXT STEP'):l('مرحله ۲ از ۵','STEP 2 OF 5'),nextTitle=hasContent?l('محتوا و اطلاعات واقعی را بازبینی کنید','Review content and real business information'):l('محتوای مناسب کسب‌وکار را انتخاب کنید','Choose suitable business content'),nextDescription=hasContent?l('صفحه‌ها آماده‌اند؛ خدمات، اطلاعات تماس، تصویرها و ویدیوها را بررسی و اصلاح کنید.','Pages are ready. Review services, contact details, images, and videos.'):l('راوا صفحه‌ها و محتوای پیش‌فرض متناسب با حوزه را به‌صورت پیش‌نویس می‌سازد.','RAVA creates suitable default pages and content as drafts.'),nextLabel=hasContent?l('بازبینی صفحه‌ها','Review pages'):l('انتخاب محتوای آماده','Choose ready-made content')
+  return <main className="admin-shell"><header className="admin-head"><div><span className="eyebrow">{l('مدیریت سایت','SITE MANAGEMENT')}</span><h1>{site.name}</h1><p>{organization?.name??l('مشتری ثبت‌نشده','Unassigned customer')}</p></div><div className="admin-actions"><Link className="admin-primary-button" href={hasContent?`/admin/pages?site=${id}`:`/admin/platform/sites/${id}/starter`}>{hasContent?l('ادامه تکمیل سایت','Continue site setup'):l('شروع راه‌اندازی','Start setup')}</Link><Link className="admin-muted-button" href="/admin/platform/sites">{l('همه سایت‌ها','All sites')}</Link></div></header>
+    <section className="admin-panel"><span className="eyebrow">{nextEyebrow}</span><h2>{nextTitle}</h2><p>{nextDescription}</p><Link className="admin-primary-button" href={hasContent?`/admin/pages?site=${id}`:`/admin/platform/sites/${id}/starter`}>{nextLabel}</Link></section>
+    <section className="admin-panel"><h2>{l('کارهای این سایت','Site tasks')}</h2><div className="admin-access-grid"><Link className="admin-access-card" href={`/admin/pages?site=${id}`}><b>{l('صفحه‌ها و منو','Pages and navigation')}</b><small>{l('ساخت، مرتب‌سازی و ویرایش محتوای سایت','Create, arrange, and edit site content')}</small></Link><Link className="admin-access-card" href={`/admin/media?site=${id}`}><b>{l('تصویرها و ویدیوها','Images and videos')}</b><small>{l('بارگذاری، جست‌وجو و مدیریت رسانه‌ها','Upload, search, and manage media')}</small></Link><Link className="admin-access-card" href={`/admin/platform/sites/${id}/design`}><b>{l('ظاهر سایت','Site appearance')}</b><small>{l('قالب، رنگ و قلم را در پیش‌نمایش انتخاب کنید','Choose templates, colors, and type in preview')}</small></Link>{commerce?.enabled&&['active','trial','grace'].includes(commerce.status)?<Link className="admin-access-card" href={`/admin/platform/sites/${id}/commerce`}><b>{l('فروشگاه','Commerce')}</b><small>{l('مدیریت امکانات فروشگاهی فعال','Manage enabled commerce capabilities')}</small></Link>:null}</div></section>
+    <details className="admin-panel rava-admin-advanced"><summary>{l('اطلاعات فنی و تنظیمات پیشرفته','Technical information and advanced settings')}</summary><p>{l('این اطلاعات برای کار روزمره لازم نیست و راوا آن‌ها را خودکار مدیریت می‌کند.','These details are not needed for everyday work and are managed automatically by RAVA.')}</p><div className="admin-stats"><div><strong>{statusLabel(site.status)}</strong><span>{l('وضعیت سایت','Site status')}</span></div><div><strong>{environments?.length??0}</strong><span>{l('محیط اجرا','Environments')}</span></div><div><strong>{domains?.length??0}</strong><span>{l('دامنه','Domains')}</span></div><div><strong>{entitlements?.filter(item=>item.enabled).length??0}</strong><span>{l('امکان فعال','Enabled capabilities')}</span></div></div><div className="admin-list"><article className="admin-list-row"><div><b>{l('شناسه داخلی سایت','Internal site identifier')}</b><small dir="ltr">{site.slug}</small></div></article><article className="admin-list-row"><div><b>{l('زبان، واحد پول و زمان','Language, currency, and time')}</b><small dir="ltr">{site.primary_locale.toUpperCase()} · {site.default_currency} · {site.timezone}</small></div></article>{environments?.map(item=><article className="admin-list-row" key={item.id}><div><b>{environmentLabel(item.kind)}</b><small>{item.active?l('فعال','Active'):l('غیرفعال','Inactive')}</small></div></article>)}{domains?.map(item=><article className="admin-list-row" key={item.id}><div><b dir="ltr">{item.hostname}</b><small>{item.is_primary?l('دامنه اصلی','Primary domain'):l('دامنه جایگزین','Alias domain')} · {item.ssl_status==='active'?l('گواهی امنیتی فعال','Security certificate active'):l('گواهی امنیتی در انتظار','Security certificate pending')}</small></div></article>)}{entitlements?.map(item=><article className="admin-list-row" key={item.module_key}><div><b>{moduleLabel(item.module_key)}</b><small>{item.enabled?l('فعال','Enabled'):l('غیرفعال','Disabled')}</small></div></article>)}</div></details>
+  </main>
 }

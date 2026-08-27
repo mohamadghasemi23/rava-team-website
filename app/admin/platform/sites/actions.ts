@@ -1,5 +1,6 @@
 'use server'
 
+import {randomUUID} from 'node:crypto'
 import { provisionOrganizationSite } from '@/lib/platform/provisioning'
 import { createTraceContext, recordAuditEvent, recordErrorEvent } from '@/lib/observability/events'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
@@ -32,14 +33,16 @@ const messagesEn:Record<string,string>={authentication_required:'Sign in again b
 export async function provisionSiteAction(_state: ProvisionActionState, formData: FormData): Promise<ProvisionActionState> {
   const locale=await getAdminLocale(),messages=locale==='fa'?messagesFa:messagesEn
   const trace = createTraceContext()
+  const suffix=randomUUID().replaceAll('-','').slice(0,12),organizationName=String(formData.get('organization_name')??''),siteName=String(formData.get('site_name')??'').trim()||organizationName
+  const primaryLocale=String(formData.get('primary_locale')??'fa')==='en'?'en':'fa'
   const requested = {
-    organizationName: String(formData.get('organization_name') ?? ''),
-    organizationSlug: String(formData.get('organization_slug') ?? ''),
-    siteName: String(formData.get('site_name') ?? ''),
-    siteSlug: String(formData.get('site_slug') ?? ''),
-    primaryLocale: String(formData.get('primary_locale') ?? 'fa'),
-    defaultCurrency: String(formData.get('default_currency') ?? 'IRR'),
-    timezone: String(formData.get('timezone') ?? 'Asia/Tehran'),
+    organizationName,
+    organizationSlug: `customer-${suffix}`,
+    siteName,
+    siteSlug: `site-${suffix}`,
+    primaryLocale,
+    defaultCurrency: primaryLocale==='fa'?'IRR':'USD',
+    timezone: primaryLocale==='fa'?'Asia/Tehran':'UTC',
   }
 
   try {
@@ -60,8 +63,8 @@ export async function provisionSiteAction(_state: ProvisionActionState, formData
 
     return {
       ok: true,
-      message: locale==='fa'?`مشتری و سایت با موفقیت ساخته شدند. شناسه سایت: ${result.siteId}`:`Customer and site created successfully. Site ID: ${result.siteId}`,
-      redirectTo: `/admin/platform/sites/${result.siteId}`,
+      message: locale==='fa'?'مشتری و سایت آماده شدند. حالا محتوای مناسب کسب‌وکار را انتخاب کنید.':'The customer and site are ready. Now choose suitable business content.',
+      redirectTo: `/admin/platform/sites/${result.siteId}/starter`,
       nonce: Date.now(),
     }
   } catch (error) {
