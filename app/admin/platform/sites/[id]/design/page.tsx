@@ -14,6 +14,8 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
   const sourceLabel=(value:string)=>({template:l('قالب','Template'),manual:l('ویرایش دستی','Manual edit'),rollback:l('بازگردانی','Rollback'),starter:l('راه‌اندازی اولیه','Starter setup')}[value]??l('منبع سیستمی','System source'))
   const releaseStatus=(value:string)=>({published:l('منتشرشده','Published'),active:l('فعال','Active'),superseded:l('جایگزین‌شده','Superseded'),rolled_back:l('بازگردانی‌شده','Rolled back')}[value]??l('وضعیت نامشخص','Unknown status'))
+  const tierLabel=(value:string)=>({core:l('پایه','Core'),premium:l('حرفه‌ای','Premium'),enterprise:l('سازمانی','Enterprise')}[value]??l('سفارشی','Custom'))
+  const industryLabel=(value:string)=>({services:l('خدماتی','Services'),commerce:l('فروشگاهی','Commerce'),agency:l('آژانس','Agency'),corporate:l('شرکتی','Corporate'),general:l('عمومی','General')}[value]??l('عمومی','General'))
   const {id}=await params
   if(!validUuid(id)) notFound()
   const supabase=await createClient()
@@ -68,7 +70,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
 
     <div className="admin-stats">
       <div><strong>{locale==='fa'?currentTemplate?.name_fa:currentTemplate?.name_en??'—'}</strong><span>{l('قالب فعلی','Current template')}</span></div>
-      <div><strong>{currentVersion?`v${currentVersion.version}`:'—'}</strong><span>{l('نسخه قالب','Template version')}</span></div>
+      <div><strong>{currentVersion?`${locale==='fa'?'نسخه':'v'} ${currentVersion.version}`:'—'}</strong><span>{l('نسخه قالب','Template version')}</span></div>
       <div><strong>{currentRevision?`#${currentRevision.revision}`:'—'}</strong><span>{l('نسخه پیش‌نویس','Draft revision')}</span></div>
       <div><strong>{releases?.[0]?`#${releases[0].release_number}`:'—'}</strong><span>{l('آخرین انتشار','Latest release')}</span></div>
     </div>
@@ -79,7 +81,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
         const templateVersions=(versions??[]).filter((v)=>v.template_id===template.id)
         const latest=templateVersions[0]
         return <article className="admin-access-card" key={template.id}>
-          <div><b>{locale==='fa'?template.name_fa:template.name_en}</b><small>{template.industry_key}</small><small>{template.commercial_tier.toUpperCase()} · {template.is_public?l('عمومی','Public'):l('کنترل‌شده','Controlled')}</small></div>
+          <div><b>{locale==='fa'?template.name_fa:template.name_en}</b><small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('عمومی','Public'):l('کنترل‌شده','Controlled')}</small></div>
           <p>{locale==='fa'?template.description_fa:template.description_en}</p>
           {latest?<ActionForm action={applyTemplateAction} confirmTitle={l('اعمال قالب','Apply template')} confirmMessage={l(`نسخه ${latest.version} از «${template.name_fa}» به‌عنوان پیش‌نویس جدید اعمال شود؟`,`Apply version ${latest.version} of “${template.name_en}” as a new draft?`)}>
             <input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_version_id" value={latest.id}/>
@@ -115,7 +117,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>{l('نسخه','Revision')}</th><th>{l('منبع','Source')}</th><th>{l('قالب','Template')}</th><th>{l('زمان','Time')}</th><th>{l('یادداشت','Note')}</th></tr></thead><tbody>{(revisions??[]).map((revision)=>{
         const template=(templates??[]).find((item)=>item.id===revision.template_id)
         const version=(versions??[]).find((item)=>item.id===revision.template_version_id)
-        return <tr key={revision.id}><td>#{revision.revision}{revision.id===state?.current_revision_id?` · ${l('فعلی','CURRENT')}`:''}</td><td>{sourceLabel(revision.source)}</td><td>{locale==='fa'?template?.name_fa:template?.name_en??'—'}{version?` v${version.version}`:''}</td><td>{new Date(revision.created_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</td><td>{revision.note??'—'}</td></tr>
+        return <tr key={revision.id}><td>#{revision.revision}{revision.id===state?.current_revision_id?` · ${l('فعلی','CURRENT')}`:''}</td><td>{sourceLabel(revision.source)}</td><td>{locale==='fa'?template?.name_fa:template?.name_en??'—'}{version?` ${locale==='fa'?'نسخه':'v'} ${version.version}`:''}</td><td>{new Date(revision.created_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</td><td>{revision.note??'—'}</td></tr>
       })}</tbody></table></div>
     </section>
 
