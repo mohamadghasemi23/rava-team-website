@@ -11,7 +11,6 @@ const allowedInfrastructure=new Set([
 const legacyMigrationQueue=new Set([
   'pages/[id]/page.tsx',
   'platform/billing/[id]/page.tsx','platform/billing/page.tsx',
-  'platform/sites/[id]/design/page.tsx',
   'system/access/page.tsx',
 ])
 
