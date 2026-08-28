@@ -77,7 +77,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
 
     <section className="admin-panel" id="visual-preview">
       <div className="admin-section-title"><div><h2>{l('پیش‌نمایش زنده پیش‌نویس','Live draft preview')}</h2><p>{l('همین خروجی واقعی سایت را در رایانه و موبایل ببینید. این پیش‌نمایش خصوصی است و تا تأیید انتشار برای بازدیدکنندگان نمایش داده نمی‌شود.','See the real site output on desktop and mobile. This preview is private and visitors will not see it until publishing is approved.')}</p></div><span>{l('خصوصی','Private')}</span></div>
-      <DesignPreviewFrame siteId={id} pages={pages??[]} locale={locale}/>
+      <DesignPreviewFrame siteId={id} pages={pages??[]}/>
     </section>
 
     <section className="admin-panel" id="appearance">
