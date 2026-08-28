@@ -64,15 +64,13 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
 
   return <main className="admin-shell">
     <header className="admin-head">
-      <div><span className="kicker">{l('موتور طراحی','DESIGN ENGINE')}</span><h1>{l('قالب، ظاهر و انتشار','Template, theme, and release')}</h1><p>{site.name} · {l('پیش‌نویس، پیش‌نمایش، انتشار و بازگشت با تاریخچه تغییرناپذیر.','Draft, preview, publish, and rollback with immutable history.')}</p></div>
+      <div><span className="kicker">{l('مرحله ۴ و ۵ راه‌اندازی','SETUP STEPS 4 AND 5')}</span><h1>{l('ظاهر سایت و تأیید نهایی','Site appearance and final approval')}</h1><p>{site.name} · {l('ابتدا قالب دلخواه را انتخاب کنید؛ سپس خلاصه تغییرات را ببینید و انتشار را جداگانه تأیید کنید.','Choose the preferred template first, then review the change summary and approve publishing separately.')}</p></div>
       <Link className="admin-muted-button" href={`/admin/platform/sites/${id}`}>{l('بازگشت به سایت','Back to site')}</Link>
     </header>
 
-    <div className="admin-stats">
-      <div><strong>{locale==='fa'?currentTemplate?.name_fa:currentTemplate?.name_en??'—'}</strong><span>{l('قالب فعلی','Current template')}</span></div>
-      <div><strong>{currentVersion?`${locale==='fa'?'نسخه':'v'} ${currentVersion.version}`:'—'}</strong><span>{l('نسخه قالب','Template version')}</span></div>
-      <div><strong>{currentRevision?`#${currentRevision.revision}`:'—'}</strong><span>{l('نسخه پیش‌نویس','Draft revision')}</span></div>
-      <div><strong>{releases?.[0]?`#${releases[0].release_number}`:'—'}</strong><span>{l('آخرین انتشار','Latest release')}</span></div>
+    <div className="rava-design-steps" aria-label={l('مراحل ظاهر و انتشار','Appearance and publishing steps')}>
+      <a href="#appearance" className="is-ready"><b>۴</b><span><strong>{l('انتخاب ظاهر','Choose appearance')}</strong><small>{currentTemplate?l('قالب انتخاب شده است.','A template has been selected.'):l('یک قالب را انتخاب کنید.','Choose a template.')}</small></span></a>
+      <a href="#release" className={state?.published_release_id?'is-ready':currentRevision?'is-current':''}><b>۵</b><span><strong>{l('بازبینی و تأیید','Review and approve')}</strong><small>{state?.published_release_id?l('نسخه تأیید و منتشر شده است.','The version is approved and published.'):currentRevision?l('پیش‌نویس برای بازبینی آماده است.','The draft is ready for review.'):l('پس از انتخاب قالب فعال می‌شود.','Available after choosing a template.')}</small></span></a>
     </div>
 
     <section className="admin-panel" id="appearance">
@@ -80,20 +78,24 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       <div className="admin-access-grid">{(templates??[]).map((template)=>{
         const templateVersions=(versions??[]).filter((v)=>v.template_id===template.id)
         const latest=templateVersions[0]
-        return <article className="admin-access-card" key={template.id}>
-          <div><b>{locale==='fa'?template.name_fa:template.name_en}</b><small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('عمومی','Public'):l('کنترل‌شده','Controlled')}</small></div>
+        const selected=template.id===state?.current_template_id
+        return <article className={`admin-access-card rava-template-choice${selected?' is-selected':''}`} key={template.id}>
+          <div><b>{locale==='fa'?template.name_fa:template.name_en}</b>{selected?<span className="status-pill status-published">{l('انتخاب فعلی','Current choice')}</span>:null}<small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('در دسترس','Available'):l('نیازمند دسترسی','Restricted')}</small></div>
           <p>{locale==='fa'?template.description_fa:template.description_en}</p>
           {latest?<ActionForm action={applyTemplateAction} confirmTitle={l('اعمال قالب','Apply template')} confirmMessage={l(`نسخه ${latest.version} از «${template.name_fa}» به‌عنوان پیش‌نویس جدید اعمال شود؟`,`Apply version ${latest.version} of “${template.name_en}” as a new draft?`)}>
             <input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_version_id" value={latest.id}/>
-            <label>{l('تنظیمات ظاهری اختیاری','Optional theme overrides')}<textarea name="theme_overrides" rows={7} defaultValue="{}" dir="ltr"/></label>
+            <input type="hidden" name="theme_overrides" value="{}"/>
             <label>{l('یادداشت','Note')}<input name="note" maxLength={500} placeholder={l('برای نمونه: انتخاب اولیه کارفرما','For example: Initial customer choice')}/></label>
-            <button className="admin-primary-button" type="submit">{l('اعمال نسخه','Apply version')} {latest.version}</button>
+            <button className="admin-primary-button" type="submit" disabled={selected}>{selected?l('همین قالب انتخاب شده است','This template is selected'):l('انتخاب این قالب','Choose this template')}</button>
           </ActionForm>:<p>{l('نسخه منتشرشده ندارد.','No published version is available.')}</p>}
         </article>
       })}</div>
     </section>
 
-    <section className="admin-panel">
+    <details className="admin-panel rava-admin-advanced">
+      <summary>{l('تنظیمات تخصصی طراحی','Advanced design settings')}</summary>
+      <p>{l('این قسمت برای طراح یا توسعه‌دهنده راواست و برای راه‌اندازی معمول سایت لازم نیست.','This area is for a RAVA designer or developer and is not required for normal site setup.')}</p>
+    <section className="rava-advanced-inner">
       <div className="admin-section-title"><div><h2>{l('ویرایشگر پیش‌نویس طراحی','Design draft editor')}</h2><p>{l('تنظیمات ساختاریافته، امن و نسخه‌دار هستند و ویرایشگر دیداری بعداً روی همین موتور قرار می‌گیرد.','The structured editor is secure and versioned; the visual builder will use this same engine.')}</p></div>{currentRevision?<span>{l('نسخه','Revision')} #{currentRevision.revision}</span>:null}</div>
       <ActionForm action={saveDesignDraftAction} className="admin-form" confirmTitle={l('ذخیره پیش‌نویس جدید','Save new draft')} confirmMessage={l('نسخه جدیدی از ظاهر و چیدمان ساخته شود؟','Create a new theme and layout revision?')}>
         <input type="hidden" name="site_id" value={id}/>
@@ -103,16 +105,25 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
         <button className="admin-primary-button" type="submit">{l('ذخیره نسخه پیش‌نویس','Save draft revision')}</button>
       </ActionForm>
     </section>
+    </details>
 
     <section className="admin-panel" id="release">
-      <div className="admin-section-title"><div><h2>{l('انتشار','Publish')}</h2><p>{l('از نسخه فعلی یک تصویر تغییرناپذیر ساخته و به انتشار فعال سایت تبدیل می‌شود.','Creates an immutable snapshot from the current revision and makes it the active site release.')}</p></div></div>
+      <div className="admin-section-title"><div><h2>{l('بازبینی و تأیید انتشار','Review and approve publishing')}</h2><p>{l('انتشار یک اقدام جداگانه است؛ تا زمانی که تأیید نکنید، پیش‌نویس جدید فعال نمی‌شود.','Publishing is a separate action; the new draft does not become active until you approve it.')}</p></div><span>{state?.published_release_id?l('منتشرشده','Published'):l('منتظر تأیید','Awaiting approval')}</span></div>
+      <div className="rava-release-preview">
+        <div><span>{l('قالب انتخابی','Selected template')}</span><b>{(locale==='fa'?currentTemplate?.name_fa:currentTemplate?.name_en)??l('هنوز انتخاب نشده','Not selected yet')}</b></div>
+        <div><span>{l('نسخه آماده بازبینی','Version ready for review')}</span><b>{currentRevision?`#${currentRevision.revision}`:l('هنوز آماده نیست','Not ready yet')}</b></div>
+        <div><span>{l('وضعیت نمایش عمومی','Public display status')}</span><b>{state?.published_release_id?l('نسخه منتشرشده فعال است','A published version is active'):l('هیچ تغییر جدیدی منتشر نشده است','No new change has been published')}</b></div>
+      </div>
       <ActionForm action={publishDesignAction} className="admin-form" confirmTitle={l('انتشار طراحی','Publish design')} confirmMessage={l('نسخه فعلی به انتشار جدید تبدیل و روی سایت فعال شود؟','Convert the current revision into a new active release?')}>
         <input type="hidden" name="site_id" value={id}/><label>{l('یادداشت انتشار','Release note')}<input name="release_note" maxLength={1000} placeholder={l('برای نمونه: تأیید نهایی سربرگ و رنگ‌ها','For example: Final approval of header and colors')}/></label>
-        <button className="admin-primary-button" type="submit">{l('انتشار نسخه جدید','Publish new release')}</button>
+        <button className="admin-primary-button" type="submit" disabled={!currentRevision}>{l('تأیید و انتشار نسخه','Approve and publish version')}</button>
       </ActionForm>
     </section>
 
-    <section className="admin-panel">
+    <details className="admin-panel rava-admin-advanced">
+      <summary>{l('تاریخچه نسخه‌ها و امکان بازگشت','Version history and rollback')}</summary>
+      <p>{l('در کار روزمره نیازی به این بخش نیست. برای بررسی نسخه‌های قدیمی یا بازگردانی، آن را باز کنید.','You do not need this area for everyday work. Open it to review older versions or roll back.')}</p>
+    <section className="rava-advanced-inner">
       <div className="admin-section-title"><div><h2>{l('تاریخچه نسخه‌ها','Revision history')}</h2><p>{l('هر ذخیره یا اعمال قالب، نسخه‌ای مستقل می‌سازد.','Every save or template application creates an independent revision.')}</p></div><span>{revisions?.length??0}</span></div>
       <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>{l('نسخه','Revision')}</th><th>{l('منبع','Source')}</th><th>{l('قالب','Template')}</th><th>{l('زمان','Time')}</th><th>{l('یادداشت','Note')}</th></tr></thead><tbody>{(revisions??[]).map((revision)=>{
         const template=(templates??[]).find((item)=>item.id===revision.template_id)
@@ -121,7 +132,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       })}</tbody></table></div>
     </section>
 
-    <section className="admin-panel">
+    <section className="rava-advanced-inner">
       <div className="admin-section-title"><div><h2>{l('تاریخچه انتشار و بازگشت','Release history and rollback')}</h2><p>{l('بازگشت تاریخچه را پاک نمی‌کند؛ از نسخه انتخاب‌شده یک نسخه و انتشار جدید می‌سازد.','Rollback preserves history and creates a new revision and release from the selected snapshot.')}</p></div><span>{releases?.length??0}</span></div>
       <div className="admin-access-grid">{(releases??[]).map((release)=><article className="admin-access-card" key={release.id}>
         <div><b>{l('انتشار','Release')} #{release.release_number}</b><small>{releaseStatus(release.status)} · {new Date(release.published_at).toLocaleString(locale==='fa'?'fa-IR':'en-GB')}</small><small>{release.release_note??l('بدون یادداشت','No note')}</small></div>
@@ -132,5 +143,6 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
         </ActionForm>}
       </article>)}</div>
     </section>
+    </details>
   </main>
 }
