@@ -4,9 +4,10 @@ import ActionForm from '@/app/admin/components/ActionForm'
 import { createClient } from '@/lib/supabase/server'
 import { PERMISSIONS } from '@/lib/authz/permissions'
 import { authorizeSiteFeature, FeatureAccessError } from '@/lib/entitlements/runtime'
-import { applyTemplateAction, publishDesignAction, rollbackDesignAction, saveDesignDraftAction } from './actions'
+import {applyTemplateAction,publishDesignAction,rollbackDesignAction,saveDesignDraftAction,setTemplateAccessAction} from './actions'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 import DesignPreviewFrame from './DesignPreviewFrame'
+import {hasPermission} from '@/lib/authz/permissions'
 
 function validUuid(value:string){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)}
 function pretty(value:unknown){return JSON.stringify(value??{},null,2)}
@@ -51,7 +52,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
     </main>
   }
 
-  const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases},{data:pages},{data:designEntitlement}]=await Promise.all([
+  const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases},{data:pages},{data:designEntitlement},{data:templateAccess},canGrantTemplates]=await Promise.all([
     supabase.from('template_catalog').select('id,key,name_fa,name_en,description_fa,description_en,industry_key,commercial_tier,is_public,status').eq('status','active').order('commercial_tier').order(locale==='fa'?'name_fa':'name_en'),
     supabase.from('template_versions').select('id,template_id,version,status,theme_defaults,layout_blueprint,changelog_fa,changelog_en').eq('status','published').order('version',{ascending:false}),
     supabase.from('site_design_state').select('site_id,current_revision_id,current_template_id,current_template_version_id,published_release_id,updated_at').eq('site_id',id).maybeSingle(),
@@ -59,6 +60,8 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
     supabase.from('site_releases').select('id,release_number,status,source_revision_id,template_id,template_version_id,release_note,published_at,parent_release_id').eq('site_id',id).order('release_number',{ascending:false}).limit(30),
     supabase.from('pages').select('id,title').eq('site_id',id).order('created_at',{ascending:true}),
     supabase.from('site_entitlements').select('tier').eq('site_id',id).eq('module_key','design').maybeSingle(),
+    supabase.from('site_template_access').select('template_id,active').eq('site_id',id),
+    hasPermission(PERMISSIONS.PLATFORM_SITES_MANAGE),
   ])
 
   const currentRevision=(revisions??[]).find((item)=>item.id===state?.current_revision_id)??revisions?.[0]
@@ -89,11 +92,13 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
         const templateVersions=(versions??[]).filter((v)=>v.template_id===template.id)
         const latest=templateVersions[0]
         const selected=template.id===state?.current_template_id
-        const available=tierRank(designEntitlement?.tier)>=tierRank(template.commercial_tier)
+        const explicitlyGranted=Boolean(templateAccess?.some(item=>item.template_id===template.id&&item.active))
+        const available=explicitlyGranted||tierRank(designEntitlement?.tier)>=tierRank(template.commercial_tier)
         return <article className={`admin-access-card rava-template-choice${selected?' is-selected':''}`} key={template.id}>
           <div><b>{locale==='fa'?template.name_fa:template.name_en}</b>{selected?<span className="status-pill status-published">{l('انتخاب فعلی','Current choice')}</span>:null}<small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('در دسترس','Available'):l('نیازمند دسترسی','Restricted')}</small></div>
           <p>{locale==='fa'?template.description_fa:template.description_en}</p>
           {!available?<p className="admin-warning-text">{l('این قالب به سطح حرفه‌ای نیاز دارد؛ انتخاب آن تا ارتقای امکانات سایت غیرفعال است.','This template requires the Premium tier; selection is disabled until the site capability is upgraded.')}</p>:null}
+          {canGrantTemplates?<ActionForm action={setTemplateAccessAction} confirmTitle={explicitlyGranted?l('برداشتن دسترسی قالب','Revoke template access'):l('فعال‌کردن قالب برای مشتری','Grant template access')} confirmMessage={explicitlyGranted?l('دسترسی اختصاصی مشتری به این قالب برداشته شود؟','Remove this customer’s explicit access to the template?'):l('این قالب بدون تغییر سطح قرارداد برای همین سایت فعال شود؟','Enable this template for this site without changing the contract tier?')}><input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_id" value={template.id}/><input type="hidden" name="active" value={explicitlyGranted?'false':'true'}/><button className="admin-muted-button" type="submit">{explicitlyGranted?l('برداشتن مجوز اختصاصی','Revoke explicit access'):l('دادن مجوز اختصاصی','Grant explicit access')}</button></ActionForm>:null}
           {latest?<ActionForm action={applyTemplateAction} confirmTitle={l('اعمال قالب','Apply template')} confirmMessage={l(`نسخه ${latest.version} از «${template.name_fa}» به‌عنوان پیش‌نویس جدید اعمال شود؟`,`Apply version ${latest.version} of “${template.name_en}” as a new draft?`)}>
             <input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_version_id" value={latest.id}/>
             <input type="hidden" name="theme_overrides" value="{}"/>

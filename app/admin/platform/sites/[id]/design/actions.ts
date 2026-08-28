@@ -93,6 +93,12 @@ export async function applyTemplateAction(_state: DesignActionState, formData: F
   } catch(error) { return failure(error,'design.template.apply_failed',siteId,l('اعمال قالب انجام نشد.','The template could not be applied.')) }
 }
 
+export async function setTemplateAccessAction(_state:DesignActionState,formData:FormData):Promise<DesignActionState>{
+  const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en,siteId=String(formData.get('site_id')??''),templateId=String(formData.get('template_id')??''),active=String(formData.get('active'))==='true'
+  if(!validUuid(siteId)||!validUuid(templateId))return{ok:false,message:l('شناسه سایت یا قالب معتبر نیست.','The site or template ID is invalid.'),nonce:Date.now()}
+  try{const supabase=await createClient(),{error}=await supabase.rpc('set_site_template_access',{p_site_id:siteId,p_template_id:templateId,p_active:active,p_access_kind:'granted'});if(error)return failure(error,'design.template.access_failed',siteId,l('تغییر دسترسی قالب انجام نشد.','Template access could not be changed.'));refresh(siteId);return{ok:true,message:active?l('این قالب برای مشتری فعال شد.','This template is now available to the customer.'):l('دسترسی مشتری به این قالب برداشته شد.','Customer access to this template was removed.'),nonce:Date.now()}}catch(error){return failure(error,'design.template.access_failed',siteId,l('تغییر دسترسی قالب انجام نشد.','Template access could not be changed.'))}
+}
+
 export async function saveDesignDraftAction(_state: DesignActionState, formData: FormData): Promise<DesignActionState> {
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
   const siteId=String(formData.get('site_id')??'')
