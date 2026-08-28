@@ -19,6 +19,23 @@ function pageStyle(payload:PublicPagePayload):CSSProperties{
 
 function Cards({data}:{data:Record<string,unknown>}){const entries=items(data.items);if(!entries.length)return null;return <div className={styles.grid}>{entries.map((entry,index)=>{if(typeof entry==='string')return <article className={styles.card} key={`${entry}:${index}`}><b>{entry}</b></article>;const item=entry&&typeof entry==='object'&&!Array.isArray(entry)?entry as Record<string,unknown>:{};return <article className={styles.card} key={`${publicText(item.title)}:${index}`}><b>{publicText(item.title)||`${index+1}`}</b><span>{publicText(item.text||item.description)}</span></article>})}</div>}
 
+function JourneyHighlights({isFa}:{isFa:boolean}){
+  const highlights=isFa?[
+    ['۱','شناخت روشن','نیاز، مخاطب و هدف کسب‌وکار پیش از طراحی مشخص می‌شود.'],
+    ['۲','طراحی هدفمند','هر صفحه برای یک تصمیم روشن و تجربه‌ای روان ساخته می‌شود.'],
+    ['۳','رشد مداوم','محتوا و ظاهر سایت بدون بازسازی پرهزینه قابل توسعه می‌ماند.'],
+  ]:[
+    ['1','Clear discovery','Business needs, audience and goals are aligned before design begins.'],
+    ['2','Purposeful design','Every page supports a clear decision through a fluid experience.'],
+    ['3','Continuous growth','Content and design remain extensible without an expensive rebuild.'],
+  ]
+  return <section className={styles.journeyHighlights}><div className={styles.journeyIntro}><span>{isFa?'یک مسیر روشن':'A clear journey'}</span><h2>{isFa?'از نخستین ایده تا یک حضور دیجیتال ماندگار':'From the first idea to a lasting digital presence'}</h2><p>{isFa?'ساخت سایت برای شما باید ساده، قابل‌فهم و لذت‌بخش باشد؛ پیچیدگی فنی پشت صحنه مدیریت می‌شود.':'Building your site should feel simple, understandable and rewarding while technical complexity stays behind the scenes.'}</p></div><div className={styles.journeySteps}>{highlights.map(([number,title,text])=><article key={number}><b>{number}</b><div><h3>{title}</h3><p>{text}</p></div></article>)}</div></section>
+}
+
+function JourneyStory({isFa}:{isFa:boolean}){
+  return <section className={styles.journeyStory}><div className={styles.journeyStoryArt} aria-hidden="true"/><div><span>{isFa?'طراحی در خدمت کسب‌وکار':'Design serving the business'}</span><h2>{isFa?'زیبایی وقتی ارزشمند است که کار را برای مخاطب آسان‌تر کند':'Beauty matters when it makes every decision easier'}</h2><p>{isFa?'ظاهر حرفه‌ای، محتوای متناسب با حوزه، صفحات مستقل و مدیریت ساده کنار هم قرار می‌گیرند تا سایت فقط زیبا نباشد؛ بلکه به رشد کسب‌وکار کمک کند.':'Professional visuals, industry-aware content, independent pages and simple management work together so the website supports real business growth.'}</p></div></section>
+}
+
 function Block({block,locale}:{block:PublicBlock;locale:string}){
   const d=block.data||{},title=publicText(d.title),body=publicText(d.text||d.body||d.description),link=safeUrl(d.button_url||d.url),label=publicText(d.button_label)||(locale.startsWith('fa')?'بیشتر بدانید':'Learn more')
   if(block.type==='hero')return <section className={`${styles.block} ${styles.hero}`}><span className={styles.eyebrow}>RAVA / {String(block.position+1).padStart(2,'0')}</span><h1>{title}</h1>{body&&<p>{body}</p>}{link&&<Link className={styles.button} href={link}>{label}</Link>}</section>
@@ -33,10 +50,11 @@ function Block({block,locale}:{block:PublicBlock;locale:string}){
 
 export default function PublicPageView({payload,navigation=[],previewBasePath}:{payload:PublicPagePayload;navigation?:PreviewNavigationItem[];previewBasePath?:string}){
   const locale=payload.site.locale||'fa',isFa=locale.startsWith('fa')
-  const templateClass=payload.site.templateKey==='rava-service-journey'?styles.journeyTemplate:''
+  const isJourney=payload.site.templateKey==='rava-service-journey',templateClass=isJourney?styles.journeyTemplate:''
+  const isJourneyHome=isJourney&&['home','home-en'].includes(payload.page.slug)
   return <div className={`${styles.page} ${templateClass}`} style={pageStyle(payload)} lang={locale} dir={isFa?'rtl':'ltr'} data-template={payload.site.templateKey||'rava-service-minimal'}>
-    <header className={styles.header}><Link className={styles.brand} href={previewBasePath?`${previewBasePath}?page=${payload.page.id}`:'/'}>RAVA <b>TEAM</b></Link>{navigation.length?<nav className={styles.navigation} aria-label={isFa?'صفحه‌های پیش‌نمایش':'Preview pages'}>{navigation.slice(0,8).map(item=><Link className={item.id===payload.page.id?styles.activeNavigation:undefined} key={item.id} href={`${previewBasePath}?page=${item.id}`}>{item.title}</Link>)}</nav>:null}<span>{payload.site.name} / {payload.page.title}</span></header>
-    <main className={styles.main}>{payload.blocks.length?payload.blocks.map(block=><Block block={block} locale={locale} key={block.id}/>):<div className={styles.empty}>{isFa?'این صفحه هنوز محتوای قابل‌نمایش ندارد.':'This page does not have previewable content yet.'}</div>}</main>
+    <header className={styles.header}><Link className={styles.brand} href={previewBasePath?`${previewBasePath}?page=${payload.page.id}`:'/'}>{isJourney?payload.site.name:<>RAVA <b>TEAM</b></>}</Link>{navigation.length?<nav className={styles.navigation} aria-label={isFa?'صفحه‌های پیش‌نمایش':'Preview pages'}>{navigation.slice(0,8).map(item=><Link className={item.id===payload.page.id?styles.activeNavigation:undefined} key={item.id} href={`${previewBasePath}?page=${item.id}`}>{item.title}</Link>)}</nav>:null}<span>{payload.site.name} / {payload.page.title}</span></header>
+    <main className={styles.main}>{payload.blocks.length?payload.blocks.map((block,index)=><div key={block.id}>{isJourneyHome&&index===1?<JourneyHighlights isFa={isFa}/>:null}{isJourneyHome&&block.type==='cta'?<JourneyStory isFa={isFa}/>:null}<Block block={block} locale={locale}/></div>):<div className={styles.empty}>{isFa?'این صفحه هنوز محتوای قابل‌نمایش ندارد.':'This page does not have previewable content yet.'}</div>}</main>
     <footer className={styles.footer}>{payload.site.name} · RAVA Platform</footer>
   </div>
 }
