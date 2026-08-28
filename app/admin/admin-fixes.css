@@ -1,0 +1,6 @@
+.rava-font-modal{max-height:calc(100svh - 40px);display:grid;grid-template-rows:auto auto auto minmax(0,1fr) auto;overflow:hidden}
+.rava-font-options{overflow:auto;overscroll-behavior:contain;padding-inline-end:5px;scrollbar-width:thin;scrollbar-color:rgba(104,184,255,.4) transparent}
+.rava-font-options::-webkit-scrollbar{width:7px}.rava-font-options::-webkit-scrollbar-thumb{border-radius:99px;background:rgba(104,184,255,.4)}
+.rava-font-modal>.admin-modal-actions{margin-top:0;padding-top:16px;border-top:1px solid rgba(169,216,255,.1);background:#0a1726}
+@media(max-width:560px){.rava-font-modal{max-height:calc(100svh - 20px)}}
+.admin-media-sections{display:flex;flex-direction:column}.admin-media-sections>section:first-of-type{order:1}.admin-media-library-toolbar{order:2}.admin-media-library-toolbar>.admin-panel{margin-bottom:0}.admin-media-sections>section:nth-of-type(n+2){order:3}

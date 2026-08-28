@@ -48,8 +48,17 @@ export function createTraceContext(existingCorrelationId?: string | null) {
 }
 
 function errorFingerprint(error: unknown, eventType: string) {
-  const source = error instanceof Error ? `${error.name}:${sanitizeTechnicalMessage(error.message)}` : sanitizeTechnicalMessage(error)
+  const source = technicalErrorMessage(error)
   return createHash('sha256').update(`${eventType}:${source}`).digest('hex').slice(0, 32)
+}
+
+function technicalErrorMessage(error: unknown) {
+  if (error instanceof Error) return `${error.name}: ${sanitizeTechnicalMessage(error.message)}`
+  if (error && typeof error === 'object') {
+    const value=error as Record<string,unknown>
+    return ['code','message','details','hint'].filter(key=>value[key]).map(key=>`${key}=${sanitizeTechnicalMessage(value[key])}`).join('; ').slice(0,4000) || 'structured error without public details'
+  }
+  return sanitizeTechnicalMessage(error)
 }
 
 export async function recordAuditEvent(input: {
@@ -127,9 +136,7 @@ export async function recordErrorEvent(input: {
   probableCauses?: string[]
 }) {
   const supabase = await createClient()
-  const technicalMessage = sanitizeTechnicalMessage(
-    input.error instanceof Error ? `${input.error.name}: ${input.error.message}` : input.error,
-  )
+  const technicalMessage = technicalErrorMessage(input.error)
 
   return supabase.rpc('record_error_event', {
     p_category: input.category,

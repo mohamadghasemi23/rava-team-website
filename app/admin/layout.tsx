@@ -11,6 +11,7 @@ import '@fontsource-variable/source-sans-3'
 import './admin-media.css'
 import './admin-shell.css'
 import './admin-experience.css'
+import './admin-fixes.css'
 import AdminShell from './components/AdminShell'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 

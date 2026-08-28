@@ -10,6 +10,8 @@ import DesignPreviewFrame from './DesignPreviewFrame'
 
 function validUuid(value:string){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)}
 function pretty(value:unknown){return JSON.stringify(value??{},null,2)}
+const tierRanks:Record<string,number>={core:0,premium:1,enterprise:2}
+const tierRank=(value:string|null|undefined)=>tierRanks[value??'core']??0
 
 export default async function SiteDesignPage({params}:{params:Promise<{id:string}>}){
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
@@ -49,13 +51,14 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
     </main>
   }
 
-  const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases},{data:pages}]=await Promise.all([
+  const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases},{data:pages},{data:designEntitlement}]=await Promise.all([
     supabase.from('template_catalog').select('id,key,name_fa,name_en,description_fa,description_en,industry_key,commercial_tier,is_public,status').eq('status','active').order('commercial_tier').order(locale==='fa'?'name_fa':'name_en'),
     supabase.from('template_versions').select('id,template_id,version,status,theme_defaults,layout_blueprint,changelog_fa,changelog_en').eq('status','published').order('version',{ascending:false}),
     supabase.from('site_design_state').select('site_id,current_revision_id,current_template_id,current_template_version_id,published_release_id,updated_at').eq('site_id',id).maybeSingle(),
     supabase.from('site_design_revisions').select('id,revision,source,template_id,template_version_id,theme_config,layout_config,note,created_at').eq('site_id',id).order('revision',{ascending:false}).limit(30),
     supabase.from('site_releases').select('id,release_number,status,source_revision_id,template_id,template_version_id,release_note,published_at,parent_release_id').eq('site_id',id).order('release_number',{ascending:false}).limit(30),
     supabase.from('pages').select('id,title').eq('site_id',id).order('created_at',{ascending:true}),
+    supabase.from('site_entitlements').select('tier').eq('site_id',id).eq('module_key','design').maybeSingle(),
   ])
 
   const currentRevision=(revisions??[]).find((item)=>item.id===state?.current_revision_id)??revisions?.[0]
@@ -86,14 +89,16 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
         const templateVersions=(versions??[]).filter((v)=>v.template_id===template.id)
         const latest=templateVersions[0]
         const selected=template.id===state?.current_template_id
+        const available=tierRank(designEntitlement?.tier)>=tierRank(template.commercial_tier)
         return <article className={`admin-access-card rava-template-choice${selected?' is-selected':''}`} key={template.id}>
           <div><b>{locale==='fa'?template.name_fa:template.name_en}</b>{selected?<span className="status-pill status-published">{l('انتخاب فعلی','Current choice')}</span>:null}<small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('در دسترس','Available'):l('نیازمند دسترسی','Restricted')}</small></div>
           <p>{locale==='fa'?template.description_fa:template.description_en}</p>
+          {!available?<p className="admin-warning-text">{l('این قالب به سطح حرفه‌ای نیاز دارد؛ انتخاب آن تا ارتقای امکانات سایت غیرفعال است.','This template requires the Premium tier; selection is disabled until the site capability is upgraded.')}</p>:null}
           {latest?<ActionForm action={applyTemplateAction} confirmTitle={l('اعمال قالب','Apply template')} confirmMessage={l(`نسخه ${latest.version} از «${template.name_fa}» به‌عنوان پیش‌نویس جدید اعمال شود؟`,`Apply version ${latest.version} of “${template.name_en}” as a new draft?`)}>
             <input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_version_id" value={latest.id}/>
             <input type="hidden" name="theme_overrides" value="{}"/>
             <label>{l('یادداشت','Note')}<input name="note" maxLength={500} placeholder={l('برای نمونه: انتخاب اولیه کارفرما','For example: Initial customer choice')}/></label>
-            <button className="admin-primary-button" type="submit" disabled={selected}>{selected?l('همین قالب انتخاب شده است','This template is selected'):l('انتخاب این قالب','Choose this template')}</button>
+            <button className="admin-primary-button" type="submit" disabled={selected||!available}>{selected?l('همین قالب انتخاب شده است','This template is selected'):available?l('انتخاب این قالب','Choose this template'):l('نیازمند ارتقای امکانات','Upgrade required')}</button>
           </ActionForm>:<p>{l('نسخه منتشرشده ندارد.','No published version is available.')}</p>}
         </article>
       })}</div>
