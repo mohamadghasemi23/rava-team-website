@@ -7,7 +7,7 @@ app_container=${RAVA_WEB_APP_CONTAINER:-rava-web-staging-app-1}
 registry_image=${RAVA_STAGING_REGISTRY_IMAGE:-ghcr.io/mohamadghasemi23/rava-team-website}
 new_tag=${1:-}
 
-[ "$(id -u)" -eq 0 ] || { echo 'run this Staging deployment as root' >&2; exit 1; }
+docker info >/dev/null 2>&1 || { echo 'Docker access is required to deploy Staging' >&2; exit 1; }
 printf '%s\n' "$new_tag" | grep -Eq '^[0-9a-f]{7,40}$' || { echo 'usage: deploy-web-staging.sh <git-commit-sha>' >&2; exit 1; }
 [ -f "$compose_file" ] || { echo 'Staging compose file is missing' >&2; exit 1; }
 

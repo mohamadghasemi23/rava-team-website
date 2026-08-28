@@ -2,12 +2,16 @@
 set -eu
 
 umask 077
-stack_dir=/opt/rava/staging/supabase
-backup_dir=/opt/rava/backups/staging
-retention_days=7
+backup_dir=${RAVA_BACKUP_DIR:-/opt/rava/backups/staging}
+retention_days=${RAVA_BACKUP_RETENTION_DAYS:-7}
 stamp=$(date -u +%Y%m%dT%H%M%SZ)
 
 mkdir -p "$backup_dir"
+
+docker info >/dev/null 2>&1 || {
+  echo 'Docker access is required to back up Staging' >&2
+  exit 1
+}
 
 db_health=$(docker inspect --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' supabase-db 2>/dev/null || true)
 if [ "$db_health" != healthy ]; then

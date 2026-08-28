@@ -19,6 +19,8 @@ Before switching a tag, the deploy script records the current image, pulls the e
 
 The GitHub repository must define `STAGING_PUBLIC_ORIGIN` as an Actions variable and `STAGING_SUPABASE_PUBLISHABLE_KEY` as an Actions secret. The VPS Docker client must have read access to the repository's private GHCR package. Neither the Supabase service-role key nor any server secret is used in the image build.
 
+Operations may run as `root` or as the restricted `ravaops` user when its Docker group membership is active. The backup script defaults to `/opt/rava/backups/staging`; `RAVA_BACKUP_DIR` may select another protected, persistent directory owned by the backup operator when root access is intentionally unavailable.
+
 The operations scripts in `../ops` provide a read-only health check, a full read-only runtime gate, a temporary-database restore test, and dry-run-first image cleanup. Cleanup refuses to run unless both web containers are healthy and preserves the running image plus `rollback-staging`.
 
 Run `verify-staging-gates.sh` from the repository root to verify the local web, Auth, REST, Storage, admin redirect, loopback binding, and absence of a Netlify runtime URL. Run `restore-test-postgres.sh` with the privileges used by the backup service; it verifies the latest checksum, restores into a uniquely named temporary database, validates PostgreSQL 17 and RLS, runs every database test, and removes only that temporary database on exit.
