@@ -33,7 +33,8 @@ function Block({block,locale}:{block:PublicBlock;locale:string}){
 
 export default function PublicPageView({payload,navigation=[],previewBasePath}:{payload:PublicPagePayload;navigation?:PreviewNavigationItem[];previewBasePath?:string}){
   const locale=payload.site.locale||'fa',isFa=locale.startsWith('fa')
-  return <div className={styles.page} style={pageStyle(payload)} lang={locale} dir={isFa?'rtl':'ltr'}>
+  const templateClass=payload.site.templateKey==='rava-service-journey'?styles.journeyTemplate:''
+  return <div className={`${styles.page} ${templateClass}`} style={pageStyle(payload)} lang={locale} dir={isFa?'rtl':'ltr'} data-template={payload.site.templateKey||'rava-service-minimal'}>
     <header className={styles.header}><Link className={styles.brand} href={previewBasePath?`${previewBasePath}?page=${payload.page.id}`:'/'}>RAVA <b>TEAM</b></Link>{navigation.length?<nav className={styles.navigation} aria-label={isFa?'صفحه‌های پیش‌نمایش':'Preview pages'}>{navigation.slice(0,8).map(item=><Link className={item.id===payload.page.id?styles.activeNavigation:undefined} key={item.id} href={`${previewBasePath}?page=${item.id}`}>{item.title}</Link>)}</nav>:null}<span>{payload.site.name} / {payload.page.title}</span></header>
     <main className={styles.main}>{payload.blocks.length?payload.blocks.map(block=><Block block={block} locale={locale} key={block.id}/>):<div className={styles.empty}>{isFa?'این صفحه هنوز محتوای قابل‌نمایش ندارد.':'This page does not have previewable content yet.'}</div>}</main>
     <footer className={styles.footer}>{payload.site.name} · RAVA Platform</footer>

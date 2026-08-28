@@ -9,7 +9,7 @@ export type PublicBlock = {
 }
 
 export type PublicPagePayload = {
-  site: { id: string; name: string; locale: string; theme: Record<string, unknown> }
+  site: { id: string; name: string; locale: string; theme: Record<string, unknown>; templateKey?: string; layout?: Record<string, unknown> }
   page: { id: string; title: string; slug: string; seo: Record<string, unknown>; published_at: string | null }
   blocks: PublicBlock[]
 }
