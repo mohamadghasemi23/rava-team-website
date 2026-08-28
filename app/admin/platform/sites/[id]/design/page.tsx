@@ -75,7 +75,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       <div><strong>{releases?.[0]?`#${releases[0].release_number}`:'—'}</strong><span>{l('آخرین انتشار','Latest release')}</span></div>
     </div>
 
-    <section className="admin-panel">
+    <section className="admin-panel" id="appearance">
       <div className="admin-section-title"><div><h2>{l('انتخاب و اعمال قالب','Choose and apply a template')}</h2><p>{l('اعمال قالب فقط یک پیش‌نویس می‌سازد؛ ظاهر عمومی سایت تا انتشار تغییر نمی‌کند.','Applying a template only creates a draft; the public site does not change until publishing.')}</p></div><span>{templates?.length??0} {l('قالب','templates')}</span></div>
       <div className="admin-access-grid">{(templates??[]).map((template)=>{
         const templateVersions=(versions??[]).filter((v)=>v.template_id===template.id)
@@ -104,7 +104,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       </ActionForm>
     </section>
 
-    <section className="admin-panel">
+    <section className="admin-panel" id="release">
       <div className="admin-section-title"><div><h2>{l('انتشار','Publish')}</h2><p>{l('از نسخه فعلی یک تصویر تغییرناپذیر ساخته و به انتشار فعال سایت تبدیل می‌شود.','Creates an immutable snapshot from the current revision and makes it the active site release.')}</p></div></div>
       <ActionForm action={publishDesignAction} className="admin-form" confirmTitle={l('انتشار طراحی','Publish design')} confirmMessage={l('نسخه فعلی به انتشار جدید تبدیل و روی سایت فعال شود؟','Convert the current revision into a new active release?')}>
         <input type="hidden" name="site_id" value={id}/><label>{l('یادداشت انتشار','Release note')}<input name="release_note" maxLength={1000} placeholder={l('برای نمونه: تأیید نهایی سربرگ و رنگ‌ها','For example: Final approval of header and colors')}/></label>
