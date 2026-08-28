@@ -50,7 +50,17 @@ else
   fail proxy_not_loopback_only
 fi
 
-if docker compose -f "$compose_file" config >/dev/null 2>&1; then
+compose_image=$(docker inspect rava-web-staging-app-1 --format '{{.Config.Image}}' 2>/dev/null || true)
+compose_tag=${compose_image#rava-web:}
+compose_env=$(docker inspect rava-web-staging-app-1 --format '{{range .Config.Env}}{{println .}}{{end}}' 2>/dev/null || true)
+STAGING_PUBLIC_ORIGIN=${STAGING_PUBLIC_ORIGIN:-$(printf '%s\n' "$compose_env" | sed -n 's/^NEXT_PUBLIC_SUPABASE_URL=//p' | head -1)}
+SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY:-$(printf '%s\n' "$compose_env" | sed -n 's/^NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=//p' | head -1)}
+RAVA_IMAGE_TAG=${RAVA_IMAGE_TAG:-$compose_tag}
+export STAGING_PUBLIC_ORIGIN SUPABASE_PUBLISHABLE_KEY RAVA_IMAGE_TAG
+
+if [ -n "$STAGING_PUBLIC_ORIGIN" ] && [ -n "$SUPABASE_PUBLISHABLE_KEY" ] && \
+  printf '%s\n' "$RAVA_IMAGE_TAG" | grep -Eq '^[A-Za-z0-9_.-]+$' && \
+  docker compose -f "$compose_file" config >/dev/null 2>&1; then
   pass compose_valid
 else
   fail compose_invalid
