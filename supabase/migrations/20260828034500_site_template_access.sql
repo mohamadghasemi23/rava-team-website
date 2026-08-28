@@ -14,8 +14,8 @@ create policy site_template_access_read on public.site_template_access for selec
   public.has_permission('platform.sites.manage',null,null) or public.has_permission('templates.manage',null,null)
   or public.has_permission('design.manage',null,site_id) or public.has_permission('sites.view',null,site_id)
 );
+revoke all on table public.site_template_access from public,anon,authenticated;
 grant select on public.site_template_access to authenticated;
-revoke insert,update,delete on public.site_template_access from authenticated;
 
 create or replace function public.set_site_template_access(p_site_id uuid,p_template_id uuid,p_active boolean,p_access_kind text default 'granted') returns boolean
 language plpgsql security definer set search_path=public,private,pg_temp as $$
