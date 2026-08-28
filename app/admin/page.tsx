@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import GettingStarted from './components/GettingStarted'
 import DashboardSummary from './components/DashboardSummary'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
+import {hasPermission,PERMISSIONS} from '@/lib/authz/permissions'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,7 +14,10 @@ export default async function AdminPage() {
   const userId = claimsData?.claims?.sub
   if (claimsError || !userId) redirect('/login')
 
-  const { data: profile } = await supabase.from('profiles').select('display_name, active').eq('id', userId).single()
+  const [{data:profile},canProvisionSites]=await Promise.all([
+    supabase.from('profiles').select('display_name, active').eq('id',userId).single(),
+    hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE),
+  ])
   if (!profile?.active) redirect('/login')
 
   const sites = await supabase.from('sites').select('id,name,created_at', { count: 'exact' }).order('created_at',{ascending:false}).limit(1)
@@ -26,7 +30,7 @@ export default async function AdminPage() {
   ]):[{count:0},{count:0},{count:0},{data:null}]
 
   return <main className="admin-shell">
-    <GettingStarted siteCount={sites.count??0} siteId={site?.id??null} siteName={site?.name??null} pageCount={pages.count??0} mediaCount={media.count??0} starterInstalled={(starter.count??0)>0} designReady={Boolean(design.data?.current_revision_id)} releasePublished={Boolean(design.data?.published_release_id)} displayName={profile.display_name??(locale==='fa'?'مالک راوا':'RAVA owner')}/>
+    <GettingStarted canProvisionSites={canProvisionSites} siteCount={sites.count??0} siteId={site?.id??null} siteName={site?.name??null} pageCount={pages.count??0} mediaCount={media.count??0} starterInstalled={(starter.count??0)>0} designReady={Boolean(design.data?.current_revision_id)} releasePublished={Boolean(design.data?.published_release_id)} displayName={profile.display_name??(locale==='fa'?'کاربر راوا':'RAVA user')}/>
     <DashboardSummary pages={pages.count??0} media={media.count??0}/>
   </main>
 }

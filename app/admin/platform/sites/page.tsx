@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
-import { PERMISSIONS, requirePermission } from '@/lib/authz/permissions'
+import {hasPermission,PERMISSIONS,requirePermission} from '@/lib/authz/permissions'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 
 export default async function PlatformSitesPage() {
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
   await requirePermission(PERMISSIONS.PLATFORM_SITES_MANAGE)
+  const canProvisionSites=await hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE)
   const supabase = await createClient()
 
   const { data: sites, error } = await supabase
@@ -22,7 +23,7 @@ export default async function PlatformSitesPage() {
           <h1>{l('مشتری‌ها و سایت‌ها','Customers and sites')}</h1>
           <p>{l('کنترل مرکزی مشتری‌ها و سایت‌های مستقل؛ قرارداد، امکانات، سلامت، مصرف و درآمد نیز در همین بخش مدیریت می‌شوند.','Central control for isolated customer sites, contracts, capabilities, health, usage, and revenue.')}</p>
         </div>
-        <Link className="admin-primary-button" href="/admin/platform/sites/new">{l('+ ساخت سایت','+ Create site')}</Link>
+        {canProvisionSites?<Link className="admin-primary-button" href="/admin/platform/sites/new">{l('+ ساخت سایت','+ Create site')}</Link>:null}
       </div>
 
       <section className="admin-panel">

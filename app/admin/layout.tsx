@@ -14,8 +14,10 @@ import './admin-experience.css'
 import './admin-fixes.css'
 import AdminShell from './components/AdminShell'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
+import {hasPermission,PERMISSIONS} from '@/lib/authz/permissions'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const locale=await getAdminLocale()
-  return <AdminShell initialLanguage={locale}>{children}</AdminShell>
+  const canProvisionSites=await hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE)
+  return <AdminShell initialLanguage={locale} canProvisionSites={canProvisionSites}>{children}</AdminShell>
 }
