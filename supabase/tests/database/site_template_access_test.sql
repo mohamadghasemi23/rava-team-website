@@ -1,11 +1,12 @@
 begin;
 create extension if not exists pgtap with schema extensions;
-select plan(6);
+select plan(7);
 select has_table('public','site_template_access','site template access table exists');
 select ok((select relrowsecurity from pg_class where oid='public.site_template_access'::regclass),'site template access uses RLS');
 select is((select count(*)::integer from information_schema.role_table_grants where table_schema='public' and table_name='site_template_access' and grantee='anon'),0,'anon has no table access');
 select ok(not has_function_privilege('anon','public.set_site_template_access(uuid,uuid,boolean,text)','execute'),'anon cannot grant template access');
 select ok(not has_function_privilege('authenticated','private.site_has_template_access(uuid,uuid)','execute'),'private grant helper is not directly executable');
+select is((select proowner from pg_proc where oid='private.site_has_template_access(uuid,uuid)'::regprocedure),(select proowner from pg_proc where oid='public.apply_template_to_site(uuid,uuid,jsonb,text)'::regprocedure),'private helper and public entry point share their SECURITY DEFINER owner');
 select is((select count(*)::integer from public.help_translations t join public.help_topics h on h.id=t.topic_id where h.key='platform.design.manage' and((t.locale='fa' and t.body_markdown like '%مجوز اختصاصی%')or(t.locale='en' and t.body_markdown ilike '%explicitly granted%'))),2,'Persian and English template-grant help is present');
 select * from finish();
 rollback;
