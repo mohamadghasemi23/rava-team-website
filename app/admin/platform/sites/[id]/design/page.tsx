@@ -6,6 +6,7 @@ import { PERMISSIONS } from '@/lib/authz/permissions'
 import { authorizeSiteFeature, FeatureAccessError } from '@/lib/entitlements/runtime'
 import { applyTemplateAction, publishDesignAction, rollbackDesignAction, saveDesignDraftAction } from './actions'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
+import DesignPreviewFrame from './DesignPreviewFrame'
 
 function validUuid(value:string){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)}
 function pretty(value:unknown){return JSON.stringify(value??{},null,2)}
@@ -48,12 +49,13 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
     </main>
   }
 
-  const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases}]=await Promise.all([
+  const [{data:templates},{data:versions},{data:state},{data:revisions},{data:releases},{data:pages}]=await Promise.all([
     supabase.from('template_catalog').select('id,key,name_fa,name_en,description_fa,description_en,industry_key,commercial_tier,is_public,status').eq('status','active').order('commercial_tier').order(locale==='fa'?'name_fa':'name_en'),
     supabase.from('template_versions').select('id,template_id,version,status,theme_defaults,layout_blueprint,changelog_fa,changelog_en').eq('status','published').order('version',{ascending:false}),
     supabase.from('site_design_state').select('site_id,current_revision_id,current_template_id,current_template_version_id,published_release_id,updated_at').eq('site_id',id).maybeSingle(),
     supabase.from('site_design_revisions').select('id,revision,source,template_id,template_version_id,theme_config,layout_config,note,created_at').eq('site_id',id).order('revision',{ascending:false}).limit(30),
     supabase.from('site_releases').select('id,release_number,status,source_revision_id,template_id,template_version_id,release_note,published_at,parent_release_id').eq('site_id',id).order('release_number',{ascending:false}).limit(30),
+    supabase.from('pages').select('id,title').eq('site_id',id).order('created_at',{ascending:true}),
   ])
 
   const currentRevision=(revisions??[]).find((item)=>item.id===state?.current_revision_id)??revisions?.[0]
@@ -72,6 +74,11 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       <a href="#appearance" className="is-ready"><b>۴</b><span><strong>{l('انتخاب ظاهر','Choose appearance')}</strong><small>{currentTemplate?l('قالب انتخاب شده است.','A template has been selected.'):l('یک قالب را انتخاب کنید.','Choose a template.')}</small></span></a>
       <a href="#release" className={state?.published_release_id?'is-ready':currentRevision?'is-current':''}><b>۵</b><span><strong>{l('بازبینی و تأیید','Review and approve')}</strong><small>{state?.published_release_id?l('نسخه تأیید و منتشر شده است.','The version is approved and published.'):currentRevision?l('پیش‌نویس برای بازبینی آماده است.','The draft is ready for review.'):l('پس از انتخاب قالب فعال می‌شود.','Available after choosing a template.')}</small></span></a>
     </div>
+
+    <section className="admin-panel" id="visual-preview">
+      <div className="admin-section-title"><div><h2>{l('پیش‌نمایش زنده پیش‌نویس','Live draft preview')}</h2><p>{l('همین خروجی واقعی سایت را در رایانه و موبایل ببینید. این پیش‌نمایش خصوصی است و تا تأیید انتشار برای بازدیدکنندگان نمایش داده نمی‌شود.','See the real site output on desktop and mobile. This preview is private and visitors will not see it until publishing is approved.')}</p></div><span>{l('خصوصی','Private')}</span></div>
+      <DesignPreviewFrame siteId={id} pages={pages??[]} locale={locale}/>
+    </section>
 
     <section className="admin-panel" id="appearance">
       <div className="admin-section-title"><div><h2>{l('انتخاب و اعمال قالب','Choose and apply a template')}</h2><p>{l('اعمال قالب فقط یک پیش‌نویس می‌سازد؛ ظاهر عمومی سایت تا انتشار تغییر نمی‌کند.','Applying a template only creates a draft; the public site does not change until publishing.')}</p></div><span>{templates?.length??0} {l('قالب','templates')}</span></div>
