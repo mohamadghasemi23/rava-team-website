@@ -3,6 +3,7 @@ set -eu
 
 repo_dir=${RAVA_REPO_DIR:-/home/ravaops/projects/rava-team-website}
 compose_file=${RAVA_WEB_COMPOSE_FILE:-$repo_dir/infra/staging/web/compose.yml}
+ai_env_file=${RAVA_STAGING_AI_ENV_FILE:-/opt/rava/staging/web/ai.env}
 app_container=${RAVA_WEB_APP_CONTAINER:-rava-web-staging-app-1}
 registry_image=${RAVA_STAGING_REGISTRY_IMAGE:-ghcr.io/mohamadghasemi23/rava-team-website}
 new_tag=${1:-}
@@ -10,6 +11,12 @@ new_tag=${1:-}
 docker info >/dev/null 2>&1 || { echo 'Docker access is required to deploy Staging' >&2; exit 1; }
 printf '%s\n' "$new_tag" | grep -Eq '^[0-9a-f]{7,40}$' || { echo 'usage: deploy-web-staging.sh <git-commit-sha>' >&2; exit 1; }
 [ -f "$compose_file" ] || { echo 'Staging compose file is missing' >&2; exit 1; }
+[ -f "$ai_env_file" ] || { echo "protected Staging AI environment file is missing: $ai_env_file" >&2; exit 1; }
+[ -r "$ai_env_file" ] || { echo 'protected Staging AI environment file is not readable' >&2; exit 1; }
+ai_env_mode=$(stat -c '%a' "$ai_env_file")
+[ "$ai_env_mode" = 600 ] || { echo 'protected Staging AI environment file must have mode 600' >&2; exit 1; }
+grep -Eq '^OPENAI_API_KEY=.+$' "$ai_env_file" || { echo 'OPENAI_API_KEY is missing from the protected Staging AI environment file' >&2; exit 1; }
+grep -Eq '^RAVA_OPENAI_MODEL=.+$' "$ai_env_file" || { echo 'RAVA_OPENAI_MODEL is missing from the protected Staging AI environment file' >&2; exit 1; }
 
 cd "$repo_dir"
 head_sha=$(git -c safe.directory="$repo_dir" rev-parse HEAD)
@@ -39,12 +46,12 @@ docker tag "$remote_image" "rava-web:$new_tag"
 
 rollback() {
   echo "Staging gate failed; rolling app back to $previous_image" >&2
-  RAVA_IMAGE_TAG="$previous_tag" docker compose -f "$compose_file" up -d --no-deps app
+  RAVA_IMAGE_TAG="$previous_tag" docker compose --env-file "$ai_env_file" -f "$compose_file" up -d --no-deps app
 }
 trap rollback INT TERM HUP
 
 export RAVA_IMAGE_TAG="$new_tag"
-docker compose -f "$compose_file" up -d --no-deps app
+docker compose --env-file "$ai_env_file" -f "$compose_file" up -d --no-deps app
 
 attempt=0
 while [ "$attempt" -lt 30 ]; do
