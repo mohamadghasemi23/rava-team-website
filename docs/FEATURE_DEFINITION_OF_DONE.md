@@ -38,4 +38,6 @@ Each UI feature must provide:
 
 `config/feature-standards.json` is the project feature registry. Any new first-class feature must be registered or its implementation is incomplete. CI runs `scripts/verify-feature-standards.mjs`; missing help keys, missing permission registrations, or required standards flags fail the build gate.
 
+`config/project-intelligence.json` is the scoped development map. Every registered feature must also declare its bounded paths, direct feature dependencies, and focused verification commands. CI runs `npm run rpim:verify`; use `npm run rpim -- feature <key>` before implementation and `npm run rpim -- impact` after editing. RPIM narrows iteration scope but never replaces the complete release Gates.
+
 Passing CI proves repository-level consistency and application buildability. It does **not** prove unapplied SQL migrations work against Production. Database migrations must still be validated in an appropriate non-production Supabase/PostgreSQL environment before Production rollout.

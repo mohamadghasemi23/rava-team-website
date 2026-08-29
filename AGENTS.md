@@ -99,6 +99,21 @@ npx tsc --noEmit
 npm run build
 ```
 
+## Scoped development with RPIM
+
+Use the RAVA Project Intelligence Map before broad repository searches:
+
+```bash
+npm run rpim -- feature <feature-key-or-phrase>
+npm run rpim -- impact
+```
+
+- Read the matched Feature paths and direct dependencies first.
+- Expand beyond that scope only when code evidence shows a shared or cross-cutting dependency.
+- Update `config/project-intelligence.json` whenever a first-class Feature or its boundaries change.
+- Run `npm run rpim:verify` in repository Gates.
+- RPIM narrows discovery and iterative tests; it never replaces complete release validation or applicable real PostgreSQL tests.
+
 If package scripts are later added for these, prefer the package scripts.
 
 ## Current branch / PR workflow

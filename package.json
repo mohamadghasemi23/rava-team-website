@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "rpim": "node scripts/rpim.mjs",
+    "rpim:verify": "node scripts/rpim.mjs verify"
   },
   "dependencies": {
     "@fontsource-variable/cairo": "5.3.0",
