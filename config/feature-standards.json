@@ -146,6 +146,22 @@
       "rlsOrSecureRpc": true
     },
     {
+      "key": "seo.ai_assistant",
+      "route": "/admin/pages/:id",
+      "helpKey": "seo.ai.owner_assistant",
+      "permissions": ["platform.sites.manage", "seo.ai.generate"],
+      "moduleKey": "seo_ai",
+      "bilingualHelp": true,
+      "contextualHelp": true,
+      "serverValidation": true,
+      "permissionEnforced": true,
+      "entitlementRequired": false,
+      "auditLogged": true,
+      "structuredErrors": true,
+      "tenantScoped": true,
+      "rlsOrSecureRpc": true
+    },
+    {
       "key": "media.library",
       "route": "/admin/media",
       "helpKey": "media.library.manage",
