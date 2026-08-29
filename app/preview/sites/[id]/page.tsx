@@ -22,7 +22,7 @@ export default async function SiteDraftPreview({params,searchParams}:{params:Pro
   const {data:site}=await supabase.from('sites').select('id,name,primary_locale,theme_config').eq('id',id).maybeSingle()
   if(!site)notFound()
   try{
-    await authorizeSiteFeature({siteId:id,moduleKey:'design',permissions:[PERMISSIONS.PLATFORM_SITES_MANAGE,PERMISSIONS.DESIGN_MANAGE],route:`/preview/sites/${id}`,operation:'draft.preview'})
+    await authorizeSiteFeature({siteId:id,moduleKey:'cms',permissions:[PERMISSIONS.PLATFORM_SITES_MANAGE,PERMISSIONS.DESIGN_MANAGE,PERMISSIONS.CMS_VIEW,PERMISSIONS.CMS_MANAGE],route:`/preview/sites/${id}`,operation:'draft.preview'})
   }catch(error){if(error instanceof FeatureAccessError)notFound();throw error}
   const [{data:pages},{data:state}]=await Promise.all([
     supabase.from('pages').select('id,title,slug,seo,published_at,created_at').eq('site_id',id).order('created_at',{ascending:true}),

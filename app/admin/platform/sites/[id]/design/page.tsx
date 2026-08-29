@@ -6,7 +6,7 @@ import { PERMISSIONS } from '@/lib/authz/permissions'
 import { authorizeSiteFeature, FeatureAccessError } from '@/lib/entitlements/runtime'
 import {applyTemplateAction,publishDesignAction,rollbackDesignAction,saveDesignDraftAction,setTemplateAccessAction} from './actions'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
-import DesignPreviewFrame from './DesignPreviewFrame'
+import SiteDraftPreview from '@/app/admin/components/SiteDraftPreview'
 import {hasPermission} from '@/lib/authz/permissions'
 
 function validUuid(value:string){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value)}
@@ -83,7 +83,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
 
     <section className="admin-panel" id="visual-preview">
       <div className="admin-section-title"><div><h2>{l('پیش‌نمایش زنده پیش‌نویس','Live draft preview')}</h2><p>{l('همین خروجی واقعی سایت را در رایانه و موبایل ببینید. این پیش‌نمایش خصوصی است و تا تأیید انتشار برای بازدیدکنندگان نمایش داده نمی‌شود.','See the real site output on desktop and mobile. This preview is private and visitors will not see it until publishing is approved.')}</p></div><span>{l('خصوصی','Private')}</span></div>
-      <DesignPreviewFrame siteId={id} pages={pages??[]}/>
+      <SiteDraftPreview siteId={id} pages={pages??[]}/>
     </section>
 
     <section className="admin-panel" id="appearance">
