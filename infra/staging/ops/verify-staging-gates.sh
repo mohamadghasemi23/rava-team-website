@@ -3,6 +3,7 @@ set -eu
 
 origin=${RAVA_STAGING_ORIGIN:-http://127.0.0.1:19080}
 compose_file=${RAVA_WEB_COMPOSE_FILE:-infra/staging/web/compose.yml}
+ai_env_file=${RAVA_STAGING_AI_ENV_FILE:-/opt/rava/staging/web/ai.env}
 failed=0
 
 pass() { printf 'PASS %s\n' "$1"; }
@@ -58,9 +59,16 @@ SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY:-$(printf '%s\n' "$compose_e
 RAVA_IMAGE_TAG=${RAVA_IMAGE_TAG:-$compose_tag}
 export STAGING_PUBLIC_ORIGIN SUPABASE_PUBLISHABLE_KEY RAVA_IMAGE_TAG
 
-if [ -n "$STAGING_PUBLIC_ORIGIN" ] && [ -n "$SUPABASE_PUBLISHABLE_KEY" ] && \
+if printf '%s\n' "$compose_env" | grep -Eq '^OPENAI_API_KEY=.+$' && \
+  printf '%s\n' "$compose_env" | grep -Eq '^RAVA_OPENAI_MODEL=.+$'; then
+  pass ai_provider_config_present
+else
+  fail ai_provider_config_missing
+fi
+
+if [ -r "$ai_env_file" ] && [ -n "$STAGING_PUBLIC_ORIGIN" ] && [ -n "$SUPABASE_PUBLISHABLE_KEY" ] && \
   printf '%s\n' "$RAVA_IMAGE_TAG" | grep -Eq '^[A-Za-z0-9_.-]+$' && \
-  docker compose -f "$compose_file" config >/dev/null 2>&1; then
+  docker compose --env-file "$ai_env_file" -f "$compose_file" config >/dev/null 2>&1; then
   pass compose_valid
 else
   fail compose_invalid
