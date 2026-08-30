@@ -4,6 +4,22 @@ This repository is the source of truth for RAVA TEAM / RAVA Platform.
 
 Before designing any Feature, you MUST read `docs/RAVA_PLATFORM_VISION.md`.
 
+## Durable project memory
+
+Before starting any implementation, planning, prioritization, deployment, or infrastructure task, read:
+
+- `docs/PROJECT_STATUS.md` for the current verified position, active objective, blockers, and next actions;
+- `docs/DECISION_LOG.md` for approved decisions and their rationale.
+
+Treat these files as navigation aids, not implementation proof. Refresh volatile Git, GitHub, CI, Staging, Production, VPS, and disk facts from their real sources before relying on a recorded snapshot.
+
+Before finishing any meaningful work:
+
+- update `docs/PROJECT_STATUS.md` when the active objective, completed evidence, blocker, environment state, pending Git state, or next priorities changed;
+- append to `docs/DECISION_LOG.md` when a durable product, architecture, UX, commercial, dependency, infrastructure, or delivery decision was made;
+- never rewrite decision history silently: mark an old decision as superseded and link the replacement;
+- never record an item as complete without repository and validation evidence.
+
 ## Product context
 RAVA is a multi-tenant SaaS Website Operating System, not a single marketing website. Every implementation must preserve multi-tenancy, scoped authorization, commercial entitlements, localization, auditability, observability, versioning, testability and future API compatibility.
 
