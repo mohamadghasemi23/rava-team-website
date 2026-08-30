@@ -26,15 +26,16 @@ export default async function SiteDraftPreview({params,searchParams}:{params:Pro
   }catch(error){if(error instanceof FeatureAccessError)notFound();throw error}
   const [{data:pages},{data:state}]=await Promise.all([
     supabase.from('pages').select('id,title,slug,seo,published_at,created_at').eq('site_id',id).order('created_at',{ascending:true}),
-    supabase.from('site_design_state').select('current_revision_id,current_template_id').eq('site_id',id).maybeSingle(),
+    supabase.from('site_design_state').select('current_revision_id,current_template_id,current_template_version_id').eq('site_id',id).maybeSingle(),
   ])
   if(!pages?.length)notFound()
   const selected=(requestedPage&&UUID_RE.test(requestedPage)?pages.find((item)=>item.id===requestedPage):null)??pages.find((item)=>item.slug==='home')??pages[0]
-  const [{data:blocks},{data:revision},{data:template}]=await Promise.all([
+  const [{data:blocks},{data:revision},{data:template},{data:templateVersion}]=await Promise.all([
     supabase.from('page_blocks').select('id,block_type,position,data').eq('page_id',selected.id).eq('visible',true).order('position',{ascending:true}),
     state?.current_revision_id?supabase.from('site_design_revisions').select('theme_config,layout_config').eq('id',state.current_revision_id).eq('site_id',id).maybeSingle():Promise.resolve({data:null}),
     state?.current_template_id?supabase.from('template_catalog').select('key').eq('id',state.current_template_id).maybeSingle():Promise.resolve({data:null}),
+    state?.current_template_version_id?supabase.from('template_versions').select('version').eq('id',state.current_template_version_id).maybeSingle():Promise.resolve({data:null}),
   ])
-  const payload:PublicPagePayload={site:{id:site.id,name:site.name,locale:site.primary_locale||'fa',theme:object(revision?.theme_config??site.theme_config),templateKey:template?.key||'rava-service-minimal',layout:object(revision?.layout_config)},page:{id:selected.id,title:selected.title,slug:selected.slug,seo:object(selected.seo),published_at:selected.published_at},blocks:(blocks??[]).map((block)=>({id:block.id,type:block.block_type,position:block.position,data:object(block.data)}))}
+  const payload:PublicPagePayload={site:{id:site.id,name:site.name,locale:site.primary_locale||'fa',theme:object(revision?.theme_config??site.theme_config),templateKey:template?.key||'rava-service-minimal',templateVersion:templateVersion?.version??1,layout:object(revision?.layout_config)},page:{id:selected.id,title:selected.title,slug:selected.slug,seo:object(selected.seo),published_at:selected.published_at},blocks:(blocks??[]).map((block)=>({id:block.id,type:block.block_type,position:block.position,data:object(block.data)}))}
   return <PublicPageView payload={payload} navigation={pages.map((page)=>({id:page.id,title:page.title,slug:page.slug}))} previewBasePath={`/preview/sites/${id}`}/>
 }

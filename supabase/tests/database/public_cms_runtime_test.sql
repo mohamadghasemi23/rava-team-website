@@ -1,6 +1,6 @@
 begin;
 create extension if not exists pgtap;
-select plan(14);
+select plan(15);
 
 select is((select prosecdef from pg_proc where oid='public.get_published_page(text,text)'::regprocedure),true,'public page resolver remains SECURITY DEFINER');
 select is(has_function_privilege('public','public.get_published_page(text,text)','EXECUTE'),false,'PUBLIC cannot execute page resolver');
@@ -32,6 +32,7 @@ insert into public.page_blocks(page_id,block_type,position,visible,data) values
 set local role anon;
 select is(public.get_published_page('a.example.test','services')->'page'->>'title','A Services','hostname resolves only its own page');
 select is(public.get_published_page('a.example.test','services')->'site'->>'templateKey','rava-service-minimal','public payload has a safe renderer fallback');
+select is(public.get_published_page('a.example.test','services')->'site'->>'templateVersion','1','public payload has a safe template-version fallback');
 select is(public.get_published_page('b.example.test','services')->'page'->>'title','B Services','same slug remains tenant isolated');
 select is(jsonb_array_length(public.get_published_page('a.example.test','services')->'blocks'),1,'hidden blocks are excluded');
 select is(public.get_published_page('a.example.test','services')->'blocks'->0->'data'->>'title','Visible A','visible block data is returned');

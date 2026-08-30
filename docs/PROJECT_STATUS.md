@@ -54,7 +54,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Active workstream
 
-The current conversation workstream is reviewing design and content Skills/resources while keeping VPS disk usage stable. New Skill discovery now uses the bounded `rava-skill-scout` workflow. Lightweight text-only Skills may be installed after license and overlap review. Dependency-heavy UI libraries are deferred until disk capacity and architecture justify them.
+The current workstream is completing a versioned `rava-service-horizon` v2 candidate with a materially independent editorial/cinematic public renderer. The source keeps Horizon v1 rollback-safe, adds exact Template-Version routing, and avoids new motion dependencies while VPS disk capacity remains constrained. It is not accepted as release-ready until the latest PR CI, real Staging PostgreSQL migration test, private draft application, desktop/mobile browser review and owner approval pass.
 
 ## Known incomplete work and risks
 

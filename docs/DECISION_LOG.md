@@ -57,3 +57,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Reason:** Targeted discovery can improve capability without repeatedly scanning large repositories, wasting context, filling the constrained VPS disk, or installing poorly licensed and unsafe dependencies.
 - **Consequence:** Ordinary discovery is capped at ten code matches, five repositories and three deep reviews. No candidate is installed, executed or added to the application without explicit approval.
 - **Source:** `tools/codex-skills/rava-skill-scout/`
+
+## 2026-08-30 — Dynamic Horizon v2 uses an original editorial-cinematic direction
+
+- **Decision:** Evolve `rava-service-horizon` through a separate version 2 renderer contract rather than silently restyling version 1. The direction combines an original dark editorial composition, a controlled WebGL hero, a visible project journey and restrained electric accents.
+- **Reason:** A premium Template must change the complete visual system, not only the Hero background, while immutable versions remain necessary for honest preview and rollback.
+- **Consequence:** Version 1 remains selectable through history and rollback. Version 2 activates only when its exact Template Version is applied. Stripe/Webflow references informed hierarchy and service trust, but no identity, layout, proprietary font, asset or copy was cloned.
+- **Motion boundary:** ThreeUI remains limited to the Hero with static/reduced-motion fallbacks. GSAP and a smooth-scroll dependency are deferred until the constrained VPS has capacity and a validated interaction need justifies their runtime and maintenance cost.
+- **Source:** `app/components/PublicPageView.tsx`, `app/[slug]/public-page.module.css`, `supabase/migrations/20260830131500_service_horizon_v2.sql`

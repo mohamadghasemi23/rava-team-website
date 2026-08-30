@@ -91,11 +91,12 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
       <div className="admin-access-grid">{(templates??[]).map((template)=>{
         const templateVersions=(versions??[]).filter((v)=>v.template_id===template.id)
         const latest=templateVersions[0]
-        const selected=template.id===state?.current_template_id
+        const selectedTemplate=template.id===state?.current_template_id
+        const selected=latest?.id===state?.current_template_version_id
         const explicitlyGranted=Boolean(templateAccess?.some(item=>item.template_id===template.id&&item.active))
         const available=explicitlyGranted||tierRank(designEntitlement?.tier)>=tierRank(template.commercial_tier)
-        return <article className={`admin-access-card rava-template-choice${selected?' is-selected':''}`} key={template.id}>
-          <div><b>{locale==='fa'?template.name_fa:template.name_en}</b>{selected?<span className="status-pill status-published">{l('انتخاب فعلی','Current choice')}</span>:null}<small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('در دسترس','Available'):l('نیازمند دسترسی','Restricted')}</small></div>
+        return <article className={`admin-access-card rava-template-choice${selectedTemplate?' is-selected':''}`} key={template.id}>
+          <div><b>{locale==='fa'?template.name_fa:template.name_en}</b>{selected?<span className="status-pill status-published">{l('نسخه فعلی','Current version')}</span>:selectedTemplate?<span className="status-pill">{l('نسخه جدید آماده است','Update available')}</span>:null}<small>{industryLabel(template.industry_key)}</small><small>{tierLabel(template.commercial_tier)} · {template.is_public?l('در دسترس','Available'):l('نیازمند دسترسی','Restricted')}</small></div>
           <p>{locale==='fa'?template.description_fa:template.description_en}</p>
           {!available?<p className="admin-warning-text">{l('این قالب به سطح حرفه‌ای نیاز دارد؛ انتخاب آن تا ارتقای امکانات سایت غیرفعال است.','This template requires the Premium tier; selection is disabled until the site capability is upgraded.')}</p>:null}
           {canGrantTemplates?<ActionForm action={setTemplateAccessAction} confirmTitle={explicitlyGranted?l('برداشتن دسترسی قالب','Revoke template access'):l('فعال‌کردن قالب برای مشتری','Grant template access')} confirmMessage={explicitlyGranted?l('دسترسی اختصاصی مشتری به این قالب برداشته شود؟','Remove this customer’s explicit access to the template?'):l('این قالب بدون تغییر سطح قرارداد برای همین سایت فعال شود؟','Enable this template for this site without changing the contract tier?')}><input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_id" value={template.id}/><input type="hidden" name="active" value={explicitlyGranted?'false':'true'}/><button className="admin-muted-button" type="submit">{explicitlyGranted?l('برداشتن مجوز اختصاصی','Revoke explicit access'):l('دادن مجوز اختصاصی','Grant explicit access')}</button></ActionForm>:null}
@@ -103,7 +104,7 @@ export default async function SiteDesignPage({params}:{params:Promise<{id:string
             <input type="hidden" name="site_id" value={id}/><input type="hidden" name="template_version_id" value={latest.id}/>
             <input type="hidden" name="theme_overrides" value="{}"/>
             <label>{l('یادداشت','Note')}<input name="note" maxLength={500} placeholder={l('برای نمونه: انتخاب اولیه کارفرما','For example: Initial customer choice')}/></label>
-            <button className="admin-primary-button" type="submit" disabled={selected||!available}>{selected?l('همین قالب انتخاب شده است','This template is selected'):available?l('انتخاب این قالب','Choose this template'):l('نیازمند ارتقای امکانات','Upgrade required')}</button>
+            <button className="admin-primary-button" type="submit" disabled={selected||!available}>{selected?l('همین نسخه انتخاب شده است','This version is selected'):available?(selectedTemplate?l('ارتقا به نسخه جدید','Upgrade to the new version'):l('انتخاب این قالب','Choose this template')):l('نیازمند ارتقای امکانات','Upgrade required')}</button>
           </ActionForm>:<p>{l('نسخه منتشرشده ندارد.','No published version is available.')}</p>}
         </article>
       })}</div>
