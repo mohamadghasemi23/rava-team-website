@@ -10,8 +10,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
-- **Last confirmed documentation baseline pushed to the GitHub branch:** `9de4888` (`docs(project): add durable status and decision memory`)
-- **Last product-code commit before the documentation-only updates:** `2f6470a` (`feat(design): add premium ThreeUI horizon template`)
+- **Last confirmed product-code commit pushed to the GitHub branch:** `d90f9e6` (`feat(design): elevate dynamic horizon service template`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
 
 ## Current verified position
@@ -19,13 +18,14 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 ### Repository and CI
 
 - PR #2 is open and remains Draft.
-- The GitHub checks attached to `2f6470a` were observed successful on 2026-08-30: application Build, PostgreSQL migrations/security tests, dedicated PostgreSQL security workflow, and immutable Staging image Build.
-- The documentation baseline through `9fdd3ff` was pushed on 2026-08-30. Application Build, immutable Staging image Build, PostgreSQL migrations/security tests and the dedicated PostgreSQL security workflow all passed for that commit.
+- The GitHub checks attached to `d90f9e6` were observed successful on 2026-08-30: application Build, immutable Staging image Build, PostgreSQL migrations/security tests and the dedicated PostgreSQL security workflow. PR #2 remains Draft and unmerged.
 
 ### Staging
 
-- Last operator-confirmed web deployment: `2f6470a`, with container, HTTP, auth gateway, REST gateway, Storage gateway, loopback-only proxy, no-Netlify runtime and Compose Gates reported passing.
+- Last verified web deployment: `d90f9e6`, with container, HTTP, auth gateway, REST gateway, Storage gateway, loopback-only proxy, AI-provider-config and Compose Gates passing.
 - Self-hosted Supabase-compatible Staging uses PostgreSQL 17.
+- The Horizon v2 migration was applied to Staging after backup `20260830T205252Z`; its five dedicated pgTAP assertions and all fifteen public-CMS-runtime assertions passed against the real Staging database.
+- Horizon v2 is available but was not silently applied to an existing site. RAVA TEAM remains on `rava-service-journey` v1 and the clinic test site remains on `rava-service-minimal` v1 pending an explicit owner preview/selection.
 - Customer Zero draft data and exact draft-preview workflow exist in Staging; this does not mean Production readiness.
 - Staging is accessed through the loopback-only tunnel at `127.0.0.1:19080`; refresh container health before testing.
 
@@ -36,7 +36,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ### Infrastructure constraints
 
-- Last observed root disk state on 2026-08-30: approximately `1.1 GiB` free on a `20 GiB` volume (`95%` used). This is volatile and must be rechecked.
+- Last observed root disk state after validated old-image cleanup and the `d90f9e6` pull on 2026-08-30: approximately `2.2 GiB` free on a `20 GiB` volume (`89%` used). This is volatile and must be rechecked.
 - Until disk capacity is increased, avoid non-essential dependency installations, local Docker Builds, duplicate images and large caches.
 - Do not delete active images, PostgreSQL data, verified backups or rollback assets without exact target validation.
 - OpenAI SEO suggestions are structurally implemented, but the provider account last reported no API credits. AI is therefore not an acceptance dependency for the current manual flow.
@@ -54,7 +54,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Active workstream
 
-The current workstream is completing a versioned `rava-service-horizon` v2 candidate with a materially independent editorial/cinematic public renderer. The source keeps Horizon v1 rollback-safe, adds exact Template-Version routing, and avoids new motion dependencies while VPS disk capacity remains constrained. It is not accepted as release-ready until the latest PR CI, real Staging PostgreSQL migration test, private draft application, desktop/mobile browser review and owner approval pass.
+The current workstream is owner evaluation of the versioned `rava-service-horizon` v2 candidate. Source, GitHub CI, immutable image deployment, real Staging migration and database tests have passed. Horizon v1 remains rollback-safe and exact Template-Version routing is active. The candidate is not accepted as release-ready until an owner explicitly applies it to a private draft and completes desktop/mobile browser, content, accessibility and visual-quality review.
 
 ## Known incomplete work and risks
 
@@ -68,13 +68,12 @@ The current workstream is completing a versioned `rava-service-horizon` v2 candi
 
 ## Prioritized next actions
 
-1. Finish the remaining lightweight Skill/resource reviews without adding heavy project dependencies.
-2. Confirm PR #2 has advanced to the pushed documentation commits and wait for their GitHub checks; do not merge.
-3. Perform a read-only disk/backup/image audit and define a conservative survival policy until disk expansion.
-4. Run a structured owner usability walkthrough from site creation through content, pages, preview, template selection and approval; capture every issue in the durable UX backlog.
-5. Fix P0/P1 usability and correctness defects exposed by that walkthrough with RPIM-scoped changes and full Gates.
-6. Establish the original RAVA design system and template-family roadmap, then complete the first service template and Customer Zero content on Staging.
-7. Rehearse all release-readiness Gates; request separate explicit approval before any Production action.
+1. Apply Horizon v2 to a private draft through the authorized owner Template-selection flow; do not alter Production.
+2. Run desktop/mobile owner review of the exact draft renderer and record visual, content, accessibility and interaction defects.
+3. Fix P0/P1 defects from that review with RPIM-scoped changes and full Gates; preserve Horizon v1 rollback.
+4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
+5. Define the remaining original service-template family roadmap toward at least ten distinctive versioned Templates without duplicating design systems or heavy dependencies.
+6. Rehearse all release-readiness Gates; request separate explicit approval before any Production action.
 
 ## Update protocol
 
