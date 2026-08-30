@@ -10,8 +10,8 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
-- **GitHub branch commit at capture:** `2f6470a` (`feat(design): add premium ThreeUI horizon template`)
-- **Local documentation commit not yet pushed at capture:** `8a47bbe` (`docs(design): record deferred Tailwind and Motion decision`)
+- **Last confirmed documentation baseline pushed to the GitHub branch:** `9de4888` (`docs(project): add durable status and decision memory`)
+- **Last product-code commit before the documentation-only updates:** `2f6470a` (`feat(design): add premium ThreeUI horizon template`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
 
 ## Current verified position
@@ -20,7 +20,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 - PR #2 is open and remains Draft.
 - The GitHub checks attached to `2f6470a` were observed successful on 2026-08-30: application Build, PostgreSQL migrations/security tests, dedicated PostgreSQL security workflow, and immutable Staging image Build.
-- The local branch was one commit ahead of GitHub at the last capture. Refresh with `git fetch`, `git status`, and PR checks before relying on this statement.
+- The documentation commits through `9de4888` were pushed on 2026-08-30. Their new GitHub checks had not yet been observed complete at the time of this status refresh.
 
 ### Staging
 
@@ -68,7 +68,7 @@ The current conversation workstream is reviewing design and content Skills/resou
 ## Prioritized next actions
 
 1. Finish the remaining lightweight Skill/resource reviews without adding heavy project dependencies.
-2. Push the pending documentation commits to `agent/platform-core-foundation` and PR #2 when authorized; do not merge.
+2. Confirm PR #2 has advanced to the pushed documentation commits and wait for their GitHub checks; do not merge.
 3. Perform a read-only disk/backup/image audit and define a conservative survival policy until disk expansion.
 4. Run a structured owner usability walkthrough from site creation through content, pages, preview, template selection and approval; capture every issue in the durable UX backlog.
 5. Fix P0/P1 usability and correctness defects exposed by that walkthrough with RPIM-scoped changes and full Gates.
@@ -90,4 +90,3 @@ At the end of meaningful work:
 3. Reorder **Prioritized next actions** if the critical path changed.
 4. Keep volatile observations dated.
 5. Never turn an untested implementation or conversation agreement into a completed claim.
-
