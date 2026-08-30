@@ -51,3 +51,9 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Reason:** The growing project cannot rely on conversation memory or scattered documents to preserve the critical path.
 - **Consequence:** `AGENTS.md` enforces the protocol; recorded status never replaces live GitHub, CI, Staging, Production or VPS verification.
 
+## 2026-08-30 — Bounded Skill discovery before third-party installation
+
+- **Decision:** Use the repository-owned `rava-skill-scout` workflow when a required capability is not covered by installed Skills. Search installed and official catalogs first, then use a metadata-first, cached, tightly bounded GitHub search.
+- **Reason:** Targeted discovery can improve capability without repeatedly scanning large repositories, wasting context, filling the constrained VPS disk, or installing poorly licensed and unsafe dependencies.
+- **Consequence:** Ordinary discovery is capped at ten code matches, five repositories and three deep reviews. No candidate is installed, executed or added to the application without explicit approval.
+- **Source:** `tools/codex-skills/rava-skill-scout/`

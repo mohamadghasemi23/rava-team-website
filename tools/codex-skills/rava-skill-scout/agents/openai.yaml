@@ -1,0 +1,4 @@
+interface:
+  display_name: "RAVA Skill Scout"
+  short_description: "Find and compare focused GitHub skills"
+  default_prompt: "Use $rava-skill-scout to find the best lightweight skill for this task."

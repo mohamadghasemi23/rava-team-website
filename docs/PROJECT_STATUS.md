@@ -20,7 +20,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 - PR #2 is open and remains Draft.
 - The GitHub checks attached to `2f6470a` were observed successful on 2026-08-30: application Build, PostgreSQL migrations/security tests, dedicated PostgreSQL security workflow, and immutable Staging image Build.
-- The documentation commits through `9de4888` were pushed on 2026-08-30. Their new GitHub checks had not yet been observed complete at the time of this status refresh.
+- The documentation baseline through `9fdd3ff` was pushed on 2026-08-30. Application Build, immutable Staging image Build, PostgreSQL migrations/security tests and the dedicated PostgreSQL security workflow all passed for that commit.
 
 ### Staging
 
@@ -50,10 +50,11 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - Core platform foundations, Admin localization/help foundations, CMS draft preview, owner SEO suggestion flow, media video/search support and versioned template work exist in the branch history.
 - Admin UX requirements record the one-path task model, owner/customer access separation, readable tables, constrained page building, exact previews, bilingual Help and SEO guidance.
 - Design work has begun, but the current templates and Admin surfaces are not accepted as final world-class design.
+- A repository-owned, bounded Skill discovery workflow exists at `tools/codex-skills/rava-skill-scout/`; it searches metadata first, caches results and requires explicit approval before installation.
 
 ## Active workstream
 
-The current conversation workstream is reviewing design and content Skills/resources while keeping VPS disk usage stable. Lightweight text-only Skills may be installed after license and overlap review. Dependency-heavy UI libraries are deferred until disk capacity and architecture justify them.
+The current conversation workstream is reviewing design and content Skills/resources while keeping VPS disk usage stable. New Skill discovery now uses the bounded `rava-skill-scout` workflow. Lightweight text-only Skills may be installed after license and overlap review. Dependency-heavy UI libraries are deferred until disk capacity and architecture justify them.
 
 ## Known incomplete work and risks
 
