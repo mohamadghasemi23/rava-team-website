@@ -88,3 +88,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Capability set:** Page building, bilingual content, brand design, SEO intelligence, responsive preview, safe publishing and multi-site operation are the primary visual subjects. Exact interface labels and controls remain code-rendered for accessibility and localization.
 - **Supersedes:** The interior still-life plates prepared during initial Comp D asset extraction. Their lamp, stone and cup subject matter is rejected for the flagship because it implies an unrelated architecture/interior brand.
 - **Source:** Owner direction and `assets/plates/*.prompt.txt`
+
+## 2026-09-01 — Premium visuals must remain inside an enforced performance budget
+
+- **Decision:** Treat frontend performance as a release Gate for RAVA Templates. Static Hero imagery is pre-compressed, delivered without runtime image-transformation work, and checked against repository-owned byte budgets in CI.
+- **Initial budget:** RAVA Living System Hero media must remain at or below 220 KiB combined and 120 KiB per delivered asset. Source-quality files may remain for reproduction but must not be the normal browser payload.
+- **Runtime boundary:** Static Templates do not receive continuous RAF, WebGL, canvas, marquee or timer loops by default. Any future exception requires measured value, visibility gating, reduced-motion fallback, complete cleanup and a separate performance review.
+- **Reason:** RAVA must deliver world-class visual quality without unnecessary server transformation cost, mobile jank, long-session CPU/GPU load or uncontrolled asset growth.
+- **Source:** `docs/FRONTEND_PERFORMANCE_BUDGET.md`, `config/frontend-performance-budgets.json`

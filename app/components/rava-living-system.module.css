@@ -153,3 +153,13 @@
 .journey li:nth-child(4) .stepScreen span:nth-child(4){inset:auto 25% 18px;height:4px;border-radius:4px;background:linear-gradient(90deg,transparent,#20ba7e,transparent)}
 @media(max-width:900px){.journeyHeader{grid-template-columns:1fr}.journeyHeader>span,.journeyHeader h2,.journeyHeader p{grid-column:1}.journeyHeader>span{grid-row:1}.journeyHeader h2{grid-row:2}.journeyHeader p{grid-row:3;margin-top:18px}.journey>ol{grid-template-columns:1fr 1fr}.journey>ol::before{display:none}.journey li{min-height:360px}.stepCopy{min-height:112px}}
 @media(max-width:520px){.journey{padding:64px 20px 72px}.journeyHeader{margin-bottom:40px}.journeyHeader h2{font-size:38px}.journeyHeader p{font-size:13px}.journey>ol{grid-template-columns:1fr;gap:42px}.journey>ol::before{display:block;inset:25px 24px 25px auto;width:1px;height:auto;background:linear-gradient(#2c70ff 0 76%,#159b66);box-shadow:0 0 18px rgba(21,87,255,.5)}.journey li{min-height:auto;padding-right:72px}.stepCopy{min-height:auto;margin-top:20px!important}.stepScreen{height:210px;margin-top:20px;margin-right:-72px}.stepNumber{margin-left:auto!important;margin-right:-72px!important}}
+
+/* Performance budget: static assets are pre-compressed; below-fold rendering is deferred. */
+.canvas picture,.devices picture{display:block;width:100%;height:100%}
+.canvas picture img,.devices picture img{display:block;width:100%;height:100%;object-fit:cover}
+.journey{content-visibility:auto;contain-intrinsic-size:auto 650px}
+.navbar::after{filter:none;background:radial-gradient(ellipse at center,rgba(12,39,78,.16),transparent 68%)}
+.journey::after{background:radial-gradient(ellipse at center,rgba(21,87,255,.16),transparent 70%);filter:none}
+.stepScreen{backdrop-filter:none}
+@media(max-width:820px){.editor{background-image:image-set(url('/templates/rava-living-system/editor-site-visual.webp') type('image/webp'),url('/templates/rava-living-system/editor-site-visual.png') type('image/png'))}}
+@media(prefers-reduced-transparency:reduce){.navbar,.mega{backdrop-filter:none;background:#f2f2f4}.stepScreen{background:#101a2c}}

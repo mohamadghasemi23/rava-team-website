@@ -46,6 +46,8 @@ jobs:
         run: node scripts/verify-feature-standards.mjs
       - name: Project intelligence map
         run: npm run rpim:verify
+      - name: Frontend performance budgets
+        run: npm run verify:performance-budgets
       - name: Admin localization standard
         run: node scripts/verify-admin-localization.mjs
       - name: Type check

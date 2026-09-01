@@ -13,6 +13,10 @@ const copy={
 function hrefFor(item:PreviewNavigationItem,previewBasePath?:string){return previewBasePath?`${previewBasePath}?page=${item.id}`:`/${item.slug}`}
 function Arrow(){return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>}
 function Mark(){return <span className={styles.mark} aria-hidden="true"><i/><i/><i/></span>}
+function ProductVisual({portrait=false,priority=false}:{portrait?:boolean;priority?:boolean}){
+  const name=portrait?'responsive-site-visual':'editor-site-visual'
+  return <picture aria-hidden="true"><source srcSet={`/templates/rava-living-system/${name}.webp`} type="image/webp"/><img src={`/templates/rava-living-system/${name}.png`} alt="" width={portrait?941:1817} height={portrait?1672:866} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></picture>
+}
 
 export default function RavaLivingSystemPage({payload,navigation,previewBasePath,showMenuPreview=false}:Props){
   const isFa=!payload.page.slug.endsWith('-en')&&(payload.site.locale||'fa').startsWith('fa')
@@ -47,9 +51,9 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
           <div className={styles.productScene} aria-label={isFa?'نمایی از صفحه‌ساز، پیش‌نمایش واکنش‌گرا و مسیر انتشار راوا':'RAVA page builder, responsive preview and publishing flow'}>
             <div className={styles.editor}>
               <div className={styles.editorRail}><Mark/><i/><i/><i/><i/></div>
-              <div className={styles.editorBody}><div className={styles.editorToolbar}><span>{t.canvas}</span><div><i/><i/><i/><i/></div></div><div className={styles.canvas}><img src="/templates/rava-living-system/editor-site-visual.png" alt=""/><div className={styles.canvasCopy}><b>{isFa?'از ساخت تا رشد؛ در یک سیستم':'From build to growth, in one system'}</b><span>{isFa?'محتوا، طراحی، سئو و انتشار کنار هم':'Content, design, SEO and release together'}</span></div></div></div>
+              <div className={styles.editorBody}><div className={styles.editorToolbar}><span>{t.canvas}</span><div><i/><i/><i/><i/></div></div><div className={styles.canvas}><ProductVisual priority/><div className={styles.canvasCopy}><b>{isFa?'از ساخت تا رشد؛ در یک سیستم':'From build to growth, in one system'}</b><span>{isFa?'محتوا، طراحی، سئو و انتشار کنار هم':'Content, design, SEO and release together'}</span></div></div></div>
             </div>
-            <div className={styles.devices}><div className={styles.tablet}><img src="/templates/rava-living-system/responsive-site-visual.png" alt=""/></div><div className={styles.phone}><img src="/templates/rava-living-system/responsive-site-visual.png" alt=""/></div></div>
+            <div className={styles.devices}><div className={styles.tablet}><ProductVisual portrait/></div><div className={styles.phone}><ProductVisual portrait/></div></div>
             <ol className={styles.releaseRail}><li><span/><b>{t.draft}</b></li><li><span/><b>{t.preview}</b></li><li><span/><b>{t.published}</b></li></ol>
           </div>
         </section>

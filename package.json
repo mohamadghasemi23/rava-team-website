@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "rpim": "node scripts/rpim.mjs",
-    "rpim:verify": "node scripts/rpim.mjs verify"
+    "rpim:verify": "node scripts/rpim.mjs verify",
+    "verify:performance-budgets": "node scripts/verify-frontend-performance-budgets.mjs"
   },
   "dependencies": {
     "@designcodeio/threeui": "1.1.0",

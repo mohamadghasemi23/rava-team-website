@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "assetGroups": [
+    {
+      "key": "rava-living-system-hero",
+      "description": "Critical visual media for the RAVA TEAM flagship Hero",
+      "maxTotalBytes": 225280,
+      "maxAssetBytes": 122880,
+      "assets": [
+        "public/templates/rava-living-system/editor-site-visual.webp",
+        "public/templates/rava-living-system/responsive-site-visual.webp"
+      ]
+    }
+  ]
+}
