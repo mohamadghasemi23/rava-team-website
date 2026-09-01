@@ -1,7 +1,10 @@
 {
   "title": "RAVA Living System — Combined final composition",
   "prompt": "A cohesive Persian RTL RAVA TEAM flagship homepage combining one product-pure light Hero, an optical 3D glass Navbar and Mega Menu, a live website canvas transforming from wireframe to finished site, responsive tablet/mobile previews and a Draft-to-Preview-to-Published rail. The lower viewport transitions into one midnight cinematic platform walkthrough showing Content, Design, Preview and Release as a flowing sequence. Use pearl, deep navy, smoke glass, controlled cobalt and verified green. Exclude buildings, abstract decoration, fake proof, generic cards and oversized flat buttons.",
-  "approved": true,
+  "approved": false,
   "approvalDate": "2026-09-01",
-  "approvalNote": "Owner approved D as the first implementation foundation; implementation must improve detail quality while preserving the approved composition and product clarity."
+  "approvalNote": "Owner approved D as the first implementation foundation; implementation must improve detail quality while preserving the approved composition and product clarity.",
+  "status": "superseded-historical-authority",
+  "supersededBy": ".impeccable/mocks/rava-living-system-d2-candidate.png",
+  "supersededReason": "D2 preserves the approved topology while replacing the rejected interior subject with truthful RAVA product and creative-workspace imagery."
 }

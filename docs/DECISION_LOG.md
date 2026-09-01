@@ -96,3 +96,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Runtime boundary:** Static Templates do not receive continuous RAF, WebGL, canvas, marquee or timer loops by default. Any future exception requires measured value, visibility gating, reduced-motion fallback, complete cleanup and a separate performance review.
 - **Reason:** RAVA must deliver world-class visual quality without unnecessary server transformation cost, mobile jank, long-session CPU/GPU load or uncontrolled asset growth.
 - **Source:** `docs/FRONTEND_PERFORMANCE_BUDGET.md`, `config/frontend-performance-budgets.json`
+
+## 2026-09-01 — D2 replaces D as the flagship Hero and Journey visual authority
+
+- **Decision:** The owner explicitly approved both the closed-navigation D2 capture and its open optical Mega Menu interaction state as the exact visual authority for the RAVA Living System Hero and Journey.
+- **Supersedes:** The original D bitmap for implementation measurement. D remains preserved as historical concept evidence, but its unrelated interior subject is no longer a fidelity target.
+- **Boundary:** D2 approves the captured Hero, navigation, product composition, creative-workspace background and four-act Journey. It does not silently approve or define the unfinished lower page family.
+- **Gate:** Rebuild the measured spec against D2 and rerun the Hero Gate at the existing 72% threshold; never lower the threshold to manufacture a pass.
+- **Source:** `.impeccable/mocks/rava-living-system-d2-candidate.png`, `.impeccable/mocks/rava-living-system-d2-menu-candidate.png`
