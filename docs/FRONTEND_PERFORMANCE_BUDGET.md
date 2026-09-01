@@ -5,7 +5,7 @@ RAVA must remain visually distinctive without turning presentation into continuo
 ## Flagship baseline
 
 - Pre-compress production imagery at build time; do not make the application server transform the same static Hero asset on every cold cache.
-- Keep the combined RAVA Living System Hero media at or below 220 KiB and each delivered asset at or below 120 KiB. Source PNG files may remain for reproduction, but browsers must prefer the budgeted WebP assets.
+- Keep the combined RAVA Living System Hero media at or below 320 KiB and each delivered asset at or below 120 KiB. This includes the product-relevant creative-workspace background; source PNG files may remain for reproduction, but browsers must prefer the budgeted WebP assets.
 - Do not add a continuous RAF, WebGL, canvas, marquee or timer loop to a static Template. An exception requires a measured product benefit, viewport/visibility gating, reduced-motion fallback, cleanup on unmount and a separate performance review.
 - Restrict expensive optical effects. Persistent `backdrop-filter` is reserved for compact navigation surfaces; large below-fold panels use precomposed gradients and borders instead.
 - Defer below-fold rendering with `content-visibility` where layout stability can be preserved with an intrinsic-size fallback.
@@ -25,7 +25,7 @@ CI enforces the repository-owned asset budget. Browser profiling remains require
 ## 2026-09-01 measured reference
 
 - Desktop Hero media selected by Chromium: `editor-site-visual.webp` and `responsive-site-visual.webp`.
-- Combined decoded transfer payload: approximately 197 KiB, down from approximately 3.2 MiB of source PNG imagery.
+- Combined delivered Hero imagery after adding the creative-workspace background: approximately 279 KiB, while the three source PNG files total approximately 5.1 MiB.
 - Template CSS transfer observed in the local design-preview route: approximately 8 KiB.
 - Canvas/WebGL elements: zero.
 - Mobile running animations after load: zero.
