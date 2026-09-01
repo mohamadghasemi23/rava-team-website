@@ -1,6 +1,11 @@
-Use case: precise-object-edit
-Asset type: portrait responsive plate derived from the RAVA product-system visual
-Primary request: recompose the same RAVA Website Operating System concept for a tall crop. Keep the central transformation from luminous page blueprint into a polished live responsive website and arrange connected capability objects vertically for page building, bilingual content, brand design, SEO, responsive preview and safe publishing.
-Brand/style: preserve the abstract R signal mark, pearl white, midnight navy, smoke glass, controlled cobalt connections and verified-green state light.
-Composition/framing: tall portrait; central website canvas readable at narrow width and capabilities forming one top-to-bottom operating journey.
-Constraints: every object represents a real RAVA capability. No architecture, buildings, interiors, lamps, cups, furniture, people, random decoration, fake words, external logos, watermark or surrounding UI chrome.
+RAVA Living System responsive hero companion
+
+Use case: a purpose-composed portrait companion for the phone and narrow-tablet frames in the RAVA flagship Hero; never a blind crop of the desktop plate.
+
+Story: a tall mobile website transforms through a luminous vertical seam from structured blueprint into its finished responsive form. Two broad glass layers add depth and one verified-green state communicates safe release.
+
+Visual language: the same pearl background, deep navy metal, optical glass and controlled cobalt edge light as the desktop flagship plate.
+
+Required exclusions: no buildings, rooms, furniture, lamps, cups, people, ecommerce products, charts, detached icon tiles, readable or fake text, external logos, cables, podiums or generic dashboard chrome.
+
+Source generation: OpenAI image generation, 2026-09-01. The preserved generation master is exec-6b17e26d-4a77-4cab-94c8-d4c0521a5ddf.png in the Codex generated-images directory for this task.

@@ -1,7 +1,11 @@
-Use case: stylized-concept
-Asset type: production visual plate inside the RAVA Living System D website-builder canvas
-Primary request: create a premium product-centered visualization of the RAVA Website Operating System. Show a precise luminous website blueprint transforming into a polished live website, surrounded by six connected functional layers representing page building, bilingual content, brand design, SEO intelligence, responsive preview and safe publishing.
-Brand: RAVA TEAM; use an abstract R-shaped signal mark only, with no generated words elsewhere.
-Style/medium: refined 3D product visualization with realistic glass, pearl ceramic, dark navy metal and restrained cobalt light.
-Composition/framing: wide landscape; central live website canvas, blueprint entering from one side, finished responsive page emerging from the other, connected capability objects forming a clear journey.
-Constraints: every visible object represents a real RAVA capability. No architecture, buildings, interior design, lamps, cups, furniture, people, random decoration, generic charts, fake text, external logos or watermark.
+RAVA Living System flagship hero product plate
+
+Use case: bespoke product visualization embedded inside the coded RAVA hero.
+
+Story: one coherent floating website canvas transforms from a precise luminous blueprint on the left into the same polished digital-agency website on the right. Three broad optical-glass planes behind it imply the platform layers: content, design and safe publishing. A restrained green state communicates a verified release.
+
+Visual language: physically plausible optical glass, pearl ceramic, deep navy anodized metal, controlled cobalt edge light, calm editorial composition and generous negative space.
+
+Required exclusions: no buildings, architecture photography, rooms, furniture, lamps, cups, people, unrelated decoration, external logos, readable or fake text, generic admin dashboard, analytics chart, disconnected icon cards, excessive neon or toy-like UI.
+
+Source generation: OpenAI image generation, 2026-09-01. The preserved generation master is exec-43d42b5c-4dcf-483f-9ce1-e72194d12ef5.png in the Codex generated-images directory for this task.
