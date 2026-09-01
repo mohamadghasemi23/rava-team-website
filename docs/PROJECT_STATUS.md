@@ -70,7 +70,7 @@ The current workstream is implementation of owner-approved RAVA Living System D 
 
 ## Prioritized next actions
 
-1. Establish an owner-approved revised Comp D visual authority using the RAVA-specific Hero and journey, re-measure the implementation and pass the Hero Gate without weakening its threshold.
+1. Obtain explicit owner review of the exact closed and open-menu D2 candidate captures in `.impeccable/mocks/`; only after approval may their sidecars become approved visual authority, the implementation be re-measured and the Hero Gate rerun without weakening its threshold.
 2. Complete the CMS-compatible D Template sections and versioned catalog migration only after the Hero Gate passes, then run complete repository Gates and real Staging validation.
 3. After D passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.

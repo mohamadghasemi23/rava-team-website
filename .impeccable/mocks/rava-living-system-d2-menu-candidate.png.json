@@ -1,0 +1,8 @@
+{
+  "title": "RAVA Living System D2 — Optical Mega Menu interaction candidate",
+  "source": "Real Chromium capture of the CMS-compatible implementation at 1536x1024",
+  "state": "platform Mega Menu open",
+  "approved": false,
+  "status": "awaiting-owner-review",
+  "reviewNote": "Interaction-state companion to the closed D2 candidate. Approval of the closed composition does not silently approve this open-menu state; both are preserved for explicit visual review."
+}
