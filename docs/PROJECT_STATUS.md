@@ -10,7 +10,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
-- **Last confirmed product-code commit pushed to the GitHub branch:** `d90f9e6` (`feat(design): elevate dynamic horizon service template`)
+- **Last confirmed product-code commit pushed to the GitHub branch:** `b0e8190` (`feat(design): refine flagship hero and optical navigation`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
 
 ## Current verified position
