@@ -1,0 +1,7 @@
+Use case: precise-object-edit
+Asset type: production website-preview editorial image plate for RAVA Living System D
+Input image: approved composition reference; preserve its subject, framing, perspective, lighting and pearl/smoke/navy-neutral palette.
+Primary request: recreate only the clean minimalist interior still life shown inside the editor: warm white pendant lamp, two pale veined stone blocks, a small neutral ceramic cup on a white shelf, soft warm-gray studio wall and realistic soft shadows.
+Composition/framing: wide landscape, same object positions and scale as the reference, artwork fills the frame edge to edge.
+Style/medium: premium editorial interior photography, quiet architectural-material product styling, photorealistic.
+Constraints: remove all Persian text, selection outlines, resize handles, toolbar, interface chrome, grids, borders, card corners and drop shadows belonging to the UI. Keep only the photographed interior scene. No logos, no watermark, no added objects, no people. Do not restyle or change the concept.

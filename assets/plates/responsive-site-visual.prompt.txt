@@ -1,0 +1,7 @@
+Use case: precise-object-edit
+Asset type: portrait responsive website-preview image plate for RAVA Living System D
+Input image 1: approved clean interior scene and exact subject/material/lighting reference. Input image 2: approved narrow responsive crop and framing reference.
+Primary request: create a portrait crop of the exact same clean minimalist interior: warm white pendant lamp, pale veined stone blocks, small neutral ceramic cup and warm-gray wall. Match the second image's tall framing while using the first image's clean photographic content and quality.
+Style/medium: premium editorial interior photography, photorealistic.
+Composition/framing: tall portrait crop intended inside tablet and mobile screens; preserve strong readable objects at narrow widths and fill edge to edge.
+Constraints: no text, no UI, no selection outlines, no device frame, no toolbar, no border, no card, no logo, no watermark, no added objects, no people. Do not change the concept, materials or lighting.

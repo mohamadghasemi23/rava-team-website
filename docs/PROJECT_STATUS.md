@@ -55,7 +55,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Active workstream
 
-The current workstream is owner selection and implementation planning for the RAVA TEAM Customer Zero flagship Template. Four product-centered concepts in the shared RAVA Digital Atelier family are preserved in `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`; D is the recommended first implementation but remains pending explicit owner approval. No Comp is approved and no new flagship page code has been written. The earlier Horizon v2 candidate remains available and rollback-safe but is not accepted as the flagship visual direction.
+The current workstream is implementation of owner-approved RAVA Living System D as the RAVA TEAM Customer Zero flagship Template. Four product-centered concepts in the shared RAVA Digital Atelier family are permanently preserved in `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`; A, B and C are future sequential Presets. D is approved, but no new flagship page code has been written yet. The earlier Horizon v2 candidate remains available and rollback-safe but is not accepted as the flagship visual direction.
 
 ## Known incomplete work and risks
 
@@ -70,9 +70,9 @@ The current workstream is owner selection and implementation planning for the RA
 
 ## Prioritized next actions
 
-1. Obtain explicit owner approval for the RAVA flagship Comp, then implement only the approved D/A/B/C composition as the first shared-family foundation.
-2. Run desktop/mobile owner review of the exact private draft renderer and record visual, content, accessibility and interaction defects.
-3. Preserve Horizon v2 as a rollback-safe candidate until the new flagship family is proven; do not alter Production.
+1. Advance approved Comp D through spec and asset Gates, then implement it as the first shared-family foundation with RPIM-scoped changes.
+2. Run complete repository Gates and real Staging validation, then perform desktop/mobile owner review of the exact private draft renderer.
+3. After D passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
 5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.
 6. Rehearse all release-readiness Gates; request separate explicit approval before any Production action.

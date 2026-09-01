@@ -2,42 +2,58 @@
   "tool": "build-phase",
   "version": 2,
   "startedAt": "2026-09-01T00:36:20.371Z",
-  "comp": null,
+  "comp": ".impeccable/mocks/rava-living-system-d.png",
   "direction": "2e45c463",
-  "breakpoint": null,
+  "breakpoint": "1536x1024",
   "artifact": null,
-  "phase": "comps",
+  "phase": "hero",
   "phases": {
     "comps": {
-      "status": "open",
+      "status": "closed",
       "openedAt": "2026-09-01T00:36:20.371Z",
-      "closedAt": null,
-      "attempts": 0,
+      "closedAt": "2026-09-01T01:06:18.574Z",
+      "attempts": 2,
       "notes": [],
-      "gate": null,
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "4 comps, 1 approved",
+        "approved": ".impeccable/mocks/rava-living-system-d.png",
+        "at": "2026-09-01T01:06:18.573Z"
+      },
       "forced": null
     },
     "spec": {
-      "status": "pending",
-      "openedAt": null,
-      "closedAt": null,
-      "attempts": 0,
+      "status": "closed",
+      "openedAt": "2026-09-01T01:06:18.884Z",
+      "closedAt": "2026-09-01T01:10:08.053Z",
+      "attempts": 1,
       "notes": [],
-      "gate": null,
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "16 regions, 2 plates, 3 text regions measured",
+        "at": "2026-09-01T01:10:08.052Z"
+      },
       "forced": null
     },
     "plates": {
-      "status": "pending",
-      "openedAt": null,
-      "closedAt": null,
-      "attempts": 0,
+      "status": "closed",
+      "openedAt": "2026-09-01T01:10:08.053Z",
+      "closedAt": "2026-09-01T01:12:52.037Z",
+      "attempts": 1,
       "notes": [],
-      "gate": null,
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "2/2 plates",
+        "at": "2026-09-01T01:12:52.036Z"
+      },
       "forced": null
     },
     "hero": {
-      "status": "pending",
-      "openedAt": null,
+      "status": "open",
+      "openedAt": "2026-09-01T01:12:52.037Z",
       "closedAt": null,
       "attempts": 0,
       "notes": [],
@@ -81,5 +97,17 @@
       "forced": null
     }
   },
-  "finish": null
+  "finish": null,
+  "plates": {
+    "editor-site-visual": {
+      "status": "ok",
+      "score": 0.761,
+      "size": "1828x860"
+    },
+    "responsive-site-visual": {
+      "status": "ok",
+      "score": 0.8337,
+      "size": "841x1870"
+    }
+  }
 }

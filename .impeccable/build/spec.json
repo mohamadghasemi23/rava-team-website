@@ -1,0 +1,921 @@
+{
+  "tool": "comp-spec",
+  "version": 1,
+  "createdAt": "2026-09-01T01:09:09.025Z",
+  "comp": ".impeccable/mocks/rava-living-system-d.png",
+  "warnings": [
+    "region editor-site-visual: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
+    "region responsive-site-visual: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
+    "region cinematic-ground: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+  ],
+  "uncoveredInkCells": [
+    "H1",
+    "A2",
+    "H2"
+  ],
+  "compSize": {
+    "width": 1536,
+    "height": 1024
+  },
+  "aspect": 1.5,
+  "orientation": "landscape",
+  "palette": [
+    {
+      "hex": "#ebe6e5",
+      "coverage": 0.5681
+    },
+    {
+      "hex": "#0b0e1b",
+      "coverage": 0.29
+    },
+    {
+      "hex": "#b2abac",
+      "coverage": 0.1071
+    },
+    {
+      "hex": "#3d424b",
+      "coverage": 0.02
+    },
+    {
+      "hex": "#7a7677",
+      "coverage": 0.0148
+    }
+  ],
+  "bands": [
+    {
+      "y": 0.0353,
+      "strength": 0.2751
+    },
+    {
+      "y": 0.0824,
+      "strength": 0.2437
+    },
+    {
+      "y": 0.1412,
+      "strength": 0.2864
+    },
+    {
+      "y": 0.1882,
+      "strength": 0.2069
+    },
+    {
+      "y": 0.2235,
+      "strength": 0.2258
+    },
+    {
+      "y": 0.2471,
+      "strength": 0.2949
+    },
+    {
+      "y": 0.4118,
+      "strength": 0.2803
+    },
+    {
+      "y": 0.6353,
+      "strength": 0.9025
+    },
+    {
+      "y": 0.6706,
+      "strength": 0.7496
+    },
+    {
+      "y": 0.7882,
+      "strength": 0.2886
+    },
+    {
+      "y": 0.8353,
+      "strength": 0.3254
+    }
+  ],
+  "regions": [
+    {
+      "id": "floating-navigation",
+      "kind": "chrome",
+      "note": "Pearl glass floating navigation bar with brand, links, platform trigger and primary action",
+      "grid": null,
+      "box": {
+        "x": 0.145,
+        "y": 0.018,
+        "w": 0.615,
+        "h": 0.087
+      },
+      "px": {
+        "x": 223,
+        "y": 18,
+        "w": 945,
+        "h": 89
+      },
+      "aspect": 10.618,
+      "palette": [
+        {
+          "hex": "#ede9e8",
+          "coverage": 0.7928
+        },
+        {
+          "hex": "#c3bcbd",
+          "coverage": 0.1433
+        },
+        {
+          "hex": "#080d18",
+          "coverage": 0.054
+        },
+        {
+          "hex": "#64606a",
+          "coverage": 0.0063
+        },
+        {
+          "hex": "#353545",
+          "coverage": 0.0035
+        }
+      ],
+      "detail": {
+        "energy": 26.4067
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "hero-headline",
+      "kind": "text",
+      "note": "Three-line Persian flagship promise in a heavy display face",
+      "grid": null,
+      "box": {
+        "x": 0.074,
+        "y": 0.143,
+        "w": 0.225,
+        "h": 0.158
+      },
+      "px": {
+        "x": 114,
+        "y": 146,
+        "w": 346,
+        "h": 162
+      },
+      "aspect": 2.1358,
+      "palette": [
+        {
+          "hex": "#eee8e8",
+          "coverage": 0.8655
+        },
+        {
+          "hex": "#09101d",
+          "coverage": 0.1135
+        },
+        {
+          "hex": "#acacb3",
+          "coverage": 0.0081
+        },
+        {
+          "hex": "#28333b",
+          "coverage": 0.0065
+        },
+        {
+          "hex": "#535765",
+          "coverage": 0.0065
+        }
+      ],
+      "detail": {
+        "energy": 40.4499
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 3,
+          "glyphs": 16,
+          "capHeightPx": 32.2,
+          "inkIsDark": true,
+          "allCaps": false,
+          "advance": 0.8928,
+          "advTall": 0.6513,
+          "advX": null,
+          "gap": 0.209,
+          "xRatio": 0.4117,
+          "stemW": 0.1661,
+          "contrast": 0.8435,
+          "serif": 0.8577,
+          "densTall": 0.41,
+          "densX": null,
+          "weight": 0.41
+        },
+        "widthClass": "normal",
+        "weightClass": "regular",
+        "chosen": {
+          "family": "Akaya Kanadaka",
+          "weight": 400,
+          "fontSizePx": 46,
+          "source": "catalog",
+          "estimatedSize": true,
+          "stamp": "e976cae91e9f"
+        }
+      }
+    },
+    {
+      "id": "hero-deck",
+      "kind": "text",
+      "note": "Concise Persian explanation of the managed website operating system",
+      "grid": null,
+      "box": {
+        "x": 0.078,
+        "y": 0.327,
+        "w": 0.218,
+        "h": 0.074
+      },
+      "px": {
+        "x": 120,
+        "y": 335,
+        "w": 335,
+        "h": 76
+      },
+      "aspect": 4.4079,
+      "palette": [
+        {
+          "hex": "#f1ebea",
+          "coverage": 0.9252
+        },
+        {
+          "hex": "#67696e",
+          "coverage": 0.0372
+        },
+        {
+          "hex": "#a2a2a5",
+          "coverage": 0.0331
+        },
+        {
+          "hex": "#514b5b",
+          "coverage": 0.0038
+        },
+        {
+          "hex": "#c8c8b8",
+          "coverage": 0.0007
+        }
+      ],
+      "detail": {
+        "energy": 23.2371
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 2,
+          "glyphs": 46,
+          "capHeightPx": 10,
+          "inkIsDark": true,
+          "allCaps": true,
+          "advance": 0.5985,
+          "advTall": 0.8346,
+          "advX": null,
+          "gap": 0.1999,
+          "xRatio": null,
+          "stemW": 0.1748,
+          "contrast": 0.9382,
+          "serif": 0.6014,
+          "densTall": 0.4605,
+          "densX": null,
+          "weight": 0.4605
+        },
+        "widthClass": "wide",
+        "weightClass": "regular"
+      }
+    },
+    {
+      "id": "hero-actions",
+      "kind": "control",
+      "note": "Compact tactile primary and secondary hero actions",
+      "grid": null,
+      "box": {
+        "x": 0.079,
+        "y": 0.411,
+        "w": 0.205,
+        "h": 0.078
+      },
+      "px": {
+        "x": 121,
+        "y": 421,
+        "w": 315,
+        "h": 80
+      },
+      "aspect": 3.9375,
+      "palette": [
+        {
+          "hex": "#e9e3e0",
+          "coverage": 0.6251
+        },
+        {
+          "hex": "#090c19",
+          "coverage": 0.2228
+        },
+        {
+          "hex": "#bab3b0",
+          "coverage": 0.0864
+        },
+        {
+          "hex": "#3b3d41",
+          "coverage": 0.0547
+        },
+        {
+          "hex": "#747678",
+          "coverage": 0.011
+        }
+      ],
+      "detail": {
+        "energy": 24.6265
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "platform-mega-menu",
+      "kind": "chrome",
+      "note": "Layered glass mega menu grouping content, design and platform operations",
+      "grid": null,
+      "box": {
+        "x": 0.316,
+        "y": 0.098,
+        "w": 0.422,
+        "h": 0.278
+      },
+      "px": {
+        "x": 485,
+        "y": 100,
+        "w": 648,
+        "h": 285
+      },
+      "aspect": 2.2737,
+      "palette": [
+        {
+          "hex": "#f1ebe8",
+          "coverage": 0.8221
+        },
+        {
+          "hex": "#b9b5b6",
+          "coverage": 0.0826
+        },
+        {
+          "hex": "#0c121c",
+          "coverage": 0.0716
+        },
+        {
+          "hex": "#636366",
+          "coverage": 0.016
+        },
+        {
+          "hex": "#32353b",
+          "coverage": 0.0077
+        }
+      ],
+      "detail": {
+        "energy": 21.0585
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "editor-shell",
+      "kind": "chrome",
+      "note": "Perspective website editor shell with page tree, toolbar and editable canvas",
+      "grid": null,
+      "box": {
+        "x": 0.302,
+        "y": 0.338,
+        "w": 0.455,
+        "h": 0.337
+      },
+      "px": {
+        "x": 464,
+        "y": 346,
+        "w": 699,
+        "h": 345
+      },
+      "aspect": 2.0261,
+      "palette": [
+        {
+          "hex": "#e4dfde",
+          "coverage": 0.6998
+        },
+        {
+          "hex": "#b3afb4",
+          "coverage": 0.1607
+        },
+        {
+          "hex": "#080e19",
+          "coverage": 0.1096
+        },
+        {
+          "hex": "#757175",
+          "coverage": 0.0272
+        },
+        {
+          "hex": "#404047",
+          "coverage": 0.0027
+        }
+      ],
+      "detail": {
+        "energy": 18.8846
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "editor-site-visual",
+      "kind": "image",
+      "note": "Editorial interior photograph composition shown inside the live website canvas",
+      "grid": null,
+      "bleed": true,
+      "box": {
+        "x": 0.397,
+        "y": 0.401,
+        "w": 0.335,
+        "h": 0.236
+      },
+      "px": {
+        "x": 610,
+        "y": 411,
+        "w": 515,
+        "h": 242
+      },
+      "aspect": 2.1281,
+      "palette": [
+        {
+          "hex": "#cfcac9",
+          "coverage": 0.7138
+        },
+        {
+          "hex": "#ada8b4",
+          "coverage": 0.1315
+        },
+        {
+          "hex": "#f7f2ed",
+          "coverage": 0.0937
+        },
+        {
+          "hex": "#747075",
+          "coverage": 0.0505
+        },
+        {
+          "hex": "#0a0a10",
+          "coverage": 0.0105
+        }
+      ],
+      "detail": {
+        "energy": 15.2454
+      },
+      "medium": "raster",
+      "plate": "assets/plates/editor-site-visual.png",
+      "text": null
+    },
+    {
+      "id": "responsive-device-preview",
+      "kind": "chrome",
+      "note": "Tablet and mobile device frames showing responsive versions of the same site",
+      "grid": null,
+      "box": {
+        "x": 0.775,
+        "y": 0.101,
+        "w": 0.112,
+        "h": 0.572
+      },
+      "px": {
+        "x": 1190,
+        "y": 103,
+        "w": 172,
+        "h": 586
+      },
+      "aspect": 0.2935,
+      "palette": [
+        {
+          "hex": "#c1b9b7",
+          "coverage": 0.4119
+        },
+        {
+          "hex": "#ede9e8",
+          "coverage": 0.3804
+        },
+        {
+          "hex": "#8b8380",
+          "coverage": 0.1045
+        },
+        {
+          "hex": "#090909",
+          "coverage": 0.0909
+        },
+        {
+          "hex": "#54514f",
+          "coverage": 0.0124
+        }
+      ],
+      "detail": {
+        "energy": 14.3659
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "responsive-site-visual",
+      "kind": "image",
+      "note": "Editorial interior photograph composition repeated in responsive device previews",
+      "grid": null,
+      "bleed": true,
+      "box": {
+        "x": 0.794,
+        "y": 0.132,
+        "w": 0.073,
+        "h": 0.494
+      },
+      "px": {
+        "x": 1220,
+        "y": 135,
+        "w": 112,
+        "h": 506
+      },
+      "aspect": 0.2213,
+      "palette": [
+        {
+          "hex": "#c1b9b6",
+          "coverage": 0.5029
+        },
+        {
+          "hex": "#ede9e7",
+          "coverage": 0.3043
+        },
+        {
+          "hex": "#8c8480",
+          "coverage": 0.1346
+        },
+        {
+          "hex": "#0a0a0a",
+          "coverage": 0.0494
+        },
+        {
+          "hex": "#565250",
+          "coverage": 0.0088
+        }
+      ],
+      "detail": {
+        "energy": 8.6943
+      },
+      "medium": "raster",
+      "plate": "assets/plates/responsive-site-visual.png",
+      "text": null
+    },
+    {
+      "id": "release-state-rail",
+      "kind": "chrome",
+      "note": "Vertical draft, preview and published state rail with directional connectors",
+      "grid": null,
+      "box": {
+        "x": 0.902,
+        "y": 0.112,
+        "w": 0.088,
+        "h": 0.511
+      },
+      "px": {
+        "x": 1385,
+        "y": 115,
+        "w": 135,
+        "h": 523
+      },
+      "aspect": 0.2581,
+      "palette": [
+        {
+          "hex": "#eee9e9",
+          "coverage": 0.9798
+        },
+        {
+          "hex": "#325626",
+          "coverage": 0.0078
+        },
+        {
+          "hex": "#5f6e7b",
+          "coverage": 0.0059
+        },
+        {
+          "hex": "#c6cbe2",
+          "coverage": 0.0039
+        },
+        {
+          "hex": "#88afd8",
+          "coverage": 0.0026
+        }
+      ],
+      "detail": {
+        "energy": 6.3601
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "cinematic-ground",
+      "kind": "chrome",
+      "note": "Midnight product walkthrough ground with restrained luminous flow lines",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0,
+        "y": 0.628,
+        "w": 1,
+        "h": 0.372
+      },
+      "px": {
+        "x": 0,
+        "y": 643,
+        "w": 1536,
+        "h": 381
+      },
+      "aspect": 4.0315,
+      "palette": [
+        {
+          "hex": "#0b0e1c",
+          "coverage": 0.7065
+        },
+        {
+          "hex": "#aaa1a3",
+          "coverage": 0.1194
+        },
+        {
+          "hex": "#e4dddb",
+          "coverage": 0.1087
+        },
+        {
+          "hex": "#1e2727",
+          "coverage": 0.0395
+        },
+        {
+          "hex": "#303848",
+          "coverage": 0.0258
+        }
+      ],
+      "detail": {
+        "energy": 28.6354
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "walkthrough-heading",
+      "kind": "text",
+      "note": "Persian heading introducing the RAVA operating journey",
+      "grid": null,
+      "box": {
+        "x": 0.07,
+        "y": 0.665,
+        "w": 0.257,
+        "h": 0.053
+      },
+      "px": {
+        "x": 108,
+        "y": 681,
+        "w": 395,
+        "h": 54
+      },
+      "aspect": 7.3148,
+      "palette": [
+        {
+          "hex": "#080c1a",
+          "coverage": 0.8904
+        },
+        {
+          "hex": "#f6f5f5",
+          "coverage": 0.0718
+        },
+        {
+          "hex": "#9d9fa5",
+          "coverage": 0.0202
+        },
+        {
+          "hex": "#5c6268",
+          "coverage": 0.0099
+        },
+        {
+          "hex": "#343644",
+          "coverage": 0.0077
+        }
+      ],
+      "detail": {
+        "energy": 43.0697
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 11,
+          "capHeightPx": 23.3,
+          "inkIsDark": false,
+          "allCaps": true,
+          "advance": 0.3861,
+          "advTall": 0.1716,
+          "advX": null,
+          "gap": 0.2574,
+          "xRatio": null,
+          "stemW": 0.1782,
+          "contrast": 0.8625,
+          "serif": 0.9827,
+          "densTall": 0.8976,
+          "densX": null,
+          "weight": 0.8976
+        },
+        "widthClass": "compressed",
+        "weightClass": "black"
+      }
+    },
+    {
+      "id": "content-step",
+      "kind": "chrome",
+      "note": "Numbered content step with content panel and concise supporting copy",
+      "grid": null,
+      "box": {
+        "x": 0.069,
+        "y": 0.745,
+        "w": 0.236,
+        "h": 0.245
+      },
+      "px": {
+        "x": 106,
+        "y": 763,
+        "w": 362,
+        "h": 251
+      },
+      "aspect": 1.4422,
+      "palette": [
+        {
+          "hex": "#0a101d",
+          "coverage": 0.7533
+        },
+        {
+          "hex": "#dcd5d0",
+          "coverage": 0.1268
+        },
+        {
+          "hex": "#9a908f",
+          "coverage": 0.0599
+        },
+        {
+          "hex": "#3a414e",
+          "coverage": 0.0466
+        },
+        {
+          "hex": "#1f2e2e",
+          "coverage": 0.0134
+        }
+      ],
+      "detail": {
+        "energy": 12.8782
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "design-step",
+      "kind": "chrome",
+      "note": "Numbered design step with modular tools and website composition panel",
+      "grid": null,
+      "box": {
+        "x": 0.322,
+        "y": 0.689,
+        "w": 0.279,
+        "h": 0.301
+      },
+      "px": {
+        "x": 495,
+        "y": 706,
+        "w": 429,
+        "h": 308
+      },
+      "aspect": 1.3929,
+      "palette": [
+        {
+          "hex": "#0e121f",
+          "coverage": 0.5741
+        },
+        {
+          "hex": "#a69fa4",
+          "coverage": 0.2558
+        },
+        {
+          "hex": "#e2dbda",
+          "coverage": 0.0669
+        },
+        {
+          "hex": "#3f4350",
+          "coverage": 0.0537
+        },
+        {
+          "hex": "#222d2d",
+          "coverage": 0.0495
+        }
+      ],
+      "detail": {
+        "energy": 17.4394
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "preview-step",
+      "kind": "chrome",
+      "note": "Numbered preview step with responsive review frame and supporting copy",
+      "grid": null,
+      "box": {
+        "x": 0.604,
+        "y": 0.689,
+        "w": 0.177,
+        "h": 0.301
+      },
+      "px": {
+        "x": 928,
+        "y": 706,
+        "w": 272,
+        "h": 308
+      },
+      "aspect": 0.8831,
+      "palette": [
+        {
+          "hex": "#0d101e",
+          "coverage": 0.5587
+        },
+        {
+          "hex": "#b6aaa8",
+          "coverage": 0.3321
+        },
+        {
+          "hex": "#4f5058",
+          "coverage": 0.0591
+        },
+        {
+          "hex": "#2d2f30",
+          "coverage": 0.0303
+        },
+        {
+          "hex": "#877a77",
+          "coverage": 0.0198
+        }
+      ],
+      "detail": {
+        "energy": 17.7945
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "publish-step",
+      "kind": "chrome",
+      "note": "Numbered publish step with verified release state and supporting copy",
+      "grid": null,
+      "box": {
+        "x": 0.799,
+        "y": 0.689,
+        "w": 0.174,
+        "h": 0.301
+      },
+      "px": {
+        "x": 1227,
+        "y": 706,
+        "w": 267,
+        "h": 308
+      },
+      "aspect": 0.8669,
+      "palette": [
+        {
+          "hex": "#0c101d",
+          "coverage": 0.8671
+        },
+        {
+          "hex": "#1b2424",
+          "coverage": 0.1131
+        },
+        {
+          "hex": "#43474e",
+          "coverage": 0.0117
+        },
+        {
+          "hex": "#606070",
+          "coverage": 0.0042
+        },
+        {
+          "hex": "#868894",
+          "coverage": 0.0039
+        }
+      ],
+      "detail": {
+        "energy": 10.8584
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    }
+  ]
+}

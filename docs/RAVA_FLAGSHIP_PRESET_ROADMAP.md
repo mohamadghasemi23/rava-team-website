@@ -41,7 +41,7 @@ The shared visual family is **RAVA Digital Atelier**: RAVA itself is the focal p
 - Prompt record: `.impeccable/mocks/rava-living-system-d.json`
 - SHA-256: `8d2baa0897e473ae710084d8e78c1cb79f5e172533d3d78f044de19076bdf121`
 - Strength: combines a clear luminous conversion Hero with a focused midnight product-demonstration chapter in one coherent system.
-- Status: recommended first implementation, pending explicit owner approval.
+- Status: owner-approved first implementation on 2026-09-01. Implementation must improve detail quality without weakening the approved composition or product-first hierarchy.
 - Intended use: RAVA TEAM Customer Zero flagship.
 
 ## Delivery sequence
@@ -71,4 +71,4 @@ Parallel implementation is rejected because it multiplies unresolved navigation,
 
 ## Approval state
 
-No Comp is marked approved in its sidecar yet. No page code may be implemented under the Impeccable comp-led workflow until the owner explicitly approves a Comp or delegates that decision.
+Comp D is approved in its sidecar. A, B and C remain preserved future Presets and are not approved for simultaneous implementation. The Impeccable workflow may now advance D through spec, asset, Hero, section, motion, responsive and review Gates.

@@ -73,3 +73,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Consequence:** Every Template needs an approved admission brief, Independence Gate, commercial scorecard, complete page family and release evidence. Templates remain separate from reusable Industry Packs and verified Brand Profiles.
 - **Customer boundary:** Customers manage content, brand choices and approved layout variants inside Template-enforced constraints. Template engineering, advanced configuration and release controls remain with explicitly authorized RAVA personnel.
 - **Source:** `docs/TEMPLATE_PORTFOLIO_STANDARD.md`
+
+## 2026-09-01 — RAVA Living System D is the Customer Zero flagship foundation
+
+- **Decision:** Build owner-approved Comp D first as the RAVA TEAM flagship foundation. Preserve A, B and C as sequential future Presets in the same RAVA Digital Atelier family rather than implementing all four simultaneously.
+- **Reason:** D provides the clearest commercial Hero and product explanation while supporting a focused cinematic platform chapter. Sequential delivery prevents unresolved navigation, optical-material, accessibility, motion and responsive defects from multiplying across four Presets.
+- **Quality boundary:** The Comp establishes topology and hierarchy, not a ceiling. Implementation must improve Navbar, Mega Menu, typography, motion, responsive composition and truthful RAVA content without silently replacing the approved visual world.
+- **Legacy boundary:** Previous Templates must not be physically deleted while revisions, releases, active sites or rollback paths reference them. After D passes Staging acceptance, legacy Templates are removed from new selection and marked deprecated/archived while their renderers and immutable history remain available for migration and rollback.
+- **Source:** `DESIGN.md`, `.impeccable/mocks/rava-living-system-d.png`, `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`
