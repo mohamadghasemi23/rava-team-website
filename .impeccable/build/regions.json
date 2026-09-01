@@ -42,7 +42,8 @@
       "kind": "image",
       "box": { "x": 0.397, "y": 0.401, "w": 0.335, "h": 0.236 },
       "note": "RAVA product-system visualization connecting page building, bilingual content, brand design, SEO, responsive preview and safe publishing",
-      "bleed": true
+      "bleed": true,
+      "plate": "public/templates/rava-living-system/editor-site-visual.png"
     },
     {
       "id": "responsive-device-preview",
@@ -55,7 +56,8 @@
       "kind": "image",
       "box": { "x": 0.794, "y": 0.132, "w": 0.073, "h": 0.494 },
       "note": "Portrait RAVA product-system visualization showing the same capability journey in responsive form",
-      "bleed": true
+      "bleed": true,
+      "plate": "public/templates/rava-living-system/responsive-site-visual.png"
     },
     {
       "id": "release-state-rail",

@@ -1,7 +1,7 @@
 {
   "tool": "comp-spec",
   "version": 1,
-  "createdAt": "2026-09-01T01:19:55.398Z",
+  "createdAt": "2026-09-01T02:00:50.235Z",
   "comp": ".impeccable/mocks/rava-living-system-d.png",
   "warnings": [
     "region editor-site-visual: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
@@ -459,7 +459,7 @@
         "energy": 15.2454
       },
       "medium": "raster",
-      "plate": "assets/plates/editor-site-visual.png",
+      "plate": "public/templates/rava-living-system/editor-site-visual.png",
       "text": null
     },
     {
@@ -554,7 +554,7 @@
         "energy": 8.6943
       },
       "medium": "raster",
-      "plate": "assets/plates/responsive-site-visual.png",
+      "plate": "public/templates/rava-living-system/responsive-site-visual.png",
       "text": null
     },
     {

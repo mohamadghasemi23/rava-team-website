@@ -55,10 +55,149 @@
       "status": "open",
       "openedAt": "2026-09-01T01:12:52.037Z",
       "closedAt": null,
-      "attempts": 0,
+      "attempts": 1,
       "notes": [],
-      "gate": null,
-      "forced": null
+      "gate": {
+        "ok": false,
+        "reasons": [
+          "hero overall 56.0% < 72% (structure 36%, color 78%, detail 44%)",
+          "region hero-deck is missing (detail 0%, structure 77%): the comp shows material the build does not",
+          "region hero-actions is missing (detail 8%, structure 46%): the comp shows material the build does not",
+          "region editor-site-visual is missing (detail 14%, structure 23%): the comp shows material the build does not",
+          "region design-step is missing (detail 15%, structure 36%): the comp shows material the build does not",
+          "region hero-headline (text) is contradicted (structure 33%, detail added 34%): the composition of this text region differs from the comp; re-derive it from the spec box",
+          "6 of 16 regions contradicted: platform-mega-menu, editor-shell, responsive-device-preview, cinematic-ground, content-step, preview-step",
+          "READINGS, each one CSS edit (3):",
+          "text hero-headline: 1 line in the build, 3 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape",
+          "text hero-deck: 1 line in the build, 2 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape",
+          "text hero-headline: it starts 70px further right than in the comp",
+          "plate editor-site-visual is clipped at the bottom: the comp's artwork keeps a margin there (ink box 512x236 at 3,0 in the region) and the build's runs to the edge (436x220 at 0,22); size the box to the artwork's aspect and use object-fit: contain, or place the <img> at the artwork's own size, never cover on a narrower box"
+        ],
+        "summary": "hero 56% (contradicted)",
+        "score": 0.5601,
+        "verdict": "contradicted",
+        "report": ".impeccable/review/diff/hero/report.json",
+        "sideBySide": ".impeccable/review/diff/hero/side-by-side.png",
+        "worst": [
+          "editor-site-visual missing 14%",
+          "editor-shell contradicted 30%",
+          "design-step missing 32%"
+        ],
+        "worstIds": [
+          "editor-site-visual",
+          "editor-shell",
+          "design-step"
+        ],
+        "worstCrops": [
+          {
+            "id": "editor-site-visual",
+            "verdict": "missing",
+            "score": {
+              "overall": 0.1355,
+              "structure": 0.2262,
+              "color": 0.0542,
+              "colorIntersection": 0.0295,
+              "paletteMatch": 0.0676,
+              "detail": 0.1363,
+              "detailRaw": 0.2769,
+              "detailAdded": 0.2813,
+              "bands": 0
+            },
+            "file": ".impeccable/review/diff/hero/regions/editor-site-visual.png"
+          },
+          {
+            "id": "editor-shell",
+            "verdict": "contradicted",
+            "score": {
+              "overall": 0.3027,
+              "structure": 0.2253,
+              "color": 0.5649,
+              "colorIntersection": 0.1964,
+              "paletteMatch": 0.7634,
+              "detail": 0.1924,
+              "detailRaw": 0.3539,
+              "detailAdded": 0.3229,
+              "bands": 0.23
+            },
+            "file": ".impeccable/review/diff/hero/regions/editor-shell.png"
+          },
+          {
+            "id": "design-step",
+            "verdict": "missing",
+            "score": {
+              "overall": 0.3204,
+              "structure": 0.3579,
+              "color": 0.5473,
+              "colorIntersection": 0.4374,
+              "paletteMatch": 0.6065,
+              "detail": 0.1473,
+              "detailRaw": 0.1994,
+              "detailAdded": 0.1042,
+              "bands": 0.1429
+            },
+            "file": ".impeccable/review/diff/hero/regions/design-step.png"
+          }
+        ],
+        "advisories": [],
+        "regionVerdicts": {
+          "floating-navigation": "drift",
+          "hero-headline": "contradicted",
+          "hero-deck": "missing",
+          "hero-actions": "missing",
+          "platform-mega-menu": "contradicted",
+          "editor-shell": "contradicted",
+          "editor-site-visual": "missing",
+          "responsive-device-preview": "contradicted",
+          "responsive-site-visual": "drift",
+          "release-state-rail": "drift",
+          "cinematic-ground": "contradicted",
+          "walkthrough-heading": "drift",
+          "content-step": "contradicted",
+          "design-step": "missing",
+          "preview-step": "contradicted",
+          "publish-step": "drift"
+        },
+        "at": "2026-09-01T01:59:01.275Z"
+      },
+      "forced": null,
+      "readingsSeen": {
+        "text hero-headline: cap height 42.4px in the build, 32.2px in the comp (+32%); set font-size so the cap height renders at 32.2px": 1,
+        "text hero-deck: it starts 54px further right than in the comp": 1,
+        "text hero-headline: 1 line in the build, 3 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape": 1,
+        "text hero-deck: 1 line in the build, 2 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape": 1,
+        "text hero-headline: it starts 70px further right than in the comp": 1
+      },
+      "records": 1,
+      "history": [
+        {
+          "at": "2026-09-01T01:59:01.275Z",
+          "score": 0.5601,
+          "worstIds": [
+            "editor-site-visual",
+            "editor-shell",
+            "design-step"
+          ],
+          "regionVerdicts": {
+            "floating-navigation": "drift",
+            "hero-headline": "contradicted",
+            "hero-deck": "missing",
+            "hero-actions": "missing",
+            "platform-mega-menu": "contradicted",
+            "editor-shell": "contradicted",
+            "editor-site-visual": "missing",
+            "responsive-device-preview": "contradicted",
+            "responsive-site-visual": "drift",
+            "release-state-rail": "drift",
+            "cinematic-ground": "contradicted",
+            "walkthrough-heading": "drift",
+            "content-step": "contradicted",
+            "design-step": "missing",
+            "preview-step": "contradicted",
+            "publish-step": "drift"
+          },
+          "artifactHash": null
+        }
+      ]
     },
     "sections": {
       "status": "pending",

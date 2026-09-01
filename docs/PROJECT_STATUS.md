@@ -55,7 +55,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Active workstream
 
-The current workstream is implementation of owner-approved RAVA Living System D as the RAVA TEAM Customer Zero flagship Template. Four product-centered concepts in the shared RAVA Digital Atelier family are permanently preserved in `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`; A, B and C are future sequential Presets. D is approved and its initial unrelated interior still-life plates have been rejected and replaced by RAVA capability-led product imagery; no new flagship page code has been written yet. The earlier Horizon v2 candidate remains available and rollback-safe but is not accepted as the flagship visual direction.
+The current workstream is implementation of owner-approved RAVA Living System D as the RAVA TEAM Customer Zero flagship Template. Four product-centered concepts in the shared RAVA Digital Atelier family are permanently preserved in `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`; A, B and C are future sequential Presets. The first CMS-compatible Hero implementation and an environment-gated local design-preview route now exist, using RAVA capability-led imagery instead of the rejected interior still life. Browser captures at 1536px and 390px render successfully. The Impeccable Hero Gate improved from 48% to 56% but remains below its 72% threshold because the approved Comp bitmap still depicts the superseded interior plate and several measured regions remain structurally different. The implementation is therefore work in progress, not an accepted Template release. The earlier Horizon v2 candidate remains rollback-safe but is not accepted as the flagship visual direction.
 
 ## Known incomplete work and risks
 
@@ -70,8 +70,8 @@ The current workstream is implementation of owner-approved RAVA Living System D 
 
 ## Prioritized next actions
 
-1. Advance approved Comp D through spec and asset Gates, then implement it as the first shared-family foundation with RPIM-scoped changes.
-2. Run complete repository Gates and real Staging validation, then perform desktop/mobile owner review of the exact private draft renderer.
+1. Revise the Comp D visual authority to preserve its approved topology while replacing the superseded interior subject with the approved RAVA capability imagery; then re-measure and pass the Hero Gate without weakening its threshold.
+2. Complete the CMS-compatible D Template sections and versioned catalog migration only after the Hero Gate passes, then run complete repository Gates and real Staging validation.
 3. After D passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
 5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.

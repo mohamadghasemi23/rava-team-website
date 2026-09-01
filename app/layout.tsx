@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import '@fontsource-variable/vazirmatn'
 import '@fontsource-variable/estedad'
 import '@fontsource-variable/manrope'
+import '@fontsource-variable/inter'
 import './globals.css'
 
 export const metadata: Metadata = {

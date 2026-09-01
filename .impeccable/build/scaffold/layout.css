@@ -2,7 +2,7 @@
 :root {
   --r-floating-navigation-x: 14.500%; --r-floating-navigation-y: 1.800%; --r-floating-navigation-w: 61.500%; --r-floating-navigation-h: 8.700%;
   --r-hero-headline-x: 7.400%; --r-hero-headline-y: 14.300%; --r-hero-headline-w: 22.500%; --r-hero-headline-h: 15.800%;
-  --r-hero-headline-cap: 32.2px; --r-hero-headline-font: 46px; --r-hero-headline-family: 'Akaya Kanadaka'; --r-hero-headline-weight: 400;
+  --r-hero-headline-cap: 32.2px; --r-hero-headline-font: 46px;
   --r-hero-deck-x: 7.800%; --r-hero-deck-y: 32.700%; --r-hero-deck-w: 21.800%; --r-hero-deck-h: 7.400%;
   --r-hero-deck-cap: 10px; --r-hero-deck-font: 14px;
   --r-hero-actions-x: 7.900%; --r-hero-actions-y: 41.100%; --r-hero-actions-w: 20.500%; --r-hero-actions-h: 7.800%;
