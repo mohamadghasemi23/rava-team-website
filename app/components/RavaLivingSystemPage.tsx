@@ -29,7 +29,7 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
         <Link className={styles.brand} href={previewBasePath?`${previewBasePath}?page=${payload.page.id}`:'/'} aria-label={payload.site.name}><Mark/><span>RAVA TEAM</span></Link>
         <nav className={styles.primaryNav} aria-label={isFa?'منوی اصلی':'Primary navigation'}>
           <details className={styles.menu} open={showMenuPreview}>
-            <summary>{t.platform}<svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></summary>
+            <summary><span>{t.platform}</span><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></summary>
             <div className={styles.mega}>
               <div className={styles.megaIntro}><span>{t.menuTitle}</span><div className={styles.miniPreview}><Mark/><i/><i/><i/></div></div>
               {t.groups.map(([heading,...links])=><div className={styles.megaGroup} key={heading}><b>{heading}</b>{links.map(label=><Link href={contact} key={label}><span>{label}</span><Arrow/></Link>)}</div>)}
