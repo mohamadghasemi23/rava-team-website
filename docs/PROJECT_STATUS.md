@@ -55,7 +55,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Active workstream
 
-The current workstream is implementation of owner-approved RAVA Living System D as the RAVA TEAM Customer Zero flagship Template. Four product-centered concepts in the shared RAVA Digital Atelier family are permanently preserved in `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`; A, B and C are future sequential Presets. D is approved, but no new flagship page code has been written yet. The earlier Horizon v2 candidate remains available and rollback-safe but is not accepted as the flagship visual direction.
+The current workstream is implementation of owner-approved RAVA Living System D as the RAVA TEAM Customer Zero flagship Template. Four product-centered concepts in the shared RAVA Digital Atelier family are permanently preserved in `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`; A, B and C are future sequential Presets. D is approved and its initial unrelated interior still-life plates have been rejected and replaced by RAVA capability-led product imagery; no new flagship page code has been written yet. The earlier Horizon v2 candidate remains available and rollback-safe but is not accepted as the flagship visual direction.
 
 ## Known incomplete work and risks
 

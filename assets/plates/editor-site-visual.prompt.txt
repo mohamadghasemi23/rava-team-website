@@ -1,7 +1,7 @@
-Use case: precise-object-edit
-Asset type: production website-preview editorial image plate for RAVA Living System D
-Input image: approved composition reference; preserve its subject, framing, perspective, lighting and pearl/smoke/navy-neutral palette.
-Primary request: recreate only the clean minimalist interior still life shown inside the editor: warm white pendant lamp, two pale veined stone blocks, a small neutral ceramic cup on a white shelf, soft warm-gray studio wall and realistic soft shadows.
-Composition/framing: wide landscape, same object positions and scale as the reference, artwork fills the frame edge to edge.
-Style/medium: premium editorial interior photography, quiet architectural-material product styling, photorealistic.
-Constraints: remove all Persian text, selection outlines, resize handles, toolbar, interface chrome, grids, borders, card corners and drop shadows belonging to the UI. Keep only the photographed interior scene. No logos, no watermark, no added objects, no people. Do not restyle or change the concept.
+Use case: stylized-concept
+Asset type: production visual plate inside the RAVA Living System D website-builder canvas
+Primary request: create a premium product-centered visualization of the RAVA Website Operating System. Show a precise luminous website blueprint transforming into a polished live website, surrounded by six connected functional layers representing page building, bilingual content, brand design, SEO intelligence, responsive preview and safe publishing.
+Brand: RAVA TEAM; use an abstract R-shaped signal mark only, with no generated words elsewhere.
+Style/medium: refined 3D product visualization with realistic glass, pearl ceramic, dark navy metal and restrained cobalt light.
+Composition/framing: wide landscape; central live website canvas, blueprint entering from one side, finished responsive page emerging from the other, connected capability objects forming a clear journey.
+Constraints: every visible object represents a real RAVA capability. No architecture, buildings, interior design, lamps, cups, furniture, people, random decoration, generic charts, fake text, external logos or watermark.

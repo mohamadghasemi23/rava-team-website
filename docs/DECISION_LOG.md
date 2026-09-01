@@ -81,3 +81,10 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Quality boundary:** The Comp establishes topology and hierarchy, not a ceiling. Implementation must improve Navbar, Mega Menu, typography, motion, responsive composition and truthful RAVA content without silently replacing the approved visual world.
 - **Legacy boundary:** Previous Templates must not be physically deleted while revisions, releases, active sites or rollback paths reference them. After D passes Staging acceptance, legacy Templates are removed from new selection and marked deprecated/archived while their renderers and immutable history remain available for migration and rollback.
 - **Source:** `DESIGN.md`, `.impeccable/mocks/rava-living-system-d.png`, `docs/RAVA_FLAGSHIP_PRESET_ROADMAP.md`
+
+## 2026-09-01 — Flagship imagery must explain RAVA
+
+- **Decision:** Every image used by the RAVA TEAM flagship must express RAVA branding or a truthful product capability. Decorative imagery without a direct relationship to RAVA is excluded.
+- **Capability set:** Page building, bilingual content, brand design, SEO intelligence, responsive preview, safe publishing and multi-site operation are the primary visual subjects. Exact interface labels and controls remain code-rendered for accessibility and localization.
+- **Supersedes:** The interior still-life plates prepared during initial Comp D asset extraction. Their lamp, stone and cup subject matter is rejected for the flagship because it implies an unrelated architecture/interior brand.
+- **Source:** Owner direction and `assets/plates/*.prompt.txt`

@@ -1,7 +1,7 @@
 {
   "tool": "comp-spec",
   "version": 1,
-  "createdAt": "2026-09-01T01:09:09.025Z",
+  "createdAt": "2026-09-01T01:19:55.398Z",
   "comp": ".impeccable/mocks/rava-living-system-d.png",
   "warnings": [
     "region editor-site-visual: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
@@ -201,15 +201,7 @@
           "weight": 0.41
         },
         "widthClass": "normal",
-        "weightClass": "regular",
-        "chosen": {
-          "family": "Akaya Kanadaka",
-          "weight": 400,
-          "fontSizePx": 46,
-          "source": "catalog",
-          "estimatedSize": true,
-          "stamp": "e976cae91e9f"
-        }
+        "weightClass": "regular"
       }
     },
     {
@@ -425,7 +417,7 @@
     {
       "id": "editor-site-visual",
       "kind": "image",
-      "note": "Editorial interior photograph composition shown inside the live website canvas",
+      "note": "RAVA product-system visualization connecting page building, bilingual content, brand design, SEO, responsive preview and safe publishing",
       "grid": null,
       "bleed": true,
       "box": {
@@ -520,7 +512,7 @@
     {
       "id": "responsive-site-visual",
       "kind": "image",
-      "note": "Editorial interior photograph composition repeated in responsive device previews",
+      "note": "Portrait RAVA product-system visualization showing the same capability journey in responsive form",
       "grid": null,
       "bleed": true,
       "box": {
