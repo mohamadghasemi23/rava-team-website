@@ -65,3 +65,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Consequence:** Version 1 remains selectable through history and rollback. Version 2 activates only when its exact Template Version is applied. Stripe/Webflow references informed hierarchy and service trust, but no identity, layout, proprietary font, asset or copy was cloned.
 - **Motion boundary:** ThreeUI remains limited to the Hero with static/reduced-motion fallbacks. GSAP and a smooth-scroll dependency are deferred until the constrained VPS has capacity and a validated interaction need justifies their runtime and maintenance cost.
 - **Source:** `app/components/PublicPageView.tsx`, `app/[slug]/public-page.module.css`, `supabase/migrations/20260830131500_service_horizon_v2.sql`
+
+## 2026-09-01 — Template diversity is a gated commercial portfolio
+
+- **Decision:** RAVA Templates must occupy distinct visual, interaction and commercial territories. Recoloring, font swapping, Hero replacement or reordering the same component stack does not qualify as a new Template.
+- **Reason:** A visually repetitive catalog creates false choice, weakens RAVA's differentiation and cannot credibly serve varied industries, buyer expectations and budgets.
+- **Consequence:** Every Template needs an approved admission brief, Independence Gate, commercial scorecard, complete page family and release evidence. Templates remain separate from reusable Industry Packs and verified Brand Profiles.
+- **Customer boundary:** Customers manage content, brand choices and approved layout variants inside Template-enforced constraints. Template engineering, advanced configuration and release controls remain with explicitly authorized RAVA personnel.
+- **Source:** `docs/TEMPLATE_PORTFOLIO_STANDARD.md`

@@ -6,7 +6,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Snapshot
 
-- **Last updated:** 2026-08-30 UTC
+- **Last updated:** 2026-09-01 UTC
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
@@ -51,6 +51,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - Admin UX requirements record the one-path task model, owner/customer access separation, readable tables, constrained page building, exact previews, bilingual Help and SEO guidance.
 - Design work has begun, but the current templates and Admin surfaces are not accepted as final world-class design.
 - A repository-owned, bounded Skill discovery workflow exists at `tools/codex-skills/rava-skill-scout/`; it searches metadata first, caches results and requires explicit approval before installation.
+- The Template portfolio now has a documented admission brief, Independence Gate, customer-safe management boundary and commercial scorecard; existing Templates have not yet been audited against it.
 
 ## Active workstream
 
@@ -62,6 +63,7 @@ The current workstream is owner evaluation of the versioned `rava-service-horizo
 - Tables, navigation, Help placement, setup wording, template selection, page management and responsive behavior require continued real-browser verification rather than commit-history assumptions.
 - The service-site experience needs a complete, verified Customer Zero content/design pass with real RAVA facts and portfolio evidence.
 - The desired library of at least ten distinctive, versioned templates is not complete.
+- Existing service Templates may fail the new diversity standard and require retain/redesign/deprecate decisions after a structured catalog audit; template count alone is not progress.
 - Production readiness still requires the applicable backup/restore, off-box backup, monitoring, SMTP, security, domain/SSL, performance, accessibility, SEO, form-delivery and rollback rehearsal Gates.
 - The VPS disk is a near-term operational risk until capacity is increased.
 - No blank-site handoff, fabricated claims, cross-tenant leakage, permission shortcuts or silent AI execution are acceptable.
@@ -72,7 +74,7 @@ The current workstream is owner evaluation of the versioned `rava-service-horizo
 2. Run desktop/mobile owner review of the exact draft renderer and record visual, content, accessibility and interaction defects.
 3. Fix P0/P1 defects from that review with RPIM-scoped changes and full Gates; preserve Horizon v1 rollback.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
-5. Define the remaining original service-template family roadmap toward at least ten distinctive versioned Templates without duplicating design systems or heavy dependencies.
+5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.
 6. Rehearse all release-readiness Gates; request separate explicit approval before any Production action.
 
 ## Update protocol
