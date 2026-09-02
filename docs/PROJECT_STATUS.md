@@ -10,7 +10,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
-- **Last confirmed commit pushed to the GitHub branch:** `1539c16` (`design: approve d2 flagship authority`)
+- **Last confirmed product/design commit pushed to the GitHub branch:** `5d813ae` (`design: lock d2 flagship hero gate`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
 
 ## Current verified position
@@ -19,6 +19,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 - PR #2 is open and remains Draft.
 - The GitHub checks attached to `d90f9e6` were observed successful on 2026-08-30: application Build, immutable Staging image Build, PostgreSQL migrations/security tests and the dedicated PostgreSQL security workflow. PR #2 remains Draft and unmerged.
+- The GitHub checks attached to D2 checkpoint `5d813ae` were observed successful on 2026-09-02: application Build, immutable Staging image Build, PostgreSQL migrations/security tests, dedicated PostgreSQL security workflow and the Netlify preview. This is CI evidence only; no Production deploy or merge occurred.
 
 ### Staging
 
