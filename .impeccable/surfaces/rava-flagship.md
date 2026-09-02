@@ -11,7 +11,7 @@
 - Required routes: platform, services, verified work, process, about, contact
 - Locale: Persian RTL and English LTR
 - Approved comp: `.impeccable/mocks/rava-living-system-d-cup-removed.png`
-- Approved interaction state: the open optical Mega Menu shown in the approved comp
+- Approved interaction state: navigation and Mega Menu are closed on initial load; the Mega Menu opens only after an explicit user action
 - Superseded comps retained for history: `.impeccable/mocks/rava-living-system-d2-candidate.png` and `.impeccable/mocks/rava-living-system-d2-menu-candidate.png`
-- Approval: owner clarified on 2026-09-02 that the original D composition is the exact visual authority and the requested revision was limited to removing the cup. Implementation must preserve D's topology, density, perspective editor, device rail, glass navigation and cinematic journey rather than replacing the design world.
+- Approval: owner clarified on 2026-09-02 that the original D composition is the exact visual authority, the requested image revision was limited to removing the cup, and the Mega Menu must not render open initially. Implementation must preserve D's topology, density, perspective editor, device rail, glass navigation and cinematic journey rather than replacing the design world.
 - Production: not authorized

@@ -112,3 +112,10 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Supersedes:** The 2026-09-01 decision that D2 replaces D as visual authority. D2 remains preserved as historical work but is no longer the fidelity target.
 - **Implementation boundary:** Rebuild the approved composition with semantic, bilingual, CMS-driven HTML and optimized assets; do not ship the comp itself as a flattened webpage. A fresh desktop/mobile fidelity review is mandatory.
 - **Source:** `.impeccable/mocks/rava-living-system-d-cup-removed.png`
+
+## 2026-09-02 — Flagship Mega Menu is closed by default
+
+- **Decision:** The RAVA flagship navigation and Mega Menu render closed on initial page load, including the isolated design-preview route. The menu opens only after an explicit user action.
+- **Reason:** The open menu in the visual comp demonstrates the interaction design but must not obscure the primary Hero or imply an automatic expanded state.
+- **Consequence:** Open-menu imagery remains interaction documentation only; it is not the default page state. Keyboard and pointer activation retain the native disclosure behavior.
+- **Source:** `app/design-preview/rava-living-system/page.tsx`, `.impeccable/surfaces/rava-flagship.md`

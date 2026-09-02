@@ -3,7 +3,7 @@ import type {PublicBlock,PublicPagePayload} from '@/lib/cms/public-runtime'
 import type {PreviewNavigationItem} from './PublicPageView'
 import styles from './rava-living-system.module.css'
 
-type Props={payload:PublicPagePayload;navigation:PreviewNavigationItem[];previewBasePath?:string;showMenuPreview?:boolean}
+type Props={payload:PublicPagePayload;navigation:PreviewNavigationItem[];previewBasePath?:string}
 
 type ContentItem={title:string;text:string}
 
@@ -35,7 +35,7 @@ function ProductVisual({portrait=false,priority=false}:{portrait?:boolean;priori
   return <picture aria-hidden="true"><source srcSet={source.webp} type="image/webp"/><img src={source.png} alt="" width={source.width} height={source.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></picture>
 }
 
-export default function RavaLivingSystemPage({payload,navigation,previewBasePath,showMenuPreview=false}:Props){
+export default function RavaLivingSystemPage({payload,navigation,previewBasePath}:Props){
   const isFa=!payload.page.slug.endsWith('-en')&&(payload.site.locale||'fa').startsWith('fa')
   const t=isFa?copy.fa:copy.en
   const hero=payload.blocks.find((block:PublicBlock)=>block.type==='hero')
@@ -64,7 +64,7 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
       <header className={styles.navbar}>
         <Link className={styles.brand} href={previewBasePath?`${previewBasePath}?page=${payload.page.id}`:'/'} aria-label={payload.site.name}><Mark/><span>RAVA TEAM</span></Link>
         <nav className={styles.primaryNav} aria-label={isFa?'منوی اصلی':'Primary navigation'}>
-          <details className={styles.menu} open={showMenuPreview}>
+          <details className={styles.menu}>
             <summary><span>{t.platform}</span><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m4 6 4 4 4-4"/></svg></summary>
             <div className={styles.mega}>
               <div className={styles.megaIntro}><span>{t.menuTitle}</span><div className={styles.miniPreview}><Mark/><i/><i/><i/></div></div>
