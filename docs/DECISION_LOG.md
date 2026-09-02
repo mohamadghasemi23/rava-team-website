@@ -119,3 +119,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Reason:** The open menu in the visual comp demonstrates the interaction design but must not obscure the primary Hero or imply an automatic expanded state.
 - **Consequence:** Open-menu imagery remains interaction documentation only; it is not the default page state. Keyboard and pointer activation retain the native disclosure behavior.
 - **Source:** `app/design-preview/rava-living-system/page.tsx`, `.impeccable/surfaces/rava-flagship.md`
+
+## 2026-09-02 — Exact visual approval precedes every user-facing implementation
+
+- **Decision:** No new or materially changed page, section, component, navigation, responsive composition or important interaction state is implemented until the owner has seen and explicitly approved its exact visual preview. Desktop, mobile and applicable interaction states are shown before implementation whenever practical. After coding, real-browser captures require a separate implementation-acceptance decision.
+- **Reason:** Written descriptions and partial references allowed implementation assumptions to diverge from the owner's intended result, wasting time and creating visually inconsistent work.
+- **Consequence:** Inspiration is not approval; a mock is not an accepted implementation; passing Build is not visual acceptance. Rejected visuals are recorded and cannot be deployed or silently reused as authority.
+- **Immediate disposition:** Commit `4b07df8` is visually rejected. It must not be deployed or treated as the flagship baseline.
+- **Source:** Owner instruction, `AGENTS.md`, `.impeccable/surfaces/rava-flagship.md`

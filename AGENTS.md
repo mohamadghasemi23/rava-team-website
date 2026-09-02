@@ -98,6 +98,13 @@ A feature is NOT complete unless all applicable items below are implemented.
 - Avoid chart/dashboard clutter that does not support a concrete action.
 - Dangerous actions need clear confirmation and, where appropriate, step-up authentication later.
 
+### Owner visual approval gate
+- Before implementing any new or materially changed user-facing page, section, component, navigation, interaction state or responsive composition, present an exact visual preview for owner review.
+- Preview the complete intended surface and all material states before code implementation whenever practical; at minimum include desktop and mobile plus closed/open, empty/loading/error or other important states that apply.
+- Do not treat inspiration, a written description, wireframe or an agent-selected direction as owner approval. Approval must refer to the actual visual preview shown.
+- After implementation, capture the real coded result and compare it with the approved preview. Design approval and implementation acceptance are separate Gates.
+- A rejected visual must be marked rejected and must not be deployed, promoted as complete or reused as the next visual authority.
+
 ### Tests / verification
 Before considering work complete:
 - Run the repository feature-standard verification.
