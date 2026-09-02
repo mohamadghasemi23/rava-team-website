@@ -1,0 +1,332 @@
+{
+  "tool": "comp-diff",
+  "version": 1,
+  "createdAt": "2026-09-01T23:51:49.788Z",
+  "label": "d2-menu-repro",
+  "comp": ".impeccable/mocks/rava-living-system-d2-menu-candidate.png",
+  "build": ".impeccable/review/d2-menu-repro.png",
+  "spec": null,
+  "compSize": "1536x1024",
+  "buildSize": "1536x1024",
+  "align": "top",
+  "overall": 1,
+  "verdict": "match",
+  "scores": {
+    "overall": 1,
+    "structure": 1,
+    "color": 1,
+    "colorIntersection": 1,
+    "paletteMatch": 1,
+    "detail": 1,
+    "detailRaw": 1,
+    "detailAdded": 0,
+    "bands": 1
+  },
+  "palette": {
+    "comp": [
+      {
+        "hex": "#e6e5e6",
+        "coverage": 0.4531
+      },
+      {
+        "hex": "#080d1c",
+        "coverage": 0.3413
+      },
+      {
+        "hex": "#0a193c",
+        "coverage": 0.0939
+      },
+      {
+        "hex": "#b4b5c1",
+        "coverage": 0.0678
+      },
+      {
+        "hex": "#0a1f72",
+        "coverage": 0.0299
+      },
+      {
+        "hex": "#0d2869",
+        "coverage": 0.0141
+      }
+    ],
+    "build": [
+      {
+        "hex": "#e6e5e6",
+        "coverage": 0.4531
+      },
+      {
+        "hex": "#080d1c",
+        "coverage": 0.3413
+      },
+      {
+        "hex": "#0a193c",
+        "coverage": 0.0939
+      },
+      {
+        "hex": "#b4b5c1",
+        "coverage": 0.0678
+      },
+      {
+        "hex": "#0a1f72",
+        "coverage": 0.0299
+      },
+      {
+        "hex": "#0d2869",
+        "coverage": 0.0141
+      }
+    ]
+  },
+  "regions": [
+    {
+      "id": "band-1",
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 0.11764705882352941,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 248,
+          "y": 34,
+          "w": 904,
+          "h": 86
+        },
+        "build": {
+          "x": 248,
+          "y": 34,
+          "w": 904,
+          "h": 86
+        }
+      }
+    },
+    {
+      "id": "band-2",
+      "x": 0,
+      "y": 0.11764705882352941,
+      "w": 1,
+      "h": 0.17647058823529413,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 204,
+          "y": 0,
+          "w": 1332,
+          "h": 181
+        },
+        "build": {
+          "x": 204,
+          "y": 0,
+          "w": 1332,
+          "h": 181
+        }
+      }
+    },
+    {
+      "id": "band-3",
+      "x": 0,
+      "y": 0.29411764705882354,
+      "w": 1,
+      "h": 0.18823529411764706,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 60,
+          "y": 0,
+          "w": 1476,
+          "h": 193
+        },
+        "build": {
+          "x": 60,
+          "y": 0,
+          "w": 1476,
+          "h": 193
+        }
+      }
+    },
+    {
+      "id": "band-4",
+      "x": 0,
+      "y": 0.4823529411764706,
+      "w": 1,
+      "h": 0.08235294117647057,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 611,
+          "y": 0,
+          "w": 879,
+          "h": 84
+        },
+        "build": {
+          "x": 611,
+          "y": 0,
+          "w": 879,
+          "h": 84
+        }
+      }
+    },
+    {
+      "id": "band-5",
+      "x": 0,
+      "y": 0.5647058823529412,
+      "w": 1,
+      "h": 0.07058823529411762,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 1536,
+          "h": 73
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 1536,
+          "h": 73
+        }
+      }
+    },
+    {
+      "id": "band-6",
+      "x": 0,
+      "y": 0.6352941176470588,
+      "w": 1,
+      "h": 0.12941176470588234,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 531,
+          "y": 68,
+          "w": 899,
+          "h": 64
+        },
+        "build": {
+          "x": 531,
+          "y": 68,
+          "w": 899,
+          "h": 64
+        }
+      }
+    },
+    {
+      "id": "band-7",
+      "x": 0,
+      "y": 0.7647058823529411,
+      "w": 1,
+      "h": 0.23529411764705888,
+      "kind": "band",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 233,
+          "y": 0,
+          "w": 1197,
+          "h": 205
+        },
+        "build": {
+          "x": 233,
+          "y": 0,
+          "w": 1197,
+          "h": 205
+        }
+      }
+    }
+  ],
+  "files": {
+    "sideBySide": ".impeccable/review/diff/d2-menu/side-by-side.png",
+    "heatmap": ".impeccable/review/diff/d2-menu/heatmap.png",
+    "regionFiles": [
+      ".impeccable/review/diff/d2-menu/regions/band-1.png",
+      ".impeccable/review/diff/d2-menu/regions/band-2.png",
+      ".impeccable/review/diff/d2-menu/regions/band-3.png",
+      ".impeccable/review/diff/d2-menu/regions/band-4.png",
+      ".impeccable/review/diff/d2-menu/regions/band-5.png",
+      ".impeccable/review/diff/d2-menu/regions/band-6.png",
+      ".impeccable/review/diff/d2-menu/regions/band-7.png"
+    ]
+  }
+}

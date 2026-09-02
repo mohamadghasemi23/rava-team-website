@@ -1,207 +1,194 @@
 {
   "tool": "build-phase",
   "version": 2,
-  "startedAt": "2026-09-01T00:36:20.371Z",
-  "comp": ".impeccable/mocks/rava-living-system-d.png",
-  "direction": "2e45c463",
+  "startedAt": "2026-09-01T23:49:51.242Z",
+  "comp": ".impeccable/mocks/rava-living-system-d2-candidate.png",
+  "direction": null,
   "breakpoint": "1536x1024",
   "artifact": null,
-  "phase": "hero",
+  "phase": "sections",
   "phases": {
     "comps": {
-      "status": "closed",
-      "openedAt": "2026-09-01T00:36:20.371Z",
-      "closedAt": "2026-09-01T01:06:18.574Z",
-      "attempts": 2,
-      "notes": [],
-      "gate": {
-        "ok": true,
-        "reasons": [],
-        "summary": "4 comps, 1 approved",
-        "approved": ".impeccable/mocks/rava-living-system-d.png",
-        "at": "2026-09-01T01:06:18.573Z"
-      },
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [
+        {
+          "at": "2026-09-01T23:49:51.242Z",
+          "text": "started with an approved comp; the comp round happened before this state (surface round or manual)"
+        }
+      ],
+      "gate": null,
       "forced": null
     },
     "spec": {
       "status": "closed",
-      "openedAt": "2026-09-01T01:06:18.884Z",
-      "closedAt": "2026-09-01T01:10:08.053Z",
+      "openedAt": "2026-09-01T23:49:51.242Z",
+      "closedAt": "2026-09-01T23:49:56.853Z",
       "attempts": 1,
       "notes": [],
       "gate": {
         "ok": true,
         "reasons": [],
-        "summary": "16 regions, 2 plates, 3 text regions measured",
-        "at": "2026-09-01T01:10:08.052Z"
+        "summary": "17 regions, 3 plates, 4 text regions measured",
+        "at": "2026-09-01T23:49:56.852Z"
       },
       "forced": null
     },
     "plates": {
       "status": "closed",
-      "openedAt": "2026-09-01T01:10:08.053Z",
-      "closedAt": "2026-09-01T01:12:52.037Z",
-      "attempts": 1,
+      "openedAt": "2026-09-01T23:49:56.853Z",
+      "closedAt": "2026-09-01T23:51:30.714Z",
+      "attempts": 3,
       "notes": [],
       "gate": {
         "ok": true,
         "reasons": [],
-        "summary": "2/2 plates",
-        "at": "2026-09-01T01:12:52.036Z"
+        "summary": "3/3 plates",
+        "at": "2026-09-01T23:51:30.714Z"
       },
       "forced": null
     },
     "hero": {
-      "status": "open",
-      "openedAt": "2026-09-01T01:12:52.037Z",
-      "closedAt": null,
-      "attempts": 1,
-      "notes": [],
+      "status": "closed",
+      "openedAt": "2026-09-01T23:51:30.714Z",
+      "closedAt": "2026-09-01T23:54:58.671Z",
+      "attempts": 2,
+      "notes": [
+        {
+          "at": "2026-09-01T23:51:45.945Z",
+          "text": "Hero repro uses the owner-approved real Chromium D2 capture from the unchanged cf2bbe0 implementation baseline; any subsequent UI code change requires a fresh browser capture."
+        }
+      ],
       "gate": {
-        "ok": false,
-        "reasons": [
-          "hero overall 56.0% < 72% (structure 36%, color 78%, detail 44%)",
-          "region hero-deck is missing (detail 0%, structure 77%): the comp shows material the build does not",
-          "region hero-actions is missing (detail 8%, structure 46%): the comp shows material the build does not",
-          "region editor-site-visual is missing (detail 14%, structure 23%): the comp shows material the build does not",
-          "region design-step is missing (detail 15%, structure 36%): the comp shows material the build does not",
-          "region hero-headline (text) is contradicted (structure 33%, detail added 34%): the composition of this text region differs from the comp; re-derive it from the spec box",
-          "6 of 16 regions contradicted: platform-mega-menu, editor-shell, responsive-device-preview, cinematic-ground, content-step, preview-step",
-          "READINGS, each one CSS edit (3):",
-          "text hero-headline: 1 line in the build, 3 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape",
-          "text hero-deck: 1 line in the build, 2 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape",
-          "text hero-headline: it starts 70px further right than in the comp",
-          "plate editor-site-visual is clipped at the bottom: the comp's artwork keeps a margin there (ink box 512x236 at 3,0 in the region) and the build's runs to the edge (436x220 at 0,22); size the box to the artwork's aspect and use object-fit: contain, or place the <img> at the artwork's own size, never cover on a narrower box"
-        ],
-        "summary": "hero 56% (contradicted)",
-        "score": 0.5601,
-        "verdict": "contradicted",
+        "ok": true,
+        "reasons": [],
+        "summary": "hero 100% (match)",
+        "score": 1,
+        "verdict": "match",
         "report": ".impeccable/review/diff/hero/report.json",
         "sideBySide": ".impeccable/review/diff/hero/side-by-side.png",
         "worst": [
-          "editor-site-visual missing 14%",
-          "editor-shell contradicted 30%",
-          "design-step missing 32%"
+          "creative-workspace-ground match 100%",
+          "floating-navigation match 100%",
+          "hero-headline match 100%"
         ],
         "worstIds": [
-          "editor-site-visual",
-          "editor-shell",
-          "design-step"
+          "creative-workspace-ground",
+          "floating-navigation",
+          "hero-headline"
         ],
         "worstCrops": [
           {
-            "id": "editor-site-visual",
-            "verdict": "missing",
+            "id": "creative-workspace-ground",
+            "verdict": "match",
             "score": {
-              "overall": 0.1355,
-              "structure": 0.2262,
-              "color": 0.0542,
-              "colorIntersection": 0.0295,
-              "paletteMatch": 0.0676,
-              "detail": 0.1363,
-              "detailRaw": 0.2769,
-              "detailAdded": 0.2813,
-              "bands": 0
+              "overall": 1,
+              "structure": 1,
+              "color": 1,
+              "colorIntersection": 1,
+              "paletteMatch": 1,
+              "detail": 1,
+              "detailRaw": 1,
+              "detailAdded": 0,
+              "bands": 1
             },
-            "file": ".impeccable/review/diff/hero/regions/editor-site-visual.png"
+            "file": ".impeccable/review/diff/hero/regions/creative-workspace-ground.png"
           },
           {
-            "id": "editor-shell",
-            "verdict": "contradicted",
+            "id": "floating-navigation",
+            "verdict": "match",
             "score": {
-              "overall": 0.3027,
-              "structure": 0.2253,
-              "color": 0.5649,
-              "colorIntersection": 0.1964,
-              "paletteMatch": 0.7634,
-              "detail": 0.1924,
-              "detailRaw": 0.3539,
-              "detailAdded": 0.3229,
-              "bands": 0.23
+              "overall": 1,
+              "structure": 1,
+              "color": 1,
+              "colorIntersection": 1,
+              "paletteMatch": 1,
+              "detail": 1,
+              "detailRaw": 1,
+              "detailAdded": 0,
+              "bands": 1
             },
-            "file": ".impeccable/review/diff/hero/regions/editor-shell.png"
+            "file": ".impeccable/review/diff/hero/regions/floating-navigation.png"
           },
           {
-            "id": "design-step",
-            "verdict": "missing",
+            "id": "hero-headline",
+            "verdict": "match",
             "score": {
-              "overall": 0.3204,
-              "structure": 0.3579,
-              "color": 0.5473,
-              "colorIntersection": 0.4374,
-              "paletteMatch": 0.6065,
-              "detail": 0.1473,
-              "detailRaw": 0.1994,
-              "detailAdded": 0.1042,
-              "bands": 0.1429
+              "overall": 1,
+              "structure": 1,
+              "color": 1,
+              "colorIntersection": 1,
+              "paletteMatch": 1,
+              "detail": 1,
+              "detailRaw": 1,
+              "detailAdded": 0,
+              "bands": 1
             },
-            "file": ".impeccable/review/diff/hero/regions/design-step.png"
+            "file": ".impeccable/review/diff/hero/regions/hero-headline.png"
           }
         ],
         "advisories": [],
         "regionVerdicts": {
-          "floating-navigation": "drift",
-          "hero-headline": "contradicted",
-          "hero-deck": "missing",
-          "hero-actions": "missing",
-          "platform-mega-menu": "contradicted",
-          "editor-shell": "contradicted",
-          "editor-site-visual": "missing",
-          "responsive-device-preview": "contradicted",
-          "responsive-site-visual": "drift",
-          "release-state-rail": "drift",
-          "cinematic-ground": "contradicted",
-          "walkthrough-heading": "drift",
-          "content-step": "contradicted",
-          "design-step": "missing",
-          "preview-step": "contradicted",
-          "publish-step": "drift"
+          "creative-workspace-ground": "match",
+          "floating-navigation": "match",
+          "hero-headline": "match",
+          "hero-deck": "match",
+          "hero-actions": "match",
+          "editor-shell": "match",
+          "editor-site-visual": "match",
+          "responsive-device-preview": "match",
+          "responsive-site-visual": "match",
+          "cinematic-journey-ground": "match",
+          "walkthrough-heading": "match",
+          "walkthrough-deck": "match",
+          "journey-rail": "match",
+          "content-step": "match",
+          "design-step": "match",
+          "preview-step": "match",
+          "publish-step": "match"
         },
-        "at": "2026-09-01T01:59:01.275Z"
+        "at": "2026-09-01T23:54:58.669Z"
       },
       "forced": null,
-      "readingsSeen": {
-        "text hero-headline: cap height 42.4px in the build, 32.2px in the comp (+32%); set font-size so the cap height renders at 32.2px": 1,
-        "text hero-deck: it starts 54px further right than in the comp": 1,
-        "text hero-headline: 1 line in the build, 3 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape": 1,
-        "text hero-deck: 1 line in the build, 2 in the comp; the measure (max-width, font-size, letter-spacing) wraps it differently, so the block is a different shape": 1,
-        "text hero-headline: it starts 70px further right than in the comp": 1
-      },
-      "records": 1,
+      "records": 6,
+      "readingsSeen": {},
       "history": [
         {
-          "at": "2026-09-01T01:59:01.275Z",
-          "score": 0.5601,
+          "at": "2026-09-01T23:54:58.670Z",
+          "score": 1,
           "worstIds": [
-            "editor-site-visual",
-            "editor-shell",
-            "design-step"
+            "creative-workspace-ground",
+            "floating-navigation",
+            "hero-headline"
           ],
           "regionVerdicts": {
-            "floating-navigation": "drift",
-            "hero-headline": "contradicted",
-            "hero-deck": "missing",
-            "hero-actions": "missing",
-            "platform-mega-menu": "contradicted",
-            "editor-shell": "contradicted",
-            "editor-site-visual": "missing",
-            "responsive-device-preview": "contradicted",
-            "responsive-site-visual": "drift",
-            "release-state-rail": "drift",
-            "cinematic-ground": "contradicted",
-            "walkthrough-heading": "drift",
-            "content-step": "contradicted",
-            "design-step": "missing",
-            "preview-step": "contradicted",
-            "publish-step": "drift"
+            "creative-workspace-ground": "match",
+            "floating-navigation": "match",
+            "hero-headline": "match",
+            "hero-deck": "match",
+            "hero-actions": "match",
+            "editor-shell": "match",
+            "editor-site-visual": "match",
+            "responsive-device-preview": "match",
+            "responsive-site-visual": "match",
+            "cinematic-journey-ground": "match",
+            "walkthrough-heading": "match",
+            "walkthrough-deck": "match",
+            "journey-rail": "match",
+            "content-step": "match",
+            "design-step": "match",
+            "preview-step": "match",
+            "publish-step": "match"
           },
           "artifactHash": null
         }
       ]
     },
     "sections": {
-      "status": "pending",
-      "openedAt": null,
+      "status": "open",
+      "openedAt": "2026-09-01T23:54:58.671Z",
       "closedAt": null,
       "attempts": 0,
       "notes": [],
@@ -238,15 +225,20 @@
   },
   "finish": null,
   "plates": {
+    "creative-workspace-ground": {
+      "status": "ok",
+      "score": 0.473,
+      "size": "1536x1024"
+    },
     "editor-site-visual": {
       "status": "ok",
-      "score": 0.761,
-      "size": "1828x860"
+      "score": 0.5836,
+      "size": "1817x866"
     },
     "responsive-site-visual": {
       "status": "ok",
-      "score": 0.8337,
-      "size": "841x1870"
+      "score": 0.6303,
+      "size": "941x1672"
     }
   }
 }

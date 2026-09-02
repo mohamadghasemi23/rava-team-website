@@ -14,8 +14,10 @@ function hrefFor(item:PreviewNavigationItem,previewBasePath?:string){return prev
 function Arrow(){return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>}
 function Mark(){return <span className={styles.mark} aria-hidden="true"><i/><i/><i/></span>}
 function ProductVisual({portrait=false,priority=false}:{portrait?:boolean;priority?:boolean}){
-  const name=portrait?'responsive-site-visual':'editor-site-visual'
-  return <picture aria-hidden="true"><source srcSet={`/templates/rava-living-system/${name}.webp`} type="image/webp"/><img src={`/templates/rava-living-system/${name}.png`} alt="" width={portrait?941:1817} height={portrait?1672:866} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></picture>
+  const source=portrait
+    ?{webp:'/templates/rava-living-system/responsive-site-visual.webp',png:'/templates/rava-living-system/responsive-site-visual.png',width:941,height:1672}
+    :{webp:'/templates/rava-living-system/editor-site-visual.webp',png:'/templates/rava-living-system/editor-site-visual.png',width:1817,height:866}
+  return <picture aria-hidden="true"><source srcSet={source.webp} type="image/webp"/><img src={source.png} alt="" width={source.width} height={source.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></picture>
 }
 
 export default function RavaLivingSystemPage({payload,navigation,previewBasePath,showMenuPreview=false}:Props){

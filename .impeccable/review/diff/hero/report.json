@@ -1,82 +1,116 @@
 {
   "tool": "comp-diff",
   "version": 1,
-  "createdAt": "2026-09-01T01:58:58.364Z",
+  "createdAt": "2026-09-01T23:54:56.205Z",
   "label": "hero",
-  "comp": ".impeccable/mocks/rava-living-system-d.png",
+  "comp": ".impeccable/mocks/rava-living-system-d2-candidate.png",
   "build": ".impeccable/review/hero-repro.png",
   "spec": ".impeccable/build/spec.json",
   "compSize": "1536x1024",
-  "buildSize": "1536x1025",
+  "buildSize": "1536x1024",
   "align": "top",
-  "overall": 0.5601,
-  "verdict": "contradicted",
+  "overall": 1,
+  "verdict": "match",
   "scores": {
-    "overall": 0.5601,
-    "structure": 0.3614,
-    "color": 0.7755,
-    "colorIntersection": 0.5901,
-    "paletteMatch": 0.8754,
-    "detail": 0.439,
-    "detailRaw": 0.5171,
-    "detailAdded": 0.1563,
-    "bands": 0.8667
+    "overall": 1,
+    "structure": 1,
+    "color": 1,
+    "colorIntersection": 1,
+    "paletteMatch": 1,
+    "detail": 1,
+    "detailRaw": 1,
+    "detailAdded": 0,
+    "bands": 1
   },
   "palette": {
     "comp": [
       {
-        "hex": "#ebe6e5",
-        "coverage": 0.5602
+        "hex": "#e5e2e4",
+        "coverage": 0.4947
       },
       {
-        "hex": "#0b0e1b",
-        "coverage": 0.286
+        "hex": "#090d1c",
+        "coverage": 0.3406
       },
       {
-        "hex": "#b2abac",
-        "coverage": 0.1056
+        "hex": "#0a193c",
+        "coverage": 0.0767
       },
       {
-        "hex": "#3d424b",
-        "coverage": 0.0197
+        "hex": "#adafbb",
+        "coverage": 0.0416
       },
       {
-        "hex": "#7a7677",
-        "coverage": 0.0146
+        "hex": "#0a2170",
+        "coverage": 0.0396
       },
       {
-        "hex": "#1c2525",
-        "coverage": 0.0138
+        "hex": "#354052",
+        "coverage": 0.0068
       }
     ],
     "build": [
       {
-        "hex": "#eae9e6",
-        "coverage": 0.4517
+        "hex": "#e5e2e4",
+        "coverage": 0.4947
       },
       {
-        "hex": "#0e1221",
-        "coverage": 0.3862
+        "hex": "#090d1c",
+        "coverage": 0.3406
       },
       {
-        "hex": "#0a193a",
-        "coverage": 0.0965
+        "hex": "#0a193c",
+        "coverage": 0.0767
       },
       {
-        "hex": "#344157",
-        "coverage": 0.0323
+        "hex": "#adafbb",
+        "coverage": 0.0416
       },
       {
-        "hex": "#707c8b",
-        "coverage": 0.0216
+        "hex": "#0a2170",
+        "coverage": 0.0396
       },
       {
-        "hex": "#b2b2be",
-        "coverage": 0.0117
+        "hex": "#354052",
+        "coverage": 0.0068
       }
     ]
   },
   "regions": [
+    {
+      "id": "creative-workspace-ground",
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 0.645,
+      "kind": "texture",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 34,
+          "w": 1536,
+          "h": 626
+        },
+        "build": {
+          "x": 0,
+          "y": 34,
+          "w": 1536,
+          "h": 626
+        }
+      }
+    },
     {
       "id": "floating-navigation",
       "x": 0.145,
@@ -85,91 +119,91 @@
       "h": 0.087,
       "kind": "chrome",
       "score": {
-        "overall": 0.5346,
-        "structure": 0.6302,
-        "color": 0.7616,
-        "colorIntersection": 0.5775,
-        "paletteMatch": 0.8607,
-        "detail": 0.2717,
-        "detailRaw": 0.3394,
-        "detailAdded": 0.1354,
-        "bands": 0.3714
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "drift",
+      "verdict": "match",
       "inkBox": {
         "comp": {
-          "x": 1,
+          "x": 25,
           "y": 16,
-          "w": 924,
+          "w": 904,
           "h": 74
         },
         "build": {
           "x": 25,
           "y": 16,
           "w": 904,
-          "h": 56
+          "h": 74
         }
       }
     },
     {
       "id": "hero-headline",
-      "x": 0.074,
-      "y": 0.143,
-      "w": 0.225,
-      "h": 0.158,
+      "x": 0.072,
+      "y": 0.142,
+      "w": 0.245,
+      "h": 0.162,
       "kind": "text",
       "score": {
-        "overall": 0.4526,
-        "structure": 0.3326,
-        "color": 0.734,
-        "colorIntersection": 0.4965,
-        "paletteMatch": 0.8619,
-        "detail": 0.1514,
-        "detailRaw": 0.3233,
-        "detailAdded": 0.3438,
-        "bands": 0.801
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
-          "x": 18,
-          "y": 6,
-          "w": 303,
-          "h": 156
+          "x": 93,
+          "y": 0,
+          "w": 261,
+          "h": 158
         },
         "build": {
-          "x": 88,
+          "x": 93,
           "y": 0,
-          "w": 257,
-          "h": 157
+          "w": 261,
+          "h": 158
         }
       }
     },
     {
       "id": "hero-deck",
       "x": 0.078,
-      "y": 0.327,
-      "w": 0.218,
+      "y": 0.326,
+      "w": 0.225,
       "h": 0.074,
       "kind": "text",
       "score": {
-        "overall": 0.5764,
-        "structure": 0.7716,
-        "color": 0.7079,
-        "colorIntersection": 0.396,
-        "paletteMatch": 0.8759,
-        "detail": 0,
-        "detailRaw": 0.0987,
-        "detailAdded": 0.3542,
-        "bands": 0.1357
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "missing",
+      "verdict": "match",
       "inkBox": {
         "comp": {
-          "x": 10,
-          "y": 9,
-          "w": 287,
-          "h": 40
+          "x": 0,
+          "y": 0,
+          "w": 293,
+          "h": 76
         },
         "build": {
           "x": 0,
@@ -181,443 +215,443 @@
     },
     {
       "id": "hero-actions",
-      "x": 0.079,
-      "y": 0.411,
-      "w": 0.205,
-      "h": 0.078,
+      "x": 0.078,
+      "y": 0.409,
+      "w": 0.212,
+      "h": 0.079,
       "kind": "control",
       "score": {
-        "overall": 0.4656,
-        "structure": 0.464,
-        "color": 0.6866,
-        "colorIntersection": 0.3793,
-        "paletteMatch": 0.8521,
-        "detail": 0.0823,
-        "detailRaw": 0.124,
-        "detailAdded": 0.0833,
-        "bands": 0
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "missing",
-      "inkBox": {
-        "comp": {
-          "x": 8,
-          "y": 1,
-          "w": 285,
-          "h": 55
-        },
-        "build": {
-          "x": 0,
-          "y": 0,
-          "w": 192,
-          "h": 40
-        }
-      }
-    },
-    {
-      "id": "platform-mega-menu",
-      "x": 0.316,
-      "y": 0.098,
-      "w": 0.422,
-      "h": 0.278,
-      "kind": "chrome",
-      "score": {
-        "overall": 0.4776,
-        "structure": 0.4154,
-        "color": 0.5385,
-        "colorIntersection": 0.2841,
-        "paletteMatch": 0.6755,
-        "detail": 0.3704,
-        "detailRaw": 0.4329,
-        "detailAdded": 0.125,
-        "bands": 0.7
-      },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
           "y": 0,
-          "w": 622,
-          "h": 285
+          "w": 191,
+          "h": 42
         },
         "build": {
-          "x": 50,
-          "y": 20,
-          "w": 599,
-          "h": 265
+          "x": 0,
+          "y": 0,
+          "w": 191,
+          "h": 42
         }
       }
     },
     {
       "id": "editor-shell",
-      "x": 0.302,
-      "y": 0.338,
-      "w": 0.455,
-      "h": 0.337,
+      "x": 0.3,
+      "y": 0.272,
+      "w": 0.467,
+      "h": 0.374,
       "kind": "chrome",
       "score": {
-        "overall": 0.3027,
-        "structure": 0.2253,
-        "color": 0.5649,
-        "colorIntersection": 0.1964,
-        "paletteMatch": 0.7634,
-        "detail": 0.1924,
-        "detailRaw": 0.3539,
-        "detailAdded": 0.3229,
-        "bands": 0.23
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
           "y": 0,
-          "w": 699,
-          "h": 345
+          "w": 717,
+          "h": 383
         },
         "build": {
           "x": 0,
           "y": 0,
-          "w": 699,
-          "h": 345
+          "w": 717,
+          "h": 383
         }
       }
     },
     {
       "id": "editor-site-visual",
-      "x": 0.397,
-      "y": 0.401,
-      "w": 0.335,
-      "h": 0.236,
+      "x": 0.358,
+      "y": 0.325,
+      "w": 0.39,
+      "h": 0.293,
       "kind": "image",
       "score": {
-        "overall": 0.1355,
-        "structure": 0.2262,
-        "color": 0.0542,
-        "colorIntersection": 0.0295,
-        "paletteMatch": 0.0676,
-        "detail": 0.1363,
-        "detailRaw": 0.2769,
-        "detailAdded": 0.2813,
-        "bands": 0
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "missing",
+      "verdict": "match",
       "inkBox": {
         "comp": {
-          "x": 3,
+          "x": 0,
           "y": 0,
-          "w": 511,
-          "h": 236
+          "w": 599,
+          "h": 300
         },
         "build": {
           "x": 0,
-          "y": 22,
-          "w": 436,
-          "h": 219
+          "y": 0,
+          "w": 599,
+          "h": 300
         }
       }
     },
     {
       "id": "responsive-device-preview",
-      "x": 0.775,
-      "y": 0.101,
-      "w": 0.112,
-      "h": 0.572,
+      "x": 0.854,
+      "y": 0.298,
+      "w": 0.117,
+      "h": 0.335,
       "kind": "chrome",
       "score": {
-        "overall": 0.4333,
-        "structure": 0.3365,
-        "color": 0.5116,
-        "colorIntersection": 0.2377,
-        "paletteMatch": 0.659,
-        "detail": 0.3307,
-        "detailRaw": 0.4192,
-        "detailAdded": 0.1771,
-        "bands": 0.7
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
           "y": 0,
-          "w": 172,
-          "h": 586
+          "w": 179,
+          "h": 343
         },
         "build": {
           "x": 0,
           "y": 0,
-          "w": 172,
-          "h": 586
+          "w": 179,
+          "h": 343
         }
       }
     },
     {
       "id": "responsive-site-visual",
-      "x": 0.794,
-      "y": 0.132,
-      "w": 0.073,
-      "h": 0.494,
+      "x": 0.862,
+      "y": 0.336,
+      "w": 0.102,
+      "h": 0.277,
       "kind": "image",
       "score": {
-        "overall": 0.3391,
-        "structure": 0.405,
-        "color": 0.4678,
-        "colorIntersection": 0.2024,
-        "paletteMatch": 0.6107,
-        "detail": 0.2357,
-        "detailRaw": 0.3972,
-        "detailAdded": 0.3229,
-        "bands": 0.5286
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "missing",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
           "y": 0,
-          "w": 112,
-          "h": 506
+          "w": 157,
+          "h": 284
         },
         "build": {
           "x": 0,
           "y": 0,
-          "w": 112,
-          "h": 506
+          "w": 157,
+          "h": 284
         }
       }
     },
     {
-      "id": "release-state-rail",
-      "x": 0.902,
-      "y": 0.112,
-      "w": 0.088,
-      "h": 0.511,
-      "kind": "chrome",
-      "score": {
-        "overall": 0.6611,
-        "structure": 0.8348,
-        "color": 0.8338,
-        "colorIntersection": 0.671,
-        "paletteMatch": 0.9215,
-        "detail": 0.4019,
-        "detailRaw": 0.4175,
-        "detailAdded": 0.0313,
-        "bands": 0.4
-      },
-      "verdict": "drift",
-      "inkBox": {
-        "comp": {
-          "x": 39,
-          "y": 31,
-          "w": 64,
-          "h": 474
-        },
-        "build": {
-          "x": 36,
-          "y": 17,
-          "w": 46,
-          "h": 500
-        }
-      }
-    },
-    {
-      "id": "cinematic-ground",
+      "id": "cinematic-journey-ground",
       "x": 0,
-      "y": 0.628,
+      "y": 0.645,
       "w": 1,
-      "h": 0.372,
+      "h": 0.355,
       "kind": "chrome",
       "score": {
-        "overall": 0.474,
-        "structure": 0.389,
-        "color": 0.7022,
-        "colorIntersection": 0.629,
-        "paletteMatch": 0.7417,
-        "detail": 0.3236,
-        "detailRaw": 0.3705,
-        "detailAdded": 0.0938,
-        "bands": 0.5429
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
-          "x": 68,
-          "y": 0,
-          "w": 1468,
-          "h": 381
+          "x": 236,
+          "y": 59,
+          "w": 1194,
+          "h": 269
         },
         "build": {
-          "x": 0,
-          "y": 0,
-          "w": 1536,
-          "h": 279
+          "x": 236,
+          "y": 59,
+          "w": 1194,
+          "h": 269
         }
       }
     },
     {
       "id": "walkthrough-heading",
-      "x": 0.07,
-      "y": 0.665,
-      "w": 0.257,
-      "h": 0.053,
+      "x": 0.672,
+      "y": 0.701,
+      "w": 0.266,
+      "h": 0.086,
       "kind": "text",
       "score": {
-        "overall": 0.673,
-        "structure": 0.5543,
-        "color": 0.8765,
-        "colorIntersection": 0.7554,
-        "paletteMatch": 0.9417,
-        "detail": 0.6446,
-        "detailRaw": 0.7227,
-        "detailAdded": 0.1563,
-        "bands": 0.8
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "drift",
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 22,
+          "y": 1,
+          "w": 376,
+          "h": 78
+        },
+        "build": {
+          "x": 22,
+          "y": 1,
+          "w": 376,
+          "h": 78
+        }
+      }
+    },
+    {
+      "id": "walkthrough-deck",
+      "x": 0.345,
+      "y": 0.734,
+      "w": 0.25,
+      "h": 0.061,
+      "kind": "text",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 1,
-          "y": 4,
-          "w": 393,
-          "h": 50
+          "y": 0,
+          "w": 383,
+          "h": 37
         },
         "build": {
-          "x": 0,
+          "x": 1,
           "y": 0,
-          "w": 394,
-          "h": 40
+          "w": 383,
+          "h": 37
+        }
+      }
+    },
+    {
+      "id": "journey-rail",
+      "x": 0.068,
+      "y": 0.825,
+      "w": 0.866,
+      "h": 0.071,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 129,
+          "y": 9,
+          "w": 1197,
+          "h": 42
+        },
+        "build": {
+          "x": 129,
+          "y": 9,
+          "w": 1197,
+          "h": 42
         }
       }
     },
     {
       "id": "content-step",
-      "x": 0.069,
-      "y": 0.745,
-      "w": 0.236,
-      "h": 0.245,
+      "x": 0.067,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
       "kind": "chrome",
       "score": {
-        "overall": 0.4744,
-        "structure": 0.446,
-        "color": 0.6921,
-        "colorIntersection": 0.526,
-        "paletteMatch": 0.7815,
-        "detail": 0.1992,
-        "detailRaw": 0.2513,
-        "detailAdded": 0.1042,
-        "bands": 0.6364
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
-          "x": 13,
+          "x": 130,
           "y": 0,
-          "w": 349,
-          "h": 251
+          "w": 191,
+          "h": 124
         },
         "build": {
-          "x": 0,
-          "y": 5,
-          "w": 362,
-          "h": 135
+          "x": 130,
+          "y": 0,
+          "w": 191,
+          "h": 124
         }
       }
     },
     {
       "id": "design-step",
-      "x": 0.322,
-      "y": 0.689,
-      "w": 0.279,
-      "h": 0.301,
+      "x": 0.29,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
       "kind": "chrome",
       "score": {
-        "overall": 0.3204,
-        "structure": 0.3579,
-        "color": 0.5473,
-        "colorIntersection": 0.4374,
-        "paletteMatch": 0.6065,
-        "detail": 0.1473,
-        "detailRaw": 0.1994,
-        "detailAdded": 0.1042,
-        "bands": 0.1429
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "missing",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
-          "y": 6,
-          "w": 422,
-          "h": 302
+          "y": 0,
+          "w": 321,
+          "h": 125
         },
         "build": {
           "x": 0,
-          "y": 66,
-          "w": 428,
-          "h": 131
+          "y": 0,
+          "w": 321,
+          "h": 125
         }
       }
     },
     {
       "id": "preview-step",
-      "x": 0.604,
-      "y": 0.689,
-      "w": 0.177,
-      "h": 0.301,
+      "x": 0.512,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
       "kind": "chrome",
       "score": {
-        "overall": 0.4482,
-        "structure": 0.4298,
-        "color": 0.6153,
-        "colorIntersection": 0.5074,
-        "paletteMatch": 0.6734,
-        "detail": 0.1978,
-        "detailRaw": 0.2291,
-        "detailAdded": 0.0625,
-        "bands": 0.63
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "contradicted",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
-          "y": 23,
-          "w": 272,
-          "h": 285
+          "y": 0,
+          "w": 321,
+          "h": 124
         },
         "build": {
           "x": 0,
-          "y": 66,
-          "w": 272,
-          "h": 131
+          "y": 0,
+          "w": 321,
+          "h": 124
         }
       }
     },
     {
       "id": "publish-step",
-      "x": 0.799,
-      "y": 0.689,
-      "w": 0.174,
-      "h": 0.301,
+      "x": 0.735,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
       "kind": "chrome",
       "score": {
-        "overall": 0.503,
-        "structure": 0.7028,
-        "color": 0.7497,
-        "colorIntersection": 0.5966,
-        "paletteMatch": 0.8321,
-        "detail": 0.105,
-        "detailRaw": 0.1571,
-        "detailAdded": 0.1042,
-        "bands": 0.2889
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
       },
-      "verdict": "drift",
+      "verdict": "match",
       "inkBox": {
         "comp": {
           "x": 0,
-          "y": 28,
-          "w": 249,
-          "h": 280
+          "y": 0,
+          "w": 301,
+          "h": 124
         },
         "build": {
           "x": 0,
-          "y": 67,
-          "w": 180,
-          "h": 130
+          "y": 0,
+          "w": 301,
+          "h": 124
         }
       }
     }
@@ -626,18 +660,19 @@
     "sideBySide": ".impeccable/review/diff/hero/side-by-side.png",
     "heatmap": ".impeccable/review/diff/hero/heatmap.png",
     "regionFiles": [
+      ".impeccable/review/diff/hero/regions/creative-workspace-ground.png",
       ".impeccable/review/diff/hero/regions/floating-navigation.png",
       ".impeccable/review/diff/hero/regions/hero-headline.png",
       ".impeccable/review/diff/hero/regions/hero-deck.png",
       ".impeccable/review/diff/hero/regions/hero-actions.png",
-      ".impeccable/review/diff/hero/regions/platform-mega-menu.png",
       ".impeccable/review/diff/hero/regions/editor-shell.png",
       ".impeccable/review/diff/hero/regions/editor-site-visual.png",
       ".impeccable/review/diff/hero/regions/responsive-device-preview.png",
       ".impeccable/review/diff/hero/regions/responsive-site-visual.png",
-      ".impeccable/review/diff/hero/regions/release-state-rail.png",
-      ".impeccable/review/diff/hero/regions/cinematic-ground.png",
+      ".impeccable/review/diff/hero/regions/cinematic-journey-ground.png",
       ".impeccable/review/diff/hero/regions/walkthrough-heading.png",
+      ".impeccable/review/diff/hero/regions/walkthrough-deck.png",
+      ".impeccable/review/diff/hero/regions/journey-rail.png",
       ".impeccable/review/diff/hero/regions/content-step.png",
       ".impeccable/review/diff/hero/regions/design-step.png",
       ".impeccable/review/diff/hero/regions/preview-step.png",
