@@ -142,3 +142,10 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Consequence:** These three images are now the complete pre-implementation authority for the flagship Hero, responsive composition and Platform Mega Menu. The default navigation remains closed; the open-menu visual documents only the state after user activation.
 - **Acceptance boundary:** Code, Build success and Staging health do not establish visual fidelity. Fresh real-browser desktop, mobile and open-menu captures must be shown and explicitly accepted after implementation.
 - **Source:** Owner approval and `.impeccable/surfaces/rava-flagship.md`
+
+## 2026-09-02 — Tooling must reduce work, never become the work
+
+- **Decision:** RPIM, Skill discovery and durable-memory updates remain lightweight supporting tools, but each task must prioritize one visible or verifiable product outcome. Navigation helpers run only within a bounded scope and cannot block direct scoped implementation when their runtime is unavailable.
+- **Reason:** The owner correctly identified that repeated process steps and status cycles were consuming attention without consistently advancing the visible website. Evidence showed RPIM and the Skill Scout were not the cause of the rejected visual; the actual failure was layering new CSS over rejected assets and skipping post-implementation visual comparison.
+- **Consequence:** Keep RPIM and the Skill Scout because they reduce broad scanning, but batch checks and memory updates, avoid redundant checkpoints, and require real-browser comparison before any visual-success claim.
+- **Source:** Owner feedback, `AGENTS.md`, `scripts/rpim.mjs`, `tools/codex-skills/rava-skill-scout/`

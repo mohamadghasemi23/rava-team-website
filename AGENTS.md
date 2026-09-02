@@ -136,8 +136,17 @@ npm run rpim -- impact
 - Update `config/project-intelligence.json` whenever a first-class Feature or its boundaries change.
 - Run `npm run rpim:verify` in repository Gates.
 - RPIM narrows discovery and iterative tests; it never replaces complete release validation or applicable real PostgreSQL tests.
+- RPIM is a bounded navigation aid, not a blocking workflow. Run the relevant lookup at most once per task; if its runtime is unavailable or direct code evidence already identifies the scope, continue with that smallest verified scope.
 
 If package scripts are later added for these, prefer the package scripts.
+
+## Delivery efficiency and visible progress
+
+- Every implementation turn must advance the current milestone through one smallest meaningful outcome: a reviewable visual, a verified code change, a closed blocker, a passing Gate, or a user-testable Staging result.
+- Do not let repository-navigation tools, Skill discovery, status reporting, repeated broad searches or redundant checkpoints become the work itself.
+- Read each durable instruction source once per task, scope with direct evidence, batch related edits and validations, and update project memory once near the end unless a safety-critical state changes.
+- A failed optional tool must degrade to direct scoped inspection; it must not block product work unless the missing evidence is genuinely required for safety or correctness.
+- Never call a visual implementation successful until a real coded browser capture has been compared with the approved preview. If browser proof is unavailable, report the implementation as unaccepted.
 
 ## Current branch / PR workflow
 The active platform work is currently on:

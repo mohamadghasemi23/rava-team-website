@@ -62,6 +62,8 @@ Pre-implementation Base `rava-flagship-base-v1.png`, its mobile adaptation and i
 
 The post-deploy owner walkthrough found that Living System was absent from Template selection. Repository and live Staging evidence confirmed the renderer existed but no `template_catalog`, published `template_versions` or starter-pack compatibility migration had been created. Commit `7dbc0ab` added migration `20260902134253_rava_living_system_template.sql` and six pgTAP assertions; all GitHub Gates passed. Backup `20260902T134745Z` completed successfully before the migration was applied to real Staging PostgreSQL. All six pgTAP assertions passed, and readback confirmed `rava-service-living-system` version 1 is active, published, Premium, discoverable and compatible with the active starter pack. The healthy web app remains the approved renderer image `rava-web:2598339`; no Production action occurred.
 
+The first real owner preview of `rava-web:2598339` is visually rejected. It still renders obsolete lamp/stone imagery, conflicting legacy navigation CSS and an unrelated Hero because the implementation changed final geometry without replacing rejected browser assets or consolidating stacked legacy layers. It must not be promoted or treated as accepted. Replacement assets must show only truthful RAVA page-building, content, preview and release subjects. A newly generated mobile candidate containing unsupported customer/project/satisfaction statistics was also rejected internally and will not enter the repository.
+
 **Correction recorded 2026-09-02:** The owner clarified that the original RAVA Living System D composition is the exact flagship visual authority and that only the prominent cup was meant to be removed. This correction supersedes the D2-authority statements later in this section: D2 remains historical evidence, not the current fidelity target. A versioned cup-removed D reference and provenance sidecar now exist. The next code pass must restore D's topology, density, perspective editor, device/release rail, optical navigation and cinematic Journey with semantic, bilingual, CMS-driven implementation. No Production action is authorized.
 
 The flagship Mega Menu is now explicitly closed on initial load, including the isolated design-preview route. Its expanded appearance is an interaction state reached only after user activation, not part of the default Hero presentation.
@@ -83,8 +85,8 @@ The current workstream is implementation of owner-approved RAVA Living System D2
 
 ## Prioritized next actions
 
-1. Refresh Template selection, choose «سیستم زنده راوا» / `RAVA Living System` version 1 and confirm it creates a draft preview without publishing.
-2. Obtain fresh real-browser desktop/mobile/open-menu captures from that draft for the separate implementation-acceptance review.
+1. Replace obsolete Living System imagery with owner-approved RAVA-only assets, consolidate the conflicting Hero/Navbar/Journey CSS, and obtain fresh real-browser desktop/mobile/open-menu captures from the draft.
+2. Compare those captures with the approved Base and request explicit implementation acceptance; do not publish the rejected Staging visual.
 3. After Living System passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
 5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.
