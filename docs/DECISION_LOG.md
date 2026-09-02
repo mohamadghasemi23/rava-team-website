@@ -168,3 +168,12 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Gamification:** Tapping the four-stage journey progressively activates the path and changes the console to the selected truthful RAVA capability; it does not introduce points, invented achievements or distracting game mechanics.
 - **Gate:** Mobile approval remains pre-implementation. Open-navigation states and later real-browser implementation captures still require separate owner approval.
 - **Source:** Owner approval on 2026-09-02.
+
+## 2026-09-02 — Interactive flagship navigation states approved
+
+- **Decision:** The owner advanced past and thereby approved the exact desktop Mega Menu and mobile navigation-drawer previews for the interactive flagship base.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-interactive-hero-v1-menu-desktop.png` and `.impeccable/mocks/rava-flagship-interactive-hero-v1-menu-mobile.png`.
+- **Behavior:** Navigation is closed by default and opens only after an explicit click or tap. Desktop uses a structured capability Mega Menu; mobile uses a touch-sized drawer with the Platform group expanded.
+- **Logo boundary:** The current RAVA mark is provisional. The owner is designing the final logo; its later placement and motion treatment require asset inspection and visual approval and must not disturb the approved layout hierarchy.
+- **Gate:** Final polish and real coded captures still require separate owner acceptance before Production.
+- **Source:** Owner direction on 2026-09-02.
