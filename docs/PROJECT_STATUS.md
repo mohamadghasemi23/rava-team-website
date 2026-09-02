@@ -58,7 +58,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 **Visual rejection recorded 2026-09-02:** The owner rejected the coded D restoration at `4b07df8`: it did not match the reference, lacked the defining curved transition, produced a disordered three-image Hero and reintroduced unrelated lamp/stone imagery. It must not be deployed or used as a visual baseline. The next design step is a pre-implementation visual round only: exact desktop/mobile comps and material states must be shown and explicitly approved before any replacement code is written.
 
-Pre-implementation BASE candidate `rava-flagship-base-v1.png` was produced on 2026-09-02. It shows the default closed navigation, one connected RAVA page-building/branding/content/release system, responsive devices, a pronounced curved Hero boundary and a four-stage navy Journey. It is not approved, does not authorize implementation and must remain a candidate until the owner explicitly accepts or requests revisions.
+Pre-implementation Base `rava-flagship-base-v1.png` was explicitly approved by the owner on 2026-09-02 for the desktop closed-menu state. It shows one connected RAVA page-building/branding/content/release system, responsive devices, a pronounced curved Hero boundary and a four-stage navy Journey. Mobile and open-Mega-Menu candidate comps now exist but remain unapproved; implementation is still blocked until those material states are explicitly accepted.
 
 **Correction recorded 2026-09-02:** The owner clarified that the original RAVA Living System D composition is the exact flagship visual authority and that only the prominent cup was meant to be removed. This correction supersedes the D2-authority statements later in this section: D2 remains historical evidence, not the current fidelity target. A versioned cup-removed D reference and provenance sidecar now exist. The next code pass must restore D's topology, density, perspective editor, device/release rail, optical navigation and cinematic Journey with semantic, bilingual, CMS-driven implementation. No Production action is authorized.
 
@@ -81,7 +81,7 @@ The current workstream is implementation of owner-approved RAVA Living System D2
 
 ## Prioritized next actions
 
-1. Rebuild the flagship Hero and Journey against the restored cup-removed D authority, then obtain fresh desktop/mobile captures and run a fidelity review before continuing lower-page acceptance.
+1. Obtain explicit owner approval or revision notes for the Base mobile and open-Mega-Menu comps; only then implement the approved desktop/mobile/interaction system and obtain fresh real-browser captures for a separate fidelity review.
 2. Prepare the versioned catalog migration only after the complete D2 page family passes its visual, responsive, accessibility, performance and content review; then run complete repository Gates and real Staging validation.
 3. After D passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.

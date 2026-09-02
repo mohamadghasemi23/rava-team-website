@@ -127,3 +127,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Consequence:** Inspiration is not approval; a mock is not an accepted implementation; passing Build is not visual acceptance. Rejected visuals are recorded and cannot be deployed or silently reused as authority.
 - **Immediate disposition:** Commit `4b07df8` is visually rejected. It must not be deployed or treated as the flagship baseline.
 - **Source:** Owner instruction, `AGENTS.md`, `.impeccable/surfaces/rava-flagship.md`
+
+## 2026-09-02 — New RAVA flagship desktop Base approved
+
+- **Decision:** The owner explicitly approved `.impeccable/mocks/rava-flagship-base-v1.png` as the desktop, closed-navigation visual Base for the RAVA TEAM flagship.
+- **Scope:** The approval covers the desktop composition, RAVA-centered product canvas, optical navigation, pronounced curved transition and four-stage Journey. It does not yet approve the mobile adaptation, open-Mega-Menu state or any coded implementation.
+- **Gate:** `.impeccable/mocks/rava-flagship-base-v1-mobile.png` and `.impeccable/mocks/rava-flagship-base-v1-menu-open.png` must receive explicit owner approval before implementation begins; real-browser captures remain a separate post-implementation acceptance Gate.
+- **Supersedes:** The restored cup-removed D bitmap as the active desktop implementation target. That reference remains preserved as design history.
+- **Source:** Owner approval and `.impeccable/surfaces/rava-flagship.md`
