@@ -177,3 +177,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Logo boundary:** The current RAVA mark is provisional. The owner is designing the final logo; its later placement and motion treatment require asset inspection and visual approval and must not disturb the approved layout hierarchy.
 - **Gate:** Final polish and real coded captures still require separate owner acceptance before Production.
 - **Source:** Owner direction on 2026-09-02.
+
+## 2026-09-02 — Flagship styling has one cascade authority
+
+- **Decision:** The RAVA Living System renderer imports one consolidated stylesheet for its active visual version. New visual passes must not be appended before or after legacy authority blocks in the same cascade.
+- **Reason:** The first interactive Staging capture proved that individually correct rules can still produce a rejected composition when later historical blocks override geometry and responsive behavior.
+- **Consequence:** `rava-living-system-v2.module.css` owns the active Hero, navigation, product console, Journey and lower-page presentation. The former stylesheet remains only as rollback/history evidence until safe deprecation; it is not imported by the active renderer.
+- **Gate:** A clean Build is insufficient. Desktop, mobile, open-menu and interactive browser captures must be compared with the approved visual base before acceptance.
+- **Source:** Owner-supplied Staging capture and CSS cascade inspection on 2026-09-02.

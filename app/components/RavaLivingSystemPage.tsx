@@ -4,7 +4,7 @@ import {useState} from 'react'
 import Link from 'next/link'
 import type {PublicBlock,PublicPagePayload} from '@/lib/cms/public-runtime'
 import type {PreviewNavigationItem} from './PublicPageView'
-import styles from './rava-living-system.module.css'
+import styles from './rava-living-system-v2.module.css'
 
 type Props={payload:PublicPagePayload;navigation:PreviewNavigationItem[];previewBasePath?:string}
 
@@ -36,7 +36,7 @@ function ProductVisual({portrait=false,isFa=true,activeStep=0}:{portrait?:boolea
     ?{content:'محتوا',design:'طراحی',preview:'پیش‌نمایش',publish:'انتشار',title:'سایت شما',ready:'آماده بازبینی'}
     :{content:'Content',design:'Design',preview:'Preview',publish:'Publish',title:'Your website',ready:'Ready for review'}
   const stages=[labels.content,labels.design,labels.preview,labels.publish]
-  return <div className={`${styles.productVisual} ${portrait?styles.productPortrait:''}`} aria-hidden="true" data-stage={activeStep}>
+  return <div className={`${styles.productVisual} ${portrait?styles.productPortrait:''}`} aria-hidden="true" data-stage={activeStep} dir={isFa?'rtl':'ltr'}>
     <div className={styles.productTop}><Mark/><span>RAVA</span><i/><i/><i/></div>
     <div className={styles.productWorkspace}>
       <div className={styles.productTools}>{stages.map((label,index)=><span className={index===activeStep?styles.productToolActive:undefined} key={label}><i/>{label}</span>)}</div>
