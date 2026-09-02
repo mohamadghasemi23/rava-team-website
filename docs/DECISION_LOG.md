@@ -185,3 +185,12 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Consequence:** `rava-living-system-v2.module.css` owns the active Hero, navigation, product console, Journey and lower-page presentation. The former stylesheet remains only as rollback/history evidence until safe deprecation; it is not imported by the active renderer.
 - **Gate:** A clean Build is insufficient. Desktop, mobile, open-menu and interactive browser captures must be compared with the approved visual base before acceptance.
 - **Source:** Owner-supplied Staging capture and CSS cascade inspection on 2026-09-02.
+
+## 2026-09-03 — RAVA flagship V3 visual system approved before implementation
+
+- **Decision:** The owner explicitly approved the complete V3 desktop, mobile, desktop open-Mega-Menu and mobile open-menu previews as the replacement implementation authority for the RAVA TEAM flagship.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-v3-desktop-closed-approved.png`, `.impeccable/mocks/rava-flagship-v3-mobile-closed-approved.png`, `.impeccable/mocks/rava-flagship-v3-desktop-menu-approved.png` and `.impeccable/mocks/rava-flagship-v3-mobile-menu-approved.png`.
+- **Required product truth:** The Hero centers a legible RAVA dashboard with real modules, project and release state; navigation is readable optical glass; Hero copy never overlaps the product; device previews and release rail remain in bounds; Journey stages are distinct; the final CTA uses the RAVA navy/pearl/cobalt system.
+- **Supersedes:** The V1 interactive previews remain design history, while V3 is the current implementation authority. Deployed commit `19af1da` remains visually rejected.
+- **Acceptance boundary:** This approval authorizes implementation only. Complete Gates, real coded desktop/mobile/menu captures and separate owner implementation acceptance are required before another Staging deployment.
+- **Source:** Owner approval on 2026-09-03.

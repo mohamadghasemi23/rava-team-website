@@ -31,20 +31,30 @@ const copy={
 function hrefFor(item:PreviewNavigationItem,previewBasePath?:string){return previewBasePath?`${previewBasePath}?page=${item.id}`:`/${item.slug}`}
 function Arrow(){return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>}
 function Mark(){return <span className={styles.mark} aria-hidden="true"><i/><i/><i/></span>}
+function StageIcon({stage}:{stage:number}){
+  const paths=[
+    <><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v5h5M10 12h5m-5 4h5"/></>,
+    <><path d="m4 18 9-9 3 3-9 9H4z"/><path d="m12 6 2-2 5 5-2 2M4 14l6 6"/></>,
+    <><rect x="3" y="5" width="13" height="10" rx="2"/><path d="M8 19h3m-1-4v4m9-8h2v8h-5v-8h3z"/></>,
+    <><path d="M12 21v-8m0 0c-3 0-5-2-5-5 3 0 5 2 5 5Zm0 0c3 0 5-2 5-5-3 0-5 2-5 5Z"/><path d="M5 20h14"/></>
+  ]
+  return <svg className={styles.stageIcon} aria-hidden="true" viewBox="0 0 24 24">{paths[stage]}</svg>
+}
 function ProductVisual({portrait=false,isFa=true,activeStep=0}:{portrait?:boolean;isFa?:boolean;activeStep?:number}){
   const labels=isFa
-    ?{content:'محتوا',design:'طراحی',preview:'پیش‌نمایش',publish:'انتشار',title:'سایت شما',ready:'آماده بازبینی'}
-    :{content:'Content',design:'Design',preview:'Preview',publish:'Publish',title:'Your website',ready:'Ready for review'}
+    ?{content:'محتوا',design:'طراحی',preview:'پیش‌نمایش',publish:'انتشار',dashboard:'داشبورد',project:'پروژه فعال',website:'وب‌سایت رسمی راوا',ready:'آماده انتشار',pages:'صفحه‌ها',seo:'سئو',performance:'عملکرد',security:'امنیت'}
+    :{content:'Content',design:'Design',preview:'Preview',publish:'Publish',dashboard:'Dashboard',project:'Active project',website:'RAVA official website',ready:'Ready to publish',pages:'Pages',seo:'SEO',performance:'Performance',security:'Security'}
   const stages=[labels.content,labels.design,labels.preview,labels.publish]
   return <div className={`${styles.productVisual} ${portrait?styles.productPortrait:''}`} aria-hidden="true" data-stage={activeStep} dir={isFa?'rtl':'ltr'}>
-    <div className={styles.productTop}><Mark/><span>RAVA</span><i/><i/><i/></div>
-    <div className={styles.productWorkspace}>
-      <div className={styles.productTools}>{stages.map((label,index)=><span className={index===activeStep?styles.productToolActive:undefined} key={label}><i/>{label}</span>)}</div>
-      <div className={styles.productCanvas}>
-        <div className={styles.productCanvasHead}><b>{labels.title}</b><span>{labels.ready}</span></div>
-        <div className={styles.productBlueprint}><i/><i/><i/><i/><i/></div>
-        <div className={styles.productLive}><div/><strong>{stages[activeStep]}</strong><span/><span/><span/></div>
-        <div className={styles.activationSeam}/>
+    <div className={styles.productTop}><Mark/><span>RAVA</span><strong>{labels.dashboard}</strong><i/></div>
+    <div className={styles.dashboardShell}>
+      <aside className={styles.dashboardNav}><b>{labels.project}</b>{stages.map((label,index)=><span className={index===activeStep?styles.productToolActive:undefined} key={label}><StageIcon stage={index}/>{label}</span>)}</aside>
+      <div className={styles.dashboardMain}>
+        <div className={styles.moduleGrid}>{stages.map((label,index)=><div className={index===activeStep?styles.moduleActive:undefined} key={label}><StageIcon stage={index}/><span><b>{label}</b><small>{index===activeStep?labels.ready:labels.dashboard}</small></span></div>)}</div>
+        <div className={styles.projectGrid}>
+          <article className={styles.projectCard}><small>{labels.project}</small><div className={styles.projectPreview}><i/><i/><i/></div><b>{labels.website}</b><span>rava.team</span></article>
+          <article className={styles.healthCard}><small>{labels.ready}</small>{[labels.pages,labels.seo,labels.performance,labels.security].map((label,index)=><span key={label}><b>{label}</b><i className={index<=activeStep?styles.healthReady:undefined}/></span>)}</article>
+        </div>
       </div>
     </div>
     <div className={styles.productTabs}>{stages.map((label,index)=><span className={index===activeStep?styles.productTabActive:undefined} key={label}>{label}</span>)}</div>
@@ -107,7 +117,7 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
           </div>
         </section>
 
-        <section className={styles.journey} id="rava-journey" aria-labelledby="journey-title"><div className={styles.journeyHeader}><span>{t.journeyLabel}</span><h2 id="journey-title">{t.journey}</h2><p>{t.journeyIntro}</p></div><ol>{t.steps.map(([title,text],index)=><li className={index===activeStep?styles.stepActive:undefined} key={title}><button className={styles.stepTrigger} type="button" aria-pressed={index===activeStep} onClick={()=>setActiveStep(index)}><span className={styles.stepNumber}>{String(index+1).padStart(2,'0')}</span><span className={styles.stepCopy}><b>{title}</b><span>{text}</span></span><span className={styles.stepScreen} aria-hidden="true"><span/><span/><span/><span/></span></button></li>)}</ol></section>
+        <section className={styles.journey} id="rava-journey" aria-labelledby="journey-title"><div className={styles.journeyHeader}><span>{t.journeyLabel}</span><h2 id="journey-title">{t.journey}</h2><p>{t.journeyIntro}</p></div><ol>{t.steps.map(([title,text],index)=><li className={index===activeStep?styles.stepActive:undefined} key={title}><button className={styles.stepTrigger} type="button" aria-pressed={index===activeStep} onClick={()=>setActiveStep(index)}><span className={styles.stepNumber}>{String(index+1).padStart(2,'0')}</span><span className={styles.stepCopy}><span className={styles.stepTitle}><StageIcon stage={index}/><b>{title}</b></span><span>{text}</span></span><span className={styles.stepScreen} data-screen={index} aria-hidden="true"><span/><span/><span/><span/><StageIcon stage={index}/></span></button></li>)}</ol></section>
 
         <section className={styles.promise} aria-labelledby="rava-promise"><div className={styles.promiseLead}><h2 id="rava-promise">{t.promiseTitle}</h2><p>{t.promiseText}</p></div><div className={styles.layerMap}>{t.layers.map(([layerTitle,text],index)=><article key={layerTitle}><span aria-hidden="true">{String(index+1).padStart(2,'0')}</span><div><h3>{layerTitle}</h3><p>{text}</p></div><div className={styles.layerSignal} aria-hidden="true"><i/><i/><i/></div></article>)}</div></section>
 
