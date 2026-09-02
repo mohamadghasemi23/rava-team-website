@@ -149,3 +149,13 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Reason:** The owner correctly identified that repeated process steps and status cycles were consuming attention without consistently advancing the visible website. Evidence showed RPIM and the Skill Scout were not the cause of the rejected visual; the actual failure was layering new CSS over rejected assets and skipping post-implementation visual comparison.
 - **Consequence:** Keep RPIM and the Skill Scout because they reduce broad scanning, but batch checks and memory updates, avoid redundant checkpoints, and require real-browser comparison before any visual-success claim.
 - **Source:** Owner feedback, `AGENTS.md`, `scripts/rpim.mjs`, `tools/codex-skills/rava-skill-scout/`
+
+## 2026-09-02 — Interactive RAVA product Hero approved as a polishable design base
+
+- **Decision:** The owner approved the resting and pointer-active desktop previews as the new design base for the RAVA TEAM flagship Hero.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-interactive-hero-v1-rest.png` and `.impeccable/mocks/rava-flagship-interactive-hero-v1-active.png`.
+- **Interaction:** The central RAVA product console presents the real content, design, preview and publish workflow. Pointer activation adds a restrained local light path and product response rather than unrelated decoration or a page-wide effect.
+- **Polish boundary:** Typography, optical material, spacing, iconography and motion choreography may be refined later, but polish must preserve the approved composition and RAVA-centered product story. Any material redesign requires a new visual approval.
+- **Content boundary:** Public capability presentation must remain truthful and capability-led; unsupported metrics, testimonials, awards, customers and decorative non-RAVA product imagery are prohibited.
+- **Gate:** This is pre-implementation approval only. Exact mobile and open-navigation states still require approval, followed by real coded desktop/mobile/state captures and separate implementation acceptance before any Production action.
+- **Source:** Owner approval on 2026-09-02.
