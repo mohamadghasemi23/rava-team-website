@@ -135,3 +135,10 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Gate:** `.impeccable/mocks/rava-flagship-base-v1-mobile.png` and `.impeccable/mocks/rava-flagship-base-v1-menu-open.png` must receive explicit owner approval before implementation begins; real-browser captures remain a separate post-implementation acceptance Gate.
 - **Supersedes:** The restored cup-removed D bitmap as the active desktop implementation target. That reference remains preserved as design history.
 - **Source:** Owner approval and `.impeccable/surfaces/rava-flagship.md`
+
+## 2026-09-02 — Flagship mobile and open-menu visuals approved
+
+- **Decision:** The owner explicitly approved `.impeccable/mocks/rava-flagship-base-v1-mobile.png` and `.impeccable/mocks/rava-flagship-base-v1-menu-open.png` alongside the approved desktop Base.
+- **Consequence:** These three images are now the complete pre-implementation authority for the flagship Hero, responsive composition and Platform Mega Menu. The default navigation remains closed; the open-menu visual documents only the state after user activation.
+- **Acceptance boundary:** Code, Build success and Staging health do not establish visual fidelity. Fresh real-browser desktop, mobile and open-menu captures must be shown and explicitly accepted after implementation.
+- **Source:** Owner approval and `.impeccable/surfaces/rava-flagship.md`
