@@ -159,3 +159,12 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Content boundary:** Public capability presentation must remain truthful and capability-led; unsupported metrics, testimonials, awards, customers and decorative non-RAVA product imagery are prohibited.
 - **Gate:** This is pre-implementation approval only. Exact mobile and open-navigation states still require approval, followed by real coded desktop/mobile/state captures and separate implementation acceptance before any Production action.
 - **Source:** Owner approval on 2026-09-02.
+
+## 2026-09-02 — Interactive flagship mobile base approved
+
+- **Decision:** The owner approved the resting and tap-active mobile previews as the responsive design base for the RAVA TEAM flagship Hero.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-interactive-hero-v1-mobile-rest.png` and `.impeccable/mocks/rava-flagship-interactive-hero-v1-mobile-active.png`.
+- **Responsive boundary:** Mobile uses a genuine one-column, thumb-friendly product console rather than a compressed desktop dashboard.
+- **Gamification:** Tapping the four-stage journey progressively activates the path and changes the console to the selected truthful RAVA capability; it does not introduce points, invented achievements or distracting game mechanics.
+- **Gate:** Mobile approval remains pre-implementation. Open-navigation states and later real-browser implementation captures still require separate owner approval.
+- **Source:** Owner approval on 2026-09-02.
