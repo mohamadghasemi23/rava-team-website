@@ -1,11 +1,9 @@
-RAVA Living System flagship hero product plate
+RAVA Living System D wide interior plate, cup removed
 
-Use case: bespoke product visualization embedded inside the coded RAVA hero.
-
-Story: one coherent floating website canvas transforms from a precise luminous blueprint on the left into the same polished digital-agency website on the right. Three broad optical-glass planes behind it imply the platform layers: content, design and safe publishing. A restrained green state communicates a verified release.
-
-Visual language: physically plausible optical glass, pearl ceramic, deep navy anodized metal, controlled cobalt edge light, calm editorial composition and generous negative space.
-
-Required exclusions: no buildings, architecture photography, rooms, furniture, lamps, cups, people, unrelated decoration, external logos, readable or fake text, generic admin dashboard, analytics chart, disconnected icon cards, excessive neon or toy-like UI.
-
-Source generation: OpenAI image generation, 2026-09-01. The preserved generation master is exec-43d42b5c-4dcf-483f-9ce1-e72194d12ef5.png in the Codex generated-images directory for this task.
+Use case: precise-object-edit
+Asset type: wide website-builder canvas plate for the approved RAVA D Hero
+Source: Git commit 3308943, assets/plates/editor-site-visual.png
+Edit: remove only the coffee cup and saucer at the lower-right; reconstruct the empty pale tabletop naturally.
+Invariants: preserve the hanging lamp, cord, marble blocks, wall, tabletop, lighting, shadows, colours, crop, dimensions and perspective. Do not add, remove or redesign anything else. No replacement object, text, logo or watermark.
+Generated with: built-in image generation tool, 2026-09-02 UTC.
+Browser delivery: WebP quality 74, generated locally from the edited PNG with Sharp.

@@ -1,11 +1,9 @@
-RAVA Living System responsive hero companion
+RAVA Living System D portrait interior plate, cup removed
 
-Use case: a purpose-composed portrait companion for the phone and narrow-tablet frames in the RAVA flagship Hero; never a blind crop of the desktop plate.
-
-Story: a tall mobile website transforms through a luminous vertical seam from structured blueprint into its finished responsive form. Two broad glass layers add depth and one verified-green state communicates safe release.
-
-Visual language: the same pearl background, deep navy metal, optical glass and controlled cobalt edge light as the desktop flagship plate.
-
-Required exclusions: no buildings, rooms, furniture, lamps, cups, people, ecommerce products, charts, detached icon tiles, readable or fake text, external logos, cables, podiums or generic dashboard chrome.
-
-Source generation: OpenAI image generation, 2026-09-01. The preserved generation master is exec-6b17e26d-4a77-4cab-94c8-d4c0521a5ddf.png in the Codex generated-images directory for this task.
+Use case: precise-object-edit
+Asset type: portrait responsive-device plate for the approved RAVA D Hero
+Source: Git commit 3308943, assets/plates/responsive-site-visual.png
+Edit: remove only the coffee cup and saucer at the lower-right; reconstruct the empty pale tabletop naturally.
+Invariants: preserve the hanging lamp, cord, marble blocks, wall, tabletop, lighting, shadows, colours, portrait crop, dimensions and perspective. Do not add, remove or redesign anything else. No replacement object, text, logo or watermark.
+Generated with: built-in image generation tool, 2026-09-02 UTC.
+Browser delivery: WebP quality 74, generated locally from the edited PNG with Sharp.

@@ -30,8 +30,8 @@ function Arrow(){return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 
 function Mark(){return <span className={styles.mark} aria-hidden="true"><i/><i/><i/></span>}
 function ProductVisual({portrait=false,priority=false}:{portrait?:boolean;priority?:boolean}){
   const source=portrait
-    ?{webp:'/templates/rava-living-system/responsive-site-visual.webp',png:'/templates/rava-living-system/responsive-site-visual.png',width:941,height:1672}
-    :{webp:'/templates/rava-living-system/editor-site-visual.webp',png:'/templates/rava-living-system/editor-site-visual.png',width:1817,height:866}
+    ?{webp:'/templates/rava-living-system/responsive-site-visual.webp',png:'/templates/rava-living-system/responsive-site-visual.png',width:841,height:1871}
+    :{webp:'/templates/rava-living-system/editor-site-visual.webp',png:'/templates/rava-living-system/editor-site-visual.png',width:1825,height:862}
   return <picture aria-hidden="true"><source srcSet={source.webp} type="image/webp"/><img src={source.png} alt="" width={source.width} height={source.height} loading={priority?'eager':'lazy'} fetchPriority={priority?'high':'auto'} decoding="async"/></picture>
 }
 

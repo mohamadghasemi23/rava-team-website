@@ -217,3 +217,45 @@
 @media(max-width:980px){.promise,.proof,.faq{grid-template-columns:1fr;gap:70px}.promiseLead{position:static}.servicesStage>header{grid-template-columns:1fr;gap:28px}.proofConsole{min-height:480px}.finalCta{align-items:start;flex-direction:column}.footer{grid-template-columns:1fr auto}.footer small{grid-column:1/-1}.layerMap article{grid-template-columns:44px 1fr 100px}}
 @media(max-width:620px){.promise,.proof,.servicesStage,.faq,.finalCta{padding-inline:20px}.promise h2,.proof h2,.servicesStage h2,.faq h2{font-size:40px}.layerMap::before{display:none}.layerMap article{grid-template-columns:36px 1fr;gap:14px;min-height:auto;padding:34px 0}.layerMap article>span{margin-top:8px}.layerSignal{display:none}.proofConsole{min-height:auto;border-radius:20px}.consoleBar{height:68px;padding-inline:16px}.proofConsole ul{padding:18px}.proofConsole li{grid-template-columns:32px 1fr 18px;gap:12px;min-height:74px}.releaseStamp{flex-wrap:wrap}.servicesStage>header{margin-bottom:50px}.servicesStage li{grid-template-columns:36px 1fr 46px;gap:14px;min-height:auto;padding:30px 0}.servicesStage li:hover{padding-inline:0}.servicesStage li>p{grid-column:2/4}.servicesStage li>i{grid-column:3;grid-row:1/2;width:42px;height:42px}.faq{gap:48px}.faqList summary{min-height:88px;font-size:18px}.finalCta h2{font-size:46px}.finalCta>a{width:100%}.footer{grid-template-columns:1fr;padding:42px 20px}.footer nav{display:grid;grid-template-columns:1fr 1fr;gap:16px}.footer small{grid-column:auto}}
 @media(prefers-reduced-motion:reduce){.servicesStage li,.servicesStage li>i,.finalCta>a,.faqList summary i::after{transition:none}}
+
+/* Restored D authority: preserve the approved dense product composition. */
+@media(min-width:821px){
+  .hero{height:644px;min-height:63svh;padding:142px 0 0;background:#ebe6e5}
+  .hero::before,.hero::after{content:none}
+  .navbar{inset-block-start:18px;left:14.5%;right:auto;width:61.5%;height:88px}
+  .heroCopy{top:145px;left:7.4%;right:auto;width:23%}
+  .heroCopy h1{font-size:clamp(36px,2.85vw,44px)}
+  .heroCopy p,.actions{transform:translateX(-3.5vw)}
+  .productScene{inset:102px 3% 0 29%!important;perspective:1300px}
+  .editor{inset:250px 31% auto 1.8%!important;height:340px;border-radius:18px;grid-template-columns:52px 1fr;transform:rotateX(3deg) rotateY(-3deg)!important}
+  [dir="rtl"] .editor{transform:rotateX(3deg) rotateY(3deg)!important}
+  .canvas{height:294px}
+  .canvas picture img{object-fit:cover}
+  .devices{display:block;inset:6px 14% auto auto!important;width:19%;height:560px}
+  .tablet,.phone{display:block;position:absolute}
+  .tablet{inset:0 8% auto auto;width:82%;height:290px;border-radius:24px}
+  .phone{inset:auto auto 0 0;width:57%;height:268px;border-radius:24px}
+  .releaseRail{display:flex;inset:12px 0 auto auto;height:520px}
+  .journey{height:380px;min-height:380px;padding:34px 6.9% 22px;background:radial-gradient(circle at 54% 8%,rgba(21,87,255,.12),transparent 34%),var(--night);content-visibility:auto;contain-intrinsic-size:auto 380px}
+  .journey::before{background:none}
+  .journey::after{content:none}
+  .journeyHeader{display:block;margin:0 0 26px}
+  .journeyHeader>span,.journeyHeader>p{display:none}
+  .journeyHeader h2{width:30%;margin:0 0 0 auto;text-align:left;font-size:clamp(27px,2.4vw,39px)}
+  .journey>ol{grid-template-columns:1.15fr 1.35fr .9fr .9fr;gap:22px;direction:ltr}
+  .journey>ol::before{inset-block-start:24px;inset-inline:2% 2%;height:1px;background:linear-gradient(90deg,transparent,#1557ff 12% 88%,transparent);box-shadow:none}
+  .journey li{min-height:255px;padding-top:5px;direction:rtl}
+  .stepNumber{width:42px;height:42px;border-radius:14px;box-shadow:none}
+  .stepCopy{min-height:auto;margin:14px 0!important}
+  .stepCopy b{font-size:16px}
+  .stepCopy p{margin-top:7px;font-size:11px;line-height:1.75}
+  .stepScreen{height:120px;margin-top:18px;border-radius:15px}
+}
+@media(min-width:821px) and (max-width:1200px){
+  .navbar{left:4%;width:72%}
+  .heroCopy{left:4%;width:28%}
+  .productScene{left:28%!important;right:3%!important}
+  .releaseRail{display:none}
+  .devices{right:0!important}
+  .editor{right:14%!important}
+}

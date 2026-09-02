@@ -4,7 +4,7 @@
 
 **RAVA Digital Atelier** is the revised visual world for the RAVA TEAM flagship Template. A precise digital page blueprint becomes a complete, living website inside RAVA and reveals that strategy, content, design, technology and safe operation belong to one system.
 
-Physical buildings and architecture photography are excluded from the identity because they misclassify RAVA as an architecture practice. The construction metaphor exists only through real website structure, responsive frames, content layers, preview and release.
+Physical buildings and architecture photography are excluded from the identity because they misclassify RAVA as an architecture practice. The approved D interface may show its restrained lamp-and-stone demo website inside the page builder and responsive frames; this is illustrative customer-site content, not RAVA's corporate category. The cup is excluded. The construction metaphor otherwise exists through real website structure, responsive frames, content layers, preview and release.
 
 ## Signature
 
@@ -67,7 +67,7 @@ Headlines use deliberate line breaks and a maximum display size of `6rem`. Body 
 
 ## Imagery
 
-- The RAVA product and one decisive generated customer-site composition are the Hero focal assets; no physical building imagery.
+- The RAVA product and the approved D lamp-and-stone customer-site demonstration are the Hero focal assets; no cup and no physical building imagery.
 - Generated imagery is a design material, not evidence of client work, and carries prompt provenance.
 - Real portfolio images must be verified, licensed and labelled honestly.
 - No fake people, customers, awards, testimonials, logos or performance claims.
@@ -94,4 +94,4 @@ The working RAVA platform is current proof. Future portfolio, testimonials, stat
 - The public site remains CMS-driven and Template-versioned; no RAVA TEAM-only hard-coded bypass.
 - Persian RTL and English LTR are independently composed.
 - Accessibility, performance, entitlement, preview, release and rollback rules remain platform requirements.
-- The rejected architecture-photo comps and current Horizon/Journey look are anti-references, not visual dependencies.
+- D2 and the current Horizon/Journey look are historical anti-references, not visual dependencies. The restored cup-removed D comp is authoritative.
