@@ -104,3 +104,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Boundary:** D2 approves the captured Hero, navigation, product composition, creative-workspace background and four-act Journey. It does not silently approve or define the unfinished lower page family.
 - **Gate:** Rebuild the measured spec against D2 and rerun the Hero Gate at the existing 72% threshold; never lower the threshold to manufacture a pass.
 - **Source:** `.impeccable/mocks/rava-living-system-d2-candidate.png`, `.impeccable/mocks/rava-living-system-d2-menu-candidate.png`
+
+## 2026-09-02 — Original D composition restored; cup removal was the only requested visual change
+
+- **Decision:** The original RAVA Living System D composition is restored as the exact visual authority for the flagship Hero and Journey. Only the prominent cup and saucer on the upper page-builder canvas are removed; the navigation, open Mega Menu, layout density, perspective editor, lamp, stone forms, responsive-device column, release rail and cinematic four-stage Journey remain part of the approved design.
+- **Reason:** The owner clarified that the earlier request was limited to removing the cup, not replacing the overall design. The D2 redesign therefore exceeded the authorized visual scope.
+- **Supersedes:** The 2026-09-01 decision that D2 replaces D as visual authority. D2 remains preserved as historical work but is no longer the fidelity target.
+- **Implementation boundary:** Rebuild the approved composition with semantic, bilingual, CMS-driven HTML and optimized assets; do not ship the comp itself as a flattened webpage. A fresh desktop/mobile fidelity review is mandatory.
+- **Source:** `.impeccable/mocks/rava-living-system-d-cup-removed.png`

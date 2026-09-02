@@ -10,8 +10,8 @@
 - Interaction material: floating 3D glass Navbar, layered Mega Menu and compact tactile controls
 - Required routes: platform, services, verified work, process, about, contact
 - Locale: Persian RTL and English LTR
-- Approved comp: `.impeccable/mocks/rava-living-system-d2-candidate.png`
-- Approved interaction state: `.impeccable/mocks/rava-living-system-d2-menu-candidate.png`
-- Superseded comp retained for history: `.impeccable/mocks/rava-living-system-d.png`
-- Approval: owner-approved on 2026-09-01; implementation may improve craft and interaction but must not replace the approved topology or product-first hierarchy without a new approval round
+- Approved comp: `.impeccable/mocks/rava-living-system-d-cup-removed.png`
+- Approved interaction state: the open optical Mega Menu shown in the approved comp
+- Superseded comps retained for history: `.impeccable/mocks/rava-living-system-d2-candidate.png` and `.impeccable/mocks/rava-living-system-d2-menu-candidate.png`
+- Approval: owner clarified on 2026-09-02 that the original D composition is the exact visual authority and the requested revision was limited to removing the cup. Implementation must preserve D's topology, density, perspective editor, device rail, glass navigation and cinematic journey rather than replacing the design world.
 - Production: not authorized
