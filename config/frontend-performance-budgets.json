@@ -5,11 +5,12 @@
       "key": "rava-living-system-hero",
       "description": "Critical visual media for the RAVA TEAM flagship Hero",
       "maxTotalBytes": 327680,
-      "maxAssetBytes": 122880,
+      "maxAssetBytes": 102400,
       "assets": [
-        "public/templates/rava-living-system/hero-workspace-background.webp",
-        "public/templates/rava-living-system/editor-site-visual.webp",
-        "public/templates/rava-living-system/responsive-site-visual.webp"
+        "public/templates/rava-living-system/hero-v4/product-fa-desktop.webp",
+        "public/templates/rava-living-system/hero-v4/product-fa-mobile.webp",
+        "public/templates/rava-living-system/hero-v4/product-en-desktop.webp",
+        "public/templates/rava-living-system/hero-v4/product-en-mobile.webp"
       ]
     }
   ]

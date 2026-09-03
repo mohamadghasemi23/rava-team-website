@@ -194,3 +194,13 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Supersedes:** The V1 interactive previews remain design history, while V3 is the current implementation authority. Deployed commit `19af1da` remains visually rejected.
 - **Acceptance boundary:** This approval authorizes implementation only. Complete Gates, real coded desktop/mobile/menu captures and separate owner implementation acceptance are required before another Staging deployment.
 - **Source:** Owner approval on 2026-09-03.
+
+## 2026-09-03 — Single mountain-console Hero supersedes the V3 device cluster
+
+- **Decision:** The flagship Hero uses one monolithic dark-glass RAVA product display with the navy mountain website preview, a quiet pearl field, a realistic contact shadow and a concave transition into the navy Journey. The separate desktop/tablet/mobile device cluster is removed from the Hero.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-v4-hero-desktop-rest-approved.png`, `.impeccable/mocks/rava-flagship-v4-hero-desktop-design-approved.png` and `.impeccable/mocks/rava-flagship-v4-hero-mobile-rest-approved.png`.
+- **Interaction:** The four content/design/preview/publish nodes remain real pointer, touch and keyboard targets. Activation moves one restrained cobalt signal; the design state adds a small local selection treatment. Initial navigation remains closed.
+- **Localization and performance:** Persian and English receive dedicated localized desktop/mobile media; English media must contain no Persian script. Critical media remains CI-budgeted and the interaction must honor reduced motion.
+- **Supersedes:** The V3 three-device Hero composition at `b721072`. V3 remains deployment history, not the current visual target. Lower-page V3 sections are outside this Hero-only decision.
+- **Acceptance boundary:** The approved mock authorizes implementation, not acceptance. Full Gates and real coded desktop/mobile/rest/active captures must be reviewed before Staging deployment; Production, DNS and `ravateam.ir` remain unauthorized.
+- **Source:** Owner approvals and selected mountain direction on 2026-09-03.

@@ -40,29 +40,8 @@ function StageIcon({stage}:{stage:number}){
   ]
   return <svg className={styles.stageIcon} aria-hidden="true" viewBox="0 0 24 24">{paths[stage]}</svg>
 }
-function ProductVisual({portrait=false,isFa=true,activeStep=0}:{portrait?:boolean;isFa?:boolean;activeStep?:number}){
-  const labels=isFa
-    ?{content:'محتوا',design:'طراحی',preview:'پیش‌نمایش',publish:'انتشار',dashboard:'داشبورد',project:'پروژه فعال',website:'وب‌سایت رسمی راوا',ready:'آماده انتشار',pages:'صفحه‌ها',seo:'سئو',performance:'عملکرد',security:'امنیت'}
-    :{content:'Content',design:'Design',preview:'Preview',publish:'Publish',dashboard:'Dashboard',project:'Active project',website:'RAVA official website',ready:'Ready to publish',pages:'Pages',seo:'SEO',performance:'Performance',security:'Security'}
-  const stages=[labels.content,labels.design,labels.preview,labels.publish]
-  return <div className={`${styles.productVisual} ${portrait?styles.productPortrait:''}`} aria-hidden="true" data-stage={activeStep} dir={isFa?'rtl':'ltr'}>
-    <div className={styles.productTop}><Mark/><span>RAVA</span><strong>{labels.dashboard}</strong><i/></div>
-    <div className={styles.dashboardShell}>
-      <aside className={styles.dashboardNav}><b>{labels.project}</b>{stages.map((label,index)=><span className={index===activeStep?styles.productToolActive:undefined} key={label}><StageIcon stage={index}/>{label}</span>)}</aside>
-      <div className={styles.dashboardMain}>
-        <div className={styles.moduleGrid}>{stages.map((label,index)=><div className={index===activeStep?styles.moduleActive:undefined} key={label}><StageIcon stage={index}/><span><b>{label}</b><small>{index===activeStep?labels.ready:labels.dashboard}</small></span></div>)}</div>
-        <div className={styles.projectGrid}>
-          <article className={styles.projectCard}><small>{labels.project}</small><div className={styles.projectPreview}><i/><i/><i/></div><b>{labels.website}</b><span>rava.team</span></article>
-          <article className={styles.healthCard}><small>{labels.ready}</small>{[labels.pages,labels.seo,labels.performance,labels.security].map((label,index)=><span key={label}><b>{label}</b><i className={index<=activeStep?styles.healthReady:undefined}/></span>)}</article>
-        </div>
-      </div>
-    </div>
-    <div className={styles.productTabs}>{stages.map((label,index)=><span className={index===activeStep?styles.productTabActive:undefined} key={label}>{label}</span>)}</div>
-  </div>
-}
-
 export default function RavaLivingSystemPage({payload,navigation,previewBasePath}:Props){
-  const [activeStep,setActiveStep]=useState(0)
+  const [activeStep,setActiveStep]=useState<number|null>(null)
   const isFa=!payload.page.slug.endsWith('-en')&&(payload.site.locale||'fa').startsWith('fa')
   const t=isFa?copy.fa:copy.en
   const hero=payload.blocks.find((block:PublicBlock)=>block.type==='hero')
@@ -107,14 +86,16 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
         <section className={styles.hero} aria-labelledby="living-title">
           <div className={styles.heroCopy}><h1 id="living-title">{title}</h1><p>{body}</p><div className={styles.actions}><Link className={styles.primaryAction} href={contact}><span>{t.start}</span><Arrow/></Link><Link className={styles.secondaryAction} href="#rava-journey"><span>{t.view}</span><Arrow/></Link></div></div>
 
-          <div className={styles.productScene} data-active-step={activeStep} aria-label={isFa?'نمایی از صفحه‌ساز، پیش‌نمایش واکنش‌گرا و مسیر انتشار راوا':'RAVA page builder, responsive preview and publishing flow'}>
-            <div className={styles.editor}>
-              <div className={styles.editorRail}><Mark/><i/><i/><i/><i/></div>
-              <div className={styles.editorBody}><div className={styles.editorToolbar}><span>{t.canvas}</span><div><i/><i/><i/><i/></div></div><div className={styles.canvas}><ProductVisual isFa={isFa} activeStep={activeStep}/><div className={styles.canvasCopy}><b>{isFa?'از ساخت تا رشد؛ در یک سیستم':'From build to growth, in one system'}</b><span>{isFa?'محتوا، طراحی، سئو و انتشار کنار هم':'Content, design, SEO and release together'}</span></div></div></div>
-            </div>
-            <div className={styles.devices}><div className={styles.tablet}><ProductVisual portrait isFa={isFa} activeStep={activeStep}/></div><div className={styles.phone}><ProductVisual portrait isFa={isFa} activeStep={activeStep}/></div></div>
-            <ol className={styles.releaseRail}><li><span/><b>{t.draft}</b></li><li><span/><b>{t.preview}</b></li><li><span/><b>{t.published}</b></li></ol>
+          <div className={styles.heroProduct} data-active-step={activeStep??undefined} onPointerLeave={()=>setActiveStep(null)} aria-label={isFa?'نمای تعاملی مسیر محتوا، طراحی، پیش‌نمایش و انتشار راوا':'Interactive RAVA content, design, preview and publishing journey'}>
+            <picture className={styles.heroProductMedia} aria-hidden="true">
+              <source media="(max-width: 820px)" srcSet={`/templates/rava-living-system/hero-v4/product-${isFa?'fa':'en'}-mobile.webp`}/>
+              <img src={`/templates/rava-living-system/hero-v4/product-${isFa?'fa':'en'}-desktop.webp`} alt="" width="1536" height="1024" fetchPriority="high"/>
+            </picture>
+            <div className={styles.heroSignal} aria-hidden="true"/>
+            <div className={styles.heroHotspots}>{t.steps.map(([label],index)=><button key={label} type="button" aria-label={isFa?`نمایش مرحله ${label}`:`Show ${label} stage`} aria-pressed={activeStep===index} onClick={()=>setActiveStep(index)} onPointerEnter={()=>setActiveStep(index)} onFocus={()=>setActiveStep(index)}/>)}</div>
+            {activeStep===1?<div className={styles.heroSelection} aria-hidden="true"><span/><div className={styles.heroEditToolbar}><i>T</i><i>B</i><i>↔</i><i>＋</i></div></div>:null}
           </div>
+          <div className={styles.heroCurve} aria-hidden="true"/>
         </section>
 
         <section className={styles.journey} id="rava-journey" aria-labelledby="journey-title"><div className={styles.journeyHeader}><span>{t.journeyLabel}</span><h2 id="journey-title">{t.journey}</h2><p>{t.journeyIntro}</p></div><ol>{t.steps.map(([title,text],index)=><li className={index===activeStep?styles.stepActive:undefined} key={title}><button className={styles.stepTrigger} type="button" aria-pressed={index===activeStep} onClick={()=>setActiveStep(index)}><span className={styles.stepNumber}>{String(index+1).padStart(2,'0')}</span><span className={styles.stepCopy}><span className={styles.stepTitle}><StageIcon stage={index}/><b>{title}</b></span><span>{text}</span></span><span className={styles.stepScreen} data-screen={index} aria-hidden="true"><span/><span/><span/><span/><StageIcon stage={index}/></span></button></li>)}</ol></section>
