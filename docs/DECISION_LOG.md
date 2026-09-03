@@ -233,3 +233,12 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Responsive boundary:** The same containment and state isolation apply on mobile. A real coded desktop/mobile comparison remains required before implementation acceptance.
 - **Acceptance boundary:** This approval authorizes implementation only. Push, CI, Staging deployment and final visual acceptance remain separate Gates.
 - **Source:** Owner review of the V4.2 isolated Staging capture and explicit instruction to implement the V4.3 corrections on 2026-09-03.
+
+## 2026-09-03 — V4.4 visual authority is exact and regression-gated
+
+- **Decision:** The desktop, four-state interaction and mobile V4.4 previews are approved as exact implementation authority. Composition, relative scale, copy, navigation, unified pearl field, integrated display/plinth/shadow, concave transition and in-screen interaction may not be reinterpreted during implementation.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-v4-4-desktop-approved.png`, `.impeccable/mocks/rava-flagship-v4-4-interactions-approved.png` and `.impeccable/mocks/rava-flagship-v4-4-mobile-approved.png`.
+- **Implementation boundary:** Display, platform and contact shadow are one transparent responsive media system. Content, design, preview and publish each produce a distinct local state, and every effect is clipped inside the physical screen.
+- **Regression Gate:** Coded captures at 1536, 1240, 820 and 390 pixels plus resting and all four active states must be compared with the approved references. A passing Build alone is insufficient.
+- **Localization:** Persian V4.4 is authorized by the shown references. English remains on its safe prior media until an equivalent English V4.4 preview is reviewed; Persian pixels must never leak into English mode.
+- **Source:** Owner's explicit approval of all three V4.4 previews on 2026-09-03.

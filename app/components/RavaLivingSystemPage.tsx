@@ -41,7 +41,7 @@ function StageIcon({stage}:{stage:number}){
   return <svg className={styles.stageIcon} aria-hidden="true" viewBox="0 0 24 24">{paths[stage]}</svg>
 }
 export default function RavaLivingSystemPage({payload,navigation,previewBasePath}:Props){
-  const [heroStep,setHeroStep]=useState<number|null>(null)
+  const [heroStep,setHeroStep]=useState<number|null>(1)
   const [journeyStep,setJourneyStep]=useState<number|null>(null)
   const isFa=!payload.page.slug.endsWith('-en')&&(payload.site.locale||'fa').startsWith('fa')
   const t=isFa?copy.fa:copy.en
@@ -87,17 +87,20 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
         <section className={styles.hero} aria-labelledby="living-title">
           <div className={styles.heroCopy}><h1 id="living-title">{title}</h1><p>{body}</p><div className={styles.actions}><Link className={styles.primaryAction} href={contact}><span>{t.start}</span><Arrow/></Link><Link className={styles.secondaryAction} href="#rava-journey"><span>{t.view}</span><Arrow/></Link></div></div>
 
-          <div className={styles.heroProduct} data-active-step={heroStep??undefined} onPointerLeave={()=>setHeroStep(null)} aria-label={isFa?'نمای تعاملی مسیر محتوا، طراحی، پیش‌نمایش و انتشار راوا':'Interactive RAVA content, design, preview and publishing journey'}>
+          <div className={styles.heroProduct} data-active-step={heroStep??undefined} data-locale={isFa?'fa':'en'} aria-label={isFa?'نمای تعاملی مسیر محتوا، طراحی، پیش‌نمایش و انتشار راوا':'Interactive RAVA content, design, preview and publishing journey'}>
             <picture className={styles.heroProductMedia} aria-hidden="true">
-              <source media="(max-width: 820px)" srcSet={`/templates/rava-living-system/hero-v4/product-${isFa?'fa':'en'}-mobile.webp`}/>
-              <img src={`/templates/rava-living-system/hero-v4/product-${isFa?'fa':'en'}-desktop.webp`} alt="" width="1536" height="1024" fetchPriority="high"/>
+              <source media="(max-width: 820px)" srcSet={isFa?'/templates/rava-living-system/hero-v4-4/product-fa-mobile.webp':'/templates/rava-living-system/hero-v4/product-en-mobile.webp'}/>
+              <img src={isFa?'/templates/rava-living-system/hero-v4-4/product-fa-desktop.webp':'/templates/rava-living-system/hero-v4/product-en-desktop.webp'} alt="" width="1536" height="1024" fetchPriority="high"/>
             </picture>
-            <div className={styles.heroPlinth} aria-hidden="true"/>
+            {!isFa?<div className={styles.heroPlinth} aria-hidden="true"/>:null}
             <div className={styles.heroScreen}>
               <div className={styles.heroSignal} aria-hidden="true"/>
               <div className={styles.heroTrail} aria-hidden="true"/>
               <div className={styles.heroHotspots}>{t.steps.map(([label],index)=><button key={label} type="button" aria-label={isFa?`نمایش مرحله ${label}`:`Show ${label} stage`} aria-pressed={heroStep===index} onClick={()=>setHeroStep(index)} onPointerEnter={()=>setHeroStep(index)} onFocus={()=>setHeroStep(index)}/>)}</div>
+              {heroStep===0?<div className={styles.heroStatePanel} data-state="content" aria-hidden="true"><b>{isFa?'محتوای صفحه':'Page content'}</b><i/><i/><i/></div>:null}
               {heroStep===1?<div className={styles.heroSelection} aria-hidden="true"><span/><div className={styles.heroEditToolbar}><i>T</i><i>B</i><i>↔</i><i>＋</i></div></div>:null}
+              {heroStep===2?<div className={styles.heroStatePanel} data-state="preview" aria-hidden="true"><b>{isFa?'پیش‌نمایش واقعی':'Real preview'}</b><span/><span/><span/></div>:null}
+              {heroStep===3?<div className={styles.heroStatePanel} data-state="publish" aria-hidden="true"><i>✓</i><b>{isFa?'آماده انتشار':'Ready to publish'}</b><span>{isFa?'نسخه تأییدشده آماده است':'The approved version is ready'}</span></div>:null}
             </div>
           </div>
           <div className={styles.heroCurve} aria-hidden="true"/>

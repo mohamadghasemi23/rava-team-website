@@ -10,7 +10,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
-- **Last confirmed product/design commit pushed to the GitHub branch:** `5e3e072` (`docs: record flagship v4 hero state`), with implementation commit `84cd3da`
+- **Last confirmed product/design commit pushed to the GitHub branch:** `8b98252` (`design: isolate flagship hero interactions`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
 
 ## Current verified position
@@ -23,6 +23,8 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - The GitHub checks attached to approved-Base implementation `2598339` were observed successful on 2026-09-02: application Build, immutable Staging image Build, PostgreSQL migrations/security tests, dedicated PostgreSQL security workflow and the deploy preview. This is CI evidence only; no Staging/Production deploy or merge occurred.
 
 ### Staging
+
+- The owner reported that commit `8b98252` passed every isolated Staging deployment Gate on 2026-09-03. The subsequent real 1240px capture is visually rejected: despite corrected state isolation and a clean single curve, the product/plinth geometry, background integration, responsive scale and interaction registration still diverge materially from the approved preview. Production, DNS and `ravateam.ir` remain unchanged.
 
 - The owner reported that isolated Staging deployment of branch head `60e26d2` passed every deployment Gate on 2026-09-03. The subsequent full-page capture confirmed the V4 single-product Hero is materially more coherent than V3, but the owner requested an approved V4.1 polish pass before implementation acceptance. The exact deployment summary line and rollback image were not captured in repository evidence.
 - Last verified web deployment: approved-Base implementation `2598339` on 2026-09-02, with app/proxy/PostgreSQL/Auth/REST/Storage container health, infrastructure/home/login/admin/auth/REST/Storage HTTP behavior, runtime independence from Netlify, loopback-only proxy, AI-provider configuration and Compose validity Gates passing. The previous `d90f9e6` image remains available through `rava-web:rollback-staging`.
@@ -86,7 +88,9 @@ The owner approved the V4.1 desktop, mobile and hover previews on 2026-09-03. V4
 
 The owner approved V4.2 desktop and mobile previews as the correction authority. Commit `5fdf324` implemented the correction, passed the reported GitHub and isolated Staging Gates, and was deployed only to isolated Staging. The owner's resulting full-page capture confirms the single transition and cleaner hierarchy, but the implementation is not visually accepted: the hover still presents an unwanted frame, the display/plinth alignment remains visibly artificial, the Hero field is not fully continuous, and activating the Hero also expands Journey cards below it.
 
-The V4.3 desktop preview is approved and preserved at `.impeccable/mocks/rava-flagship-v4-3-desktop-approved.png`. The local V4.3 commit removes the hover frame while retaining the cobalt glint, unifies the pearl Hero field, recalibrates the display platform, clips every Hero interaction to the actual product-screen region, and separates Hero interaction state from the lower Journey state so an on-screen action cannot open cards beneath the display. This implementation is not yet pushed, CI-validated, browser-captured, implementation-accepted or deployed.
+The V4.3 desktop preview is approved and preserved at `.impeccable/mocks/rava-flagship-v4-3-desktop-approved.png`. Commit `8b98252` removed the hover frame, separated Hero/Journey state and passed GitHub and isolated Staging Gates, but its real browser result is rejected for visual-fidelity defects.
+
+The owner approved the complete V4.4 desktop, four-state interaction and mobile previews without modification. They are preserved at `.impeccable/mocks/rava-flagship-v4-4-desktop-approved.png`, `.impeccable/mocks/rava-flagship-v4-4-interactions-approved.png` and `.impeccable/mocks/rava-flagship-v4-4-mobile-approved.png`. The current worktree replaces the Persian Hero's opaque display and separately guessed CSS plinth with 212 KiB of responsive transparent, integrated display/plinth/shadow media; adds real in-screen content, design, preview and publish states; removes the 1240px oversizing; and keeps all interaction clipped within the screen. Feature standards, RPIM, TypeScript and a clean production Build pass inside the existing immutable application image. Fresh coded desktop/mobile/four-state browser captures remain mandatory; English V4.4 media still requires a separately reviewed localized visual before it can replace the existing English V4 asset.
 
 The first D restoration implementation pass now restores the dense desktop topology in code: solid pearl Hero ground, perspective page-builder canvas, separate tablet and phone previews, vertical draft/preview/published rail and the compact navy four-stage Journey. Both approved lamp-and-stone plates were restored from repository history, edited only to remove their cups/saucers, and compressed to a combined 28 KiB WebP browser payload with prompt provenance. The lower CMS-driven sections remain intact. Fresh real-browser desktop/mobile captures are still required before claiming visual acceptance.
 
@@ -105,8 +109,8 @@ The current workstream is implementation of owner-approved RAVA Living System D2
 
 ## Prioritized next actions
 
-1. Validate and commit the approved V4.3 Hero correction, then run all GitHub Gates without deploying it.
-2. Capture and compare the coded V4.3 Hero with the approved reference in desktop and mobile; obtain explicit implementation acceptance before another Staging deployment.
+1. Commit and push the approved V4.4 implementation, then require every GitHub Gate to pass without deploying it.
+2. Capture and compare coded V4.4 at 1536, 1240, 820 and 390 pixels in resting and all four active states; obtain explicit implementation acceptance before another Staging deployment.
 3. After Living System passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
 5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.
