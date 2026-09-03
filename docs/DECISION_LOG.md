@@ -224,3 +224,12 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Navigation:** Hover uses a minimal optical lens, a one-pixel cobalt glint and a two-pixel lift; bulky capsules and broad bloom are rejected.
 - **Acceptance boundary:** This approval authorizes implementation only. Full Gates and fresh coded desktop/mobile captures remain required before implementation acceptance or another Staging deployment.
 - **Source:** Owner review of the isolated Staging capture and explicit V4.2 approval on 2026-09-03.
+
+## 2026-09-03 — V4.3 unifies the Hero surface and isolates its interaction
+
+- **Decision:** V4.2 remains rejected as a final implementation. V4.3 removes the enclosing navigation-hover frame while preserving the short cobalt glint, uses one continuous depth-bearing pearl Hero surface, and treats the product display and its platform as one aligned object.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-v4-3-desktop-approved.png`.
+- **Interaction boundary:** All Hero hotspots, paths, selections and feedback must be clipped to the actual screen region. Hero state and the lower Journey-card state are independent; operating one must never open or mutate the other.
+- **Responsive boundary:** The same containment and state isolation apply on mobile. A real coded desktop/mobile comparison remains required before implementation acceptance.
+- **Acceptance boundary:** This approval authorizes implementation only. Push, CI, Staging deployment and final visual acceptance remain separate Gates.
+- **Source:** Owner review of the V4.2 isolated Staging capture and explicit instruction to implement the V4.3 corrections on 2026-09-03.

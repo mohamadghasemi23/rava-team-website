@@ -84,7 +84,9 @@ The current V4 Hero visual authority is the owner-approved mountain-console comp
 
 The owner approved the V4.1 desktop, mobile and hover previews on 2026-09-03. V4.1 preserves the V4 topology while adding controlled elevation hierarchy, an optical-glass navigation hover, tactile CTA depth, a physical pearl/smoked-glass display plinth, deeper contact shadow, cobalt underglow and a restrained active-stage trail. Commit `e66724c` was pushed, passed all GitHub Gates and was reported successfully deployed to isolated Staging. The real-browser capture is visually rejected: the under-plinth cobalt treatment reads as a misplaced lamp, the legacy Journey curve and Hero curve combine into a white aperture, the opaque product-media rectangle remains visible and the navigation hover is too heavy.
 
-The owner approved V4.2 desktop and mobile previews as the correction authority. The local V4.2 commit removes the under-plinth light, keeps the interaction trail inside the product screen, uses one Hero-to-Journey curve, soft-masks/blends the opaque product-media edge and reduces the menu hover to a lifted optical lens with a one-pixel cobalt glint. It is not yet pushed, CI-validated, browser-captured, implementation-accepted or deployed.
+The owner approved V4.2 desktop and mobile previews as the correction authority. Commit `5fdf324` implemented the correction, passed the reported GitHub and isolated Staging Gates, and was deployed only to isolated Staging. The owner's resulting full-page capture confirms the single transition and cleaner hierarchy, but the implementation is not visually accepted: the hover still presents an unwanted frame, the display/plinth alignment remains visibly artificial, the Hero field is not fully continuous, and activating the Hero also expands Journey cards below it.
+
+The V4.3 desktop preview is approved and preserved at `.impeccable/mocks/rava-flagship-v4-3-desktop-approved.png`. The local V4.3 commit removes the hover frame while retaining the cobalt glint, unifies the pearl Hero field, recalibrates the display platform, clips every Hero interaction to the actual product-screen region, and separates Hero interaction state from the lower Journey state so an on-screen action cannot open cards beneath the display. This implementation is not yet pushed, CI-validated, browser-captured, implementation-accepted or deployed.
 
 The first D restoration implementation pass now restores the dense desktop topology in code: solid pearl Hero ground, perspective page-builder canvas, separate tablet and phone previews, vertical draft/preview/published rail and the compact navy four-stage Journey. Both approved lamp-and-stone plates were restored from repository history, edited only to remove their cups/saucers, and compressed to a combined 28 KiB WebP browser payload with prompt provenance. The lower CMS-driven sections remain intact. Fresh real-browser desktop/mobile captures are still required before claiming visual acceptance.
 
@@ -103,8 +105,8 @@ The current workstream is implementation of owner-approved RAVA Living System D2
 
 ## Prioritized next actions
 
-1. Validate and commit the approved V4.2 Hero correction, then run all GitHub Gates without deploying it.
-2. Capture and compare the coded V4.2 Hero with the approved desktop/mobile references; obtain explicit implementation acceptance before another Staging deployment.
+1. Validate and commit the approved V4.3 Hero correction, then run all GitHub Gates without deploying it.
+2. Capture and compare the coded V4.3 Hero with the approved reference in desktop and mobile; obtain explicit implementation acceptance before another Staging deployment.
 3. After Living System passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
 5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.
