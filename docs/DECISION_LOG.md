@@ -214,3 +214,13 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Performance/accessibility:** Prefer transform/opacity and static CSS material layers; avoid continuous canvas/WebGL work and honor reduced-motion preferences.
 - **Acceptance boundary:** The preview authorizes implementation only. Full Gates and a fresh real-browser comparison remain mandatory before implementation acceptance or another Staging deployment.
 - **Source:** Owner approval on 2026-09-03.
+
+## 2026-09-03 — V4.2 removes the false underlight and duplicate curve
+
+- **Decision:** The V4.1 real-browser result is rejected and must not be promoted. V4.2 uses exactly one solid pearl-to-navy concave transition, one natural contact shadow and no luminous element beneath the display platform.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-v4-2-desktop-approved.png` and `.impeccable/mocks/rava-flagship-v4-2-mobile-approved.png`.
+- **Gamification boundary:** Cobalt feedback is confined to the product screen: active-stage halo, a thin internal path and local selection handles. No light source may appear below the product.
+- **Media boundary:** The product render must blend into the continuous pearl Hero field without a visible rectangular asset boundary.
+- **Navigation:** Hover uses a minimal optical lens, a one-pixel cobalt glint and a two-pixel lift; bulky capsules and broad bloom are rejected.
+- **Acceptance boundary:** This approval authorizes implementation only. Full Gates and fresh coded desktop/mobile captures remain required before implementation acceptance or another Staging deployment.
+- **Source:** Owner review of the isolated Staging capture and explicit V4.2 approval on 2026-09-03.
