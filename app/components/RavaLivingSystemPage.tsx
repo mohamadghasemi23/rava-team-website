@@ -91,7 +91,9 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
               <source media="(max-width: 820px)" srcSet={`/templates/rava-living-system/hero-v4/product-${isFa?'fa':'en'}-mobile.webp`}/>
               <img src={`/templates/rava-living-system/hero-v4/product-${isFa?'fa':'en'}-desktop.webp`} alt="" width="1536" height="1024" fetchPriority="high"/>
             </picture>
+            <div className={styles.heroPlinth} aria-hidden="true"/>
             <div className={styles.heroSignal} aria-hidden="true"/>
+            <div className={styles.heroTrail} aria-hidden="true"/>
             <div className={styles.heroHotspots}>{t.steps.map(([label],index)=><button key={label} type="button" aria-label={isFa?`نمایش مرحله ${label}`:`Show ${label} stage`} aria-pressed={activeStep===index} onClick={()=>setActiveStep(index)} onPointerEnter={()=>setActiveStep(index)} onFocus={()=>setActiveStep(index)}/>)}</div>
             {activeStep===1?<div className={styles.heroSelection} aria-hidden="true"><span/><div className={styles.heroEditToolbar}><i>T</i><i>B</i><i>↔</i><i>＋</i></div></div>:null}
           </div>

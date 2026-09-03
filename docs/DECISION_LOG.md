@@ -204,3 +204,13 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Supersedes:** The V3 three-device Hero composition at `b721072`. V3 remains deployment history, not the current visual target. Lower-page V3 sections are outside this Hero-only decision.
 - **Acceptance boundary:** The approved mock authorizes implementation, not acceptance. Full Gates and real coded desktop/mobile/rest/active captures must be reviewed before Staging deployment; Production, DNS and `ravateam.ir` remain unauthorized.
 - **Source:** Owner approvals and selected mountain direction on 2026-09-03.
+
+## 2026-09-03 — Controlled three-dimensional Hero polish approved
+
+- **Decision:** Add depth selectively to the V4 Hero through material edges, refraction, elevation and contact shadows. The optical-glass navigation, tactile CTA controls and monolithic product display receive distinct depth levels; the display sits on a thin pearl/smoked-glass plinth with a deeper shadow and restrained cobalt underglow.
+- **Visual authority:** `.impeccable/mocks/rava-flagship-v4-1-depth-desktop-approved.png`, `.impeccable/mocks/rava-flagship-v4-1-depth-mobile-approved.png` and `.impeccable/mocks/rava-flagship-v4-1-hover-approved.png`.
+- **Legibility:** Important product-screen labels, the four-stage journey and mountain-site content must remain visibly sharp and high contrast at the delivered desktop and mobile sizes.
+- **Gamification:** Hover, focus, tap or click may activate a subtle stage glow, light trail and local content selection. Points, invented achievements, mascots, confetti and attention-seeking perpetual motion remain excluded.
+- **Performance/accessibility:** Prefer transform/opacity and static CSS material layers; avoid continuous canvas/WebGL work and honor reduced-motion preferences.
+- **Acceptance boundary:** The preview authorizes implementation only. Full Gates and a fresh real-browser comparison remain mandatory before implementation acceptance or another Staging deployment.
+- **Source:** Owner approval on 2026-09-03.
