@@ -120,6 +120,14 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Consequence:** Open-menu imagery remains interaction documentation only; it is not the default page state. Keyboard and pointer activation retain the native disclosure behavior.
 - **Source:** `app/design-preview/rava-living-system/page.tsx`, `.impeccable/surfaces/rava-flagship.md`
 
+## 2026-09-04 — V4.4 Hero states use one visual authority per state
+
+- **Decision:** Each Persian Hero interaction state is rendered by one complete, responsive, transparent product image. Semantic hotspots remain in HTML, but CSS must not redraw the signal, selection, trail, panel or plinth already present in that state image.
+- **Reason:** The first V4.4 implementation combined a Design-state bitmap with independently positioned CSS overlays. The real Staging capture therefore double-rendered the interaction and diverged materially from the approved four-state preview.
+- **Performance boundary:** State media loads through responsive `picture` sources and is covered by a repository CI byte budget. English media remains on the existing localized asset until its own exact V4.4 visual is approved.
+- **Gate:** The correction is not visually accepted until fresh real-browser desktop, tablet-width and mobile captures—including all four states—match the approved previews.
+- **Source:** `.impeccable/mocks/rava-flagship-v4-4-interactions-approved.png`, `app/components/RavaLivingSystemPage.tsx`, `config/frontend-performance-budgets.json`
+
 ## 2026-09-02 — Exact visual approval precedes every user-facing implementation
 
 - **Decision:** No new or materially changed page, section, component, navigation, responsive composition or important interaction state is implemented until the owner has seen and explicitly approved its exact visual preview. Desktop, mobile and applicable interaction states are shown before implementation whenever practical. After coding, real-browser captures require a separate implementation-acceptance decision.

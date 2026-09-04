@@ -12,6 +12,22 @@
         "public/templates/rava-living-system/hero-v4/product-en-desktop.webp",
         "public/templates/rava-living-system/hero-v4/product-en-mobile.webp"
       ]
+    },
+    {
+      "key": "rava-living-system-hero-v4-4-states",
+      "description": "Lazy interaction-state media for the approved Persian flagship Hero",
+      "maxTotalBytes": 720000,
+      "maxAssetBytes": 130000,
+      "assets": [
+        "public/templates/rava-living-system/hero-v4-4/state-content-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-content-mobile.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-design-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-design-mobile.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-preview-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-preview-mobile.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-publish-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-publish-mobile.webp"
+      ]
     }
   ]
 }
