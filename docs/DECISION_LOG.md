@@ -15,6 +15,12 @@
 - **Visual authority:** `.impeccable/mocks/rava-ui-handoff/rava-commercial-carousel-cinematic-drag-approved.png` documents desktop resting, desktop 28% mid-drag and 390px mobile mid-swipe states.
 - **Acceptance boundary:** Preview approval authorizes implementation only. The coded result still requires real-browser desktop/mobile captures and owner acceptance before any Staging deployment; Production, DNS and `ravateam.ir` remain unauthorized.
 
+### 2026-09-05 — Superseded depth calibration
+
+- **Superseded:** The original three-degree/0.975-scale drag calibration was technically present but visually imperceptible on the large real carousel and is rejected by the owner.
+- **Replacement:** The approved strengthened calibration uses up to 7.5 degrees, 0.965 scale and 18px depth on desktop; up to 4.5 degrees, 0.975 scale and 10px depth on mobile; plus a directional edge, directional shadow and bounded internal parallax. Resting cards remain flat.
+- **Visual authority:** `.impeccable/mocks/rava-ui-handoff/rava-commercial-carousel-cinematic-drag-v2-approved.png` documents the approved strengthened desktop and mobile drag states.
+
 This append-only log records durable decisions and their rationale. Implementation remains subject to repository evidence and applicable Gates.
 
 If a decision changes, add a new entry that explicitly supersedes the old entry; do not silently rewrite history.
