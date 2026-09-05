@@ -28,6 +28,17 @@
         "public/templates/rava-living-system/hero-v4-4/state-publish-desktop.webp",
         "public/templates/rava-living-system/hero-v4-4/state-publish-mobile.webp"
       ]
+    },
+    {
+      "key": "rava-commercial-homepage-sectors",
+      "description": "Responsive editorial media for the commercial homepage sector carousel",
+      "maxTotalBytes": 180000,
+      "maxAssetBytes": 70000,
+      "assets": [
+        "public/templates/rava-commercial-homepage/professional-consulting.webp",
+        "public/templates/rava-commercial-homepage/healthcare-doctor.webp",
+        "public/templates/rava-commercial-homepage/education-mentorship.webp"
+      ]
     }
   ]
 }

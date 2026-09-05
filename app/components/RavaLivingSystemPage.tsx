@@ -5,6 +5,7 @@ import Link from 'next/link'
 import type {PublicBlock,PublicPagePayload} from '@/lib/cms/public-runtime'
 import type {PreviewNavigationItem} from './PublicPageView'
 import styles from './rava-living-system-v2.module.css'
+import RavaCommercialHomepage from './RavaCommercialHomepage'
 
 type Props={payload:PublicPagePayload;navigation:PreviewNavigationItem[];previewBasePath?:string}
 
@@ -66,6 +67,7 @@ export default function RavaLivingSystemPage({payload,navigation,previewBasePath
   const finalTitle=publicText(ctaBlock?.data?.title)||t.finalTitle
   const finalText=publicText(ctaBlock?.data?.text||ctaBlock?.data?.body||ctaBlock?.data?.description)||t.finalText
   const heroState=['content','design','preview','publish'][heroStep??1]
+  if(['home','home-en'].includes(payload.page.slug))return <RavaCommercialHomepage payload={payload} navigation={navigation} previewBasePath={previewBasePath}/>
   return <div className={styles.page} lang={isFa?'fa':'en'} dir={isFa?'rtl':'ltr'} data-template="rava-service-living-system">
     <a className={styles.skip} href="#living-main">{isFa?'رفتن به محتوای اصلی':'Skip to main content'}</a>
     <div className={styles.frame}>

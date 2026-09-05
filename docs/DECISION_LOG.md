@@ -1,5 +1,13 @@
 # RAVA Decision Log
 
+## 2026-09-05 — Sector showcase combines a cinematic resting frame with bounded three-dimensional drag
+
+- **Decision:** The commercial-homepage sector showcase uses one uninterrupted, full-width cinematic card at rest. Three-dimensional depth appears only while the visitor actively drags or swipes: the active surface rotates by no more than approximately three degrees, scales no lower than 0.975 and reveals the adjacent sector through direct manipulation. It returns to a flat, readable state after release.
+- **Behavior:** Embla Carousel 8.6.0 owns pointer, touch, keyboard-compatible scrolling and looping; its official Autoplay plugin advances every six seconds, resets after interaction and pauses for hover, focus, touch or explicit user pause. Manual pause remains independent from temporary interaction pauses.
+- **Accessibility/performance:** The implementation uses bounded CSS transforms rather than WebGL/Three.js. Reduced-motion mode stops autoplay and removes spatial 3D transforms while retaining usable manual controls and complete content.
+- **Visual authority:** `.impeccable/mocks/rava-ui-handoff/rava-commercial-carousel-cinematic-drag-approved.png` documents desktop resting, desktop 28% mid-drag and 390px mobile mid-swipe states.
+- **Acceptance boundary:** Preview approval authorizes implementation only. The coded result still requires real-browser desktop/mobile captures and owner acceptance before any Staging deployment; Production, DNS and `ravateam.ir` remain unauthorized.
+
 This append-only log records durable decisions and their rationale. Implementation remains subject to repository evidence and applicable Gates.
 
 If a decision changes, add a new entry that explicitly supersedes the old entry; do not silently rewrite history.
@@ -250,3 +258,33 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Regression Gate:** Coded captures at 1536, 1240, 820 and 390 pixels plus resting and all four active states must be compared with the approved references. A passing Build alone is insufficient.
 - **Localization:** Persian V4.4 is authorized by the shown references. English remains on its safe prior media until an equivalent English V4.4 preview is reviewed; Persian pixels must never leak into English mode.
 - **Source:** Owner's explicit approval of all three V4.4 previews on 2026-09-03.
+
+## 2026-09-04 — Commercial homepage replaces the gamified Hero workstream
+
+- **Decision:** Retire the flagship Hero's display gamification, hotspots and four-state light-trail interaction. The RAVA TEAM homepage is designed and evaluated as one commercial journey rather than an isolated Hero: clear promise, sector discovery, distinct Template showcase, content-ready delivery, simple customer path, platform proof, craft evidence, objections and one conversion path.
+- **Design principle:** No color, device metaphor or prior visual treatment is sacred. Contemporary design quality, product truth, conversion clarity, accessibility, performance, localization and CMS manageability decide what remains.
+- **Slider:** Sector discovery uses one large manual image slider immediately after the static Hero. It has no autoplay, shows a controlled edge of adjacent work, supports pointer/touch/keyboard operation and gives each sector a materially distinct visual direction.
+- **Visual base:** `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-desktop-base-approved.png` is approved as a starting base, not final polish. Generated photography and microcopy are illustrative and cannot become client proof or immutable text assets.
+- **Implementation boundary:** Public copy and media remain CMS-driven where corresponding blocks exist. Template geometry, responsive behavior and accessibility constraints remain controlled by the versioned Template. Real coded desktop/mobile captures and separate owner acceptance remain mandatory before deployment.
+- **Supersedes:** The interactive portions of the 2026-09-02 and 2026-09-03 V4 Hero decisions are historical evidence only and no longer active visual authority.
+- **Source:** Owner direction and approval to begin implementation on 2026-09-04.
+
+## 2026-09-05 — Commercial homepage Hero and sector showcase polish approved
+
+- **Decision:** The owner approved the exact desktop and mobile polish previews for the first commercial-homepage slice. They replace the rough Base geometry for navigation, Hero, curve and sector showcase without changing the broader commercial narrative.
+- **Visual authority:** `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-polish-desktop-approved.png` and `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-polish-mobile-approved.png`.
+- **Required corrections:** Every CTA has a visible label; the Hero uses a compact, continuous pearl field and a real RAVA service-site canvas; the navy transition is shallow; the sector showcase uses one manual control set and a text-free adjacent-slide cue; the initial healthcare slide uses truthful illustrative content without claims or statistics.
+- **Responsive boundary:** Mobile uses a closed compact menu, stacked Hero and one complete sector card with 44-pixel controls. It is an intentional mobile composition, not a compressed desktop layout.
+- **Performance boundary:** Static optimized media is preferred; there is no autoplay, gamification, continuous animation, Canvas or WebGL requirement.
+- **Acceptance boundary:** Preview approval authorizes implementation only. A real coded desktop/mobile capture and pointer, touch and keyboard checks are still required before implementation acceptance, Push or deployment.
+- **Source:** Owner's explicit approval on 2026-09-05.
+
+## 2026-09-05 — Commercial sector showcase gains restrained autoplay and distinct imagery
+
+- **Decision:** The owner approved the livelier desktop/mobile previews as the implementation authority for the current commercial Hero and sector showcase.
+- **Visual authority:** `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-autoplay-desktop-approved.png` and `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-autoplay-mobile-approved.png`.
+- **Carousel behavior:** Advance every six seconds; pause while hovered, focused or touched; restart timing after a manual slide change; expose a visible pause/resume control; disable autoplay for `prefers-reduced-motion`.
+- **Composition:** Remove the detached adjacent-slide rectangle entirely. Show one complete art-directed sector card, one timer line and one control group.
+- **Media:** Professional services, health and education use three distinct project-owned editorial WebP images. Generated people are illustrative Template subjects, never represented as RAVA staff, customers or endorsements.
+- **Acceptance boundary:** Full repository Gates and loopback checks do not replace a real coded desktop/mobile browser comparison and interaction review. Push and deployment remain separate actions.
+- **Source:** Owner's explicit approval on 2026-09-05.

@@ -6,7 +6,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Snapshot
 
-- **Last updated:** 2026-09-03 UTC
+- **Last updated:** 2026-09-05 UTC
 - **Current milestone:** Complete the services-first Customer Zero path on isolated Staging before any Production release.
 - **Active branch:** `agent/platform-core-foundation`
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
@@ -60,7 +60,11 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 
 ## Active workstream
 
-**Visual rejection recorded 2026-09-02:** The owner rejected the coded D restoration at `4b07df8`: it did not match the reference, lacked the defining curved transition, produced a disordered three-image Hero and reintroduced unrelated lamp/stone imagery. It must not be deployed or used as a visual baseline. The next design step is a pre-implementation visual round only: exact desktop/mobile comps and material states must be shown and explicitly approved before any replacement code is written.
+**Active visual implementation updated 2026-09-05:** The owner approved the livelier commercial-homepage desktop/mobile previews at `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-autoplay-desktop-approved.png` and `.impeccable/mocks/rava-ui-handoff/rava-commercial-homepage-autoplay-mobile-approved.png`. The local uncommitted first slice now implements its labeled optical navigation, atmospheric static Hero, real RAVA service-site canvas, shallow transition and one-card sector showcase. The detached adjacent-card rectangle is removed. Professional services, health and education use distinct project-owned WebP imagery totaling about 150 KiB under a new 180,000-byte CI budget. The carousel advances every six seconds, pauses for hover/focus/touch, supports explicit pause/resume and manual navigation, and disables autoplay under reduced motion. `RavaLivingSystemPage.tsx` routes only `home`/`home-en` to this component, preserving non-home rollback behavior. TypeScript, Feature Standards, RPIM verification and the updated frontend media budget pass; a fresh production Build and loopback recheck follow the favicon fallback correction. A real coded browser capture and pointer/touch/keyboard checks remain required; implementation is not yet visually accepted. No Commit, Push, deployment, Production, DNS or `ravateam.ir` change occurred.
+
+The owner subsequently approved the exact cinematic resting, desktop mid-drag and mobile mid-swipe authority generated as `exec-68392580-2e7f-4a2b-a071-0e0a0a5584bd.png`. The local uncommitted carousel now uses Embla 8.6.0 with the official Autoplay plugin: resting cards remain flat and full-width; pointer/touch dragging reveals the adjacent slide while applying a bounded three-degree/0.975-scale treatment; release settles over 560 ms; autoplay resets after interaction; manual pause is independent from temporary hover/focus/touch pauses; and reduced-motion mode disables autoplay and 3D transforms. Feature Standards, RPIM verification, frontend performance budgets, TypeScript and the production Build pass with Node 22.23.2, and the locally served production Build returns HTTP 200. Automated real-browser capture is unavailable because this environment has no Playwright/Chromium runtime, so visual fidelity, drag feel, keyboard flow and responsive acceptance remain open Gates. No Commit, Push, deployment, Production, DNS or `ravateam.ir` change occurred.
+
+Embla Carousel React and its official Autoplay plugin are now locally installed and manifest-pinned at `8.6.0`; Node resolution and `npm ls` confirm the complete dependency graph. The installed footprint is about 1.3 MiB. Integration is intentionally blocked on owner approval of the resting, mid-drag and mobile mid-swipe visual states; no existing carousel implementation has yet been replaced by Embla.
 
 Pre-implementation Base `rava-flagship-base-v1.png`, its mobile adaptation and its open-Mega-Menu interaction state were explicitly approved by the owner on 2026-09-02. Together they define one connected RAVA page-building/branding/content/release system, responsive behavior, a pronounced curved Hero boundary and a four-stage navy Journey. The first focused implementation is committed at `2598339`; all GitHub CI and immutable-image Gates passed, and that exact image passed the isolated rollback-aware Staging deployment Gates on 2026-09-02. It is not yet implementation-accepted: fresh real-browser desktop/mobile/open-menu captures must still be compared with the approved previews and explicitly accepted by the owner.
 
@@ -109,8 +113,8 @@ The current workstream is implementation of owner-approved RAVA Living System D2
 
 ## Prioritized next actions
 
-1. Commit the V4.4 root correction after local Gates, then request explicit approval before pushing it to PR #2.
-2. After GitHub Gates pass, request separate isolated-Staging deployment approval and capture the coded V4.4 at 1536, 1240, 820 and 390 pixels in resting and all four active states; obtain explicit implementation acceptance.
+1. Capture the new coded navigation, Hero and sector slider at desktop and mobile widths in an available browser and compare them with the approved 2026-09-05 polish previews; exercise manual slider and mobile-menu keyboard/touch behavior.
+2. Correct the first bounded visual comparison before implementing the remaining commercial homepage sections; obtain explicit owner acceptance before Push or isolated-Staging deployment.
 3. After Living System passes owner acceptance, hide/deprecate legacy Templates from new selection while preserving referenced renderers, revisions, releases and rollback paths; do not alter Production.
 4. Continue the structured owner usability walkthrough from site creation through content, pages, preview, Template selection and approval.
 5. Audit every existing Template against `docs/TEMPLATE_PORTFOLIO_STANDARD.md`; retain, redesign, merge or deprecate weak duplicates before approving the ten-family service portfolio roadmap.
