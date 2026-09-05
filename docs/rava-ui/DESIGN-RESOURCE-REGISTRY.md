@@ -48,6 +48,8 @@ Good discovery pools include the [Vercel Next.js Template marketplace](https://v
 
 ## Complete Template candidates — first screening
 
+> **Owner verdict (2026-09-05): Rejected.** The three candidates below were judged visually too weak for RAVA. They remain only as screening history and must not be presented again as flagship directions.
+
 ### Bigspring Light Next.js
 
 - **Source/demo:** https://github.com/themefisher/bigspring-light-nextjs and https://bigspring-light-nextjs.vercel.app/
@@ -74,3 +76,33 @@ Good discovery pools include the [Vercel Next.js Template marketplace](https://v
 - **Cruip Open:** polished and complete, but its stated terms prohibit republishing, redistribution or resale of the Template; unsuitable as a multi-customer RAVA Template foundation.
 - **Blazity Next SaaS Starter:** MIT and feature-rich, but built around Next.js 12/React 17 plus TinaCMS, SendGrid and styled-components. Integration would import obsolete and duplicate infrastructure.
 - **next-startd:** MIT but based on Next.js 10/React 17 and obsolete dependencies; rejected for the active platform.
+
+## High-craft source pool — second screening
+
+### Claude Directory
+
+- **Source:** https://github.com/pulkitxm/claude-directory
+- **License:** MIT at repository root; bundled fonts and media still require an asset-level provenance check before redistribution.
+- **Observed offering:** Hundreds of self-contained landing pages, complete Templates, Heroes, motion studies and Three.js/WebGL experiments. Each project includes its originating prompt and a recorded working demo; many also vendor their assets for offline use.
+- **Best RAVA use:** Source complete visual foundations and proven interaction/component patterns instead of repeatedly rebuilding them from scratch. Port selected code into RAVA's existing Next.js, CMS, localization, tenancy, Template-versioning and accessibility contracts rather than importing a second application architecture.
+- **Quality warning:** The repository explicitly identifies the projects as AI-generated and requires code, dependency, accessibility and responsive review before production use. A polished demo is candidate evidence, not implementation proof.
+- **Workflow status:** Approved as a bounded discovery and code-source pool. No Template has been imported yet.
+
+### Second-screening finalists
+
+1. **Superdesign Cinematic Agency** — dark cinematic agency foundation with a 3D rolodex Hero, case-study bento, commercial pricing/calculator journey and editorial close. Strongest expressive option for a creative RAVA Template family, but its rotating Hero and oversized typography require Persian/RTL and performance adaptation.
+   - Preview: https://github.com/pulkitxm/claude-directory/blob/main/templates/superdesign-cinematic-agency/demo.mp4
+   - Code: https://github.com/pulkitxm/claude-directory/tree/main/templates/superdesign-cinematic-agency
+2. **Velvet Vellum Agency** — quiet-luxury editorial agency foundation on warm paper and oxblood, with restrained interactions, work bento, method, testimonials and perspective-grid footer. Strongest minimal, premium service-business direction; factual proof sections must remain hidden until RAVA receives verified evidence.
+   - Preview: https://github.com/pulkitxm/claude-directory/blob/main/landing-pages/velvet-vellum-agency-h4/demo.mp4
+   - Code: https://github.com/pulkitxm/claude-directory/tree/main/landing-pages/velvet-vellum-agency-h4
+3. **Paper Circuit Agentic SaaS** — light paper/blueprint product foundation with a complete product mockup, controlled pointer depth, bento capabilities, enterprise narrative and commercial CTA flow. Strongest structural match for selling the RAVA Platform, subject to removing AI-category language and replacing every mock product claim with real RAVA capability.
+   - Preview: https://github.com/pulkitxm/claude-directory/blob/main/landing-pages/paper-circuit-agentic-saas-h16/demo.mp4
+   - Code: https://github.com/pulkitxm/claude-directory/tree/main/landing-pages/paper-circuit-agentic-saas-h16
+
+### Not promoted from the second screening
+
+- **Enterprise Admin SaaS:** technically relevant but visually too close to a conventional corporate security dashboard; retain only as a source of enterprise proof-section patterns.
+- **Flux Editorial SaaS:** distinctive but intentionally loud and brutalist; unsuitable for the current flagship's restrained premium brief, though it may inform a future high-energy Template family.
+- **Superdesign Modern Atmospheric:** polished but visually category-generic for contemporary AI tools and dependent on familiar glow/glass tropes.
+- **Obsidian Elite:** strong monochrome art direction but optimized for an invite-only waitlist rather than RAVA's service-and-platform commercial journey.

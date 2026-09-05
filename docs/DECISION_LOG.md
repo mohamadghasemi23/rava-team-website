@@ -316,3 +316,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Media:** Professional services, health and education use three distinct project-owned editorial WebP images. Generated people are illustrative Template subjects, never represented as RAVA staff, customers or endorsements.
 - **Acceptance boundary:** Full repository Gates and loopback checks do not replace a real coded desktop/mobile browser comparison and interaction review. Push and deployment remain separate actions.
 - **Source:** Owner's explicit approval on 2026-09-05.
+
+## 2026-09-05 — Weak first-round Template candidates are rejected
+
+- **Decision:** Bigspring Light, Creative Agency Portfolio by Terminal Blank and Nextly are rejected as visual foundations for RAVA because the owner found them substantially below the required design level.
+- **Consequence:** They remain research history only and must not be presented again as leading directions. Future screening starts from demonstrably high-craft, complete foundations with working visual demos and clear commercial reuse rights.
+- **Replacement pool:** The MIT-licensed `pulkitxm/claude-directory` is registered as a bounded source pool. Candidate code remains subject to asset-provenance, accessibility, responsiveness, performance and architecture review before selective import.
+- **Gate:** No candidate is selected or authorized for implementation merely by appearing in the registry. The owner must review the actual demo and approve the exact adapted desktop/mobile visual before code integration.
+- **Source:** Owner rejection and follow-up direction on 2026-09-05.
