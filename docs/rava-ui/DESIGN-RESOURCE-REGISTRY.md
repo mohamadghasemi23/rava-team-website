@@ -106,3 +106,15 @@ Good discovery pools include the [Vercel Next.js Template marketplace](https://v
 - **Flux Editorial SaaS:** distinctive but intentionally loud and brutalist; unsuitable for the current flagship's restrained premium brief, though it may inform a future high-energy Template family.
 - **Superdesign Modern Atmospheric:** polished but visually category-generic for contemporary AI tools and dependent on familiar glow/glass tropes.
 - **Obsidian Elite:** strong monochrome art direction but optimized for an invite-only waitlist rather than RAVA's service-and-platform commercial journey.
+
+### Additional high-craft candidates
+
+4. **Superdesign Studio Editorial** — strict black-and-white creative-studio foundation driven by large editorial typography, per-letter reveals, a motion marquee and grayscale-to-color project work. It offers a materially different portfolio-led Template family for creative agencies, photographers and personal brands. The custom cursor must become progressive enhancement and all motion must honor keyboard, touch and reduced-motion behavior.
+   - Preview: https://github.com/pulkitxm/claude-directory/blob/main/templates/superdesign-studio-editorial/demo.mp4
+   - Code: https://github.com/pulkitxm/claude-directory/tree/main/templates/superdesign-studio-editorial
+5. **Super Design Industrial System** — warm industrial/editorial foundation with a structural 12-column grid, split Hero, interactive project list, clip-path media reveals, technical journal and large dark footer. It is the strongest systems-and-craft direction in this round and could demonstrate RAVA's design, content and platform capability without resembling a conventional SaaS landing page.
+   - Preview: https://github.com/pulkitxm/claude-directory/blob/main/templates/super-design-industrial-system/demo.mp4
+   - Code: https://github.com/pulkitxm/claude-directory/tree/main/templates/super-design-industrial-system
+6. **Superdesign Crimson Craft** — dark-luxury, high-ticket service foundation with sticky glass navigation, strong image-led Hero, trust bar, asymmetric service architecture, drag-scroll before/after work and a forceful conversion close. It is a useful foundation for premium service sectors, but fabricated urgency, ROI, avatars and testimonials must be removed until backed by verified customer evidence.
+   - Preview: https://github.com/pulkitxm/claude-directory/blob/main/templates/superdesign-crimson-craft/demo.mp4
+   - Code: https://github.com/pulkitxm/claude-directory/tree/main/templates/superdesign-crimson-craft
