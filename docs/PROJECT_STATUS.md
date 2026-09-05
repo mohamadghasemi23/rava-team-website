@@ -13,6 +13,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Last confirmed product/design commit pushed to the GitHub branch:** `8b98252` (`design: isolate flagship hero interactions`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
 - **Fast visual loop:** `rava-preview` serves the guarded design route with hot reload on loopback-only port `13100`; Push, CI and immutable Staging deployment are reserved for owner-approved release candidates.
+- **Carousel replacement tooling:** Official `swiper@14.2.0` is now pinned in the project and the global Swiper documentation/demo MCP is configured at `https://swiperjs.com/mcp`. No carousel code has been replaced yet; Embla remains until the exact Swiper-based visual preview is owner-approved and implemented through the fast preview loop.
 
 ## Current verified position
 

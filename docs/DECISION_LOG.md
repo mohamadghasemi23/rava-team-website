@@ -1,5 +1,13 @@
 # RAVA Decision Log
 
+## 2026-09-05 — RAVA Templates start from licensed professional foundations
+
+- **Decision:** New RAVA Template families do not begin from a blank canvas. Each begins with a screened, production-quality codebase or Template whose license permits RAVA's intended commercial use, then passes through a bounded adaptation layer for RAVA CMS data, localization/RTL, theming, responsive behavior, accessibility, performance, SEO, tenant scope, versioning, preview and rollback.
+- **Speed objective:** Research, selection and owner preview precede integration. Reusable sections and interactions should come from approved registries or official demos instead of being recreated through repeated visual trial and error.
+- **Ownership boundary:** Small visual edits do not erase copyright or change a restrictive license. Publicly visible design is not automatically reusable code. Prefer MIT, Apache-2.0, BSD, properly purchased commercial licenses, or assets commissioned for RAVA; preserve notices and provenance where required.
+- **Product boundary:** A source Template is an implementation foundation, not the final product model. Customer content, permissions, entitlements and publishing remain controlled by RAVA rather than by a copied Template's assumptions.
+- **Delivery model:** Use the fast loopback preview for adaptation; run full CI and immutable Staging deployment once after owner approval of a release candidate.
+
 ## 2026-09-05 — Visual iteration uses a loopback-only fast preview
 
 - **Decision:** Routine visual iteration runs through a persistent Next.js development preview bound only to `127.0.0.1:13100`; Commit, GitHub CI, immutable-image Build and isolated Staging deployment are reserved for owner-approved release candidates.
