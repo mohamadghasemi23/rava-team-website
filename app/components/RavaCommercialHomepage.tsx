@@ -49,7 +49,7 @@ export default function RavaCommercialHomepage({payload,navigation,previewBasePa
     emblaApi.scrollTo(1,true);select()
     return()=>{emblaApi.off('select',select).off('settle',settle)}
   },[clearDragProgress,emblaApi])
-  useEffect(()=>{const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(paused||reduced)autoplay.current.stop();else autoplay.current.play()},[paused])
+  useEffect(()=>{if(!emblaApi)return;const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;if(paused||reduced)autoplay.current.stop();else autoplay.current.play()},[emblaApi,paused])
   return <div className={styles.page} dir={isFa?'rtl':'ltr'} lang={isFa?'fa':'en'}>
     <a className={styles.skip} href="#main">{isFa?'رفتن به محتوای اصلی':'Skip to main content'}</a>
     <header className={styles.header}>
