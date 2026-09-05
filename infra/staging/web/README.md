@@ -19,7 +19,7 @@ Before switching a tag, the deploy script records the current image, pulls the e
 
 The GitHub repository must define `STAGING_PUBLIC_ORIGIN` as an Actions variable and `STAGING_SUPABASE_PUBLISHABLE_KEY` as an Actions secret. The VPS Docker client must have read access to the repository's private GHCR package. Neither the Supabase service-role key nor any server secret is used in the image build.
 
-The owner-only SEO assistant reads its server-only provider configuration from `/opt/rava/staging/web/ai.env` by default. The file must be readable by the deployment operator, have mode `600`, and define `OPENAI_API_KEY` and `RAVA_OPENAI_MODEL`. It stays outside the repository and image. The deployment script passes it to Docker Compose only at runtime; neither value uses a `NEXT_PUBLIC_` prefix or becomes browser-visible.
+The owner-only SEO assistant reads its optional server-only provider configuration from `/opt/rava/staging/web/ai.env` by default. The file must be readable by the deployment operator and have mode `600`; `OPENAI_API_KEY` may be absent or empty while AI suggestions are disabled, and `RAVA_OPENAI_MODEL` defaults to `gpt-5`. The file stays outside the repository and image. The deployment script passes it to Docker Compose only at runtime; neither value uses a `NEXT_PUBLIC_` prefix or becomes browser-visible. Missing AI credentials never block the website or Staging deployment.
 
 Operations may run as `root` or as the restricted `ravaops` user when its Docker group membership is active. The backup script defaults to `/opt/rava/backups/staging`; `RAVA_BACKUP_DIR` may select another protected, persistent directory owned by the backup operator when root access is intentionally unavailable.
 

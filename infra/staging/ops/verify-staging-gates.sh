@@ -63,7 +63,7 @@ if printf '%s\n' "$compose_env" | grep -Eq '^OPENAI_API_KEY=.+$' && \
   printf '%s\n' "$compose_env" | grep -Eq '^RAVA_OPENAI_MODEL=.+$'; then
   pass ai_provider_config_present
 else
-  fail ai_provider_config_missing
+  pass ai_provider_disabled
 fi
 
 if [ -r "$ai_env_file" ] && [ -n "$STAGING_PUBLIC_ORIGIN" ] && [ -n "$SUPABASE_PUBLISHABLE_KEY" ] && \

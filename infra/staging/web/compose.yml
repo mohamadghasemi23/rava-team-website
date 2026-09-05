@@ -11,8 +11,8 @@ services:
       NEXT_PUBLIC_SITE_URL: ${STAGING_PUBLIC_ORIGIN:?set STAGING_PUBLIC_ORIGIN}
       RAVA_PUBLIC_SITE_HOSTNAME: ${RAVA_PUBLIC_SITE_HOSTNAME:-}
       RAVA_DESIGN_PREVIEW: "1"
-      OPENAI_API_KEY: ${OPENAI_API_KEY:?set OPENAI_API_KEY in the protected Staging AI environment file}
-      RAVA_OPENAI_MODEL: ${RAVA_OPENAI_MODEL:?set RAVA_OPENAI_MODEL in the protected Staging AI environment file}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      RAVA_OPENAI_MODEL: ${RAVA_OPENAI_MODEL:-gpt-5}
     networks: [web, supabase]
     init: true
     read_only: true

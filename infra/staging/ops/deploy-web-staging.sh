@@ -15,8 +15,6 @@ printf '%s\n' "$new_tag" | grep -Eq '^[0-9a-f]{7,40}$' || { echo 'usage: deploy-
 [ -r "$ai_env_file" ] || { echo 'protected Staging AI environment file is not readable' >&2; exit 1; }
 ai_env_mode=$(stat -c '%a' "$ai_env_file")
 [ "$ai_env_mode" = 600 ] || { echo 'protected Staging AI environment file must have mode 600' >&2; exit 1; }
-grep -Eq '^OPENAI_API_KEY=.+$' "$ai_env_file" || { echo 'OPENAI_API_KEY is missing from the protected Staging AI environment file' >&2; exit 1; }
-grep -Eq '^RAVA_OPENAI_MODEL=.+$' "$ai_env_file" || { echo 'RAVA_OPENAI_MODEL is missing from the protected Staging AI environment file' >&2; exit 1; }
 
 cd "$repo_dir"
 head_sha=$(git -c safe.directory="$repo_dir" rev-parse HEAD)

@@ -1,5 +1,12 @@
 # RAVA Decision Log
 
+## 2026-09-05 — Optional AI providers never block core deployment
+
+- **Decision:** OpenAI credentials are optional runtime configuration. Their absence disables only AI-backed suggestions and must never block the website, Admin, Staging deployment or core health Gates.
+- **Behavior:** Compose supplies an empty server-only key when none is configured, the deployment Gate reports `ai_provider_disabled`, and the Admin returns a localized disabled-service message rather than describing the whole system as broken.
+- **Security:** No placeholder or fabricated credential is stored. When a real key is later configured it remains server-only in the protected mode-600 environment file.
+- **Commercial boundary:** AI remains an optional owner capability and future entitlement; baseline CMS, SEO fields and deployment do not depend on paid provider credit.
+
 ## 2026-09-05 — Sector showcase combines a cinematic resting frame with bounded three-dimensional drag
 
 - **Decision:** The commercial-homepage sector showcase uses one uninterrupted, full-width cinematic card at rest. Three-dimensional depth appears only while the visitor actively drags or swipes: the active surface rotates by no more than approximately three degrees, scales no lower than 0.975 and reveals the adjacent sector through direct manipulation. It returns to a flat, readable state after release.
