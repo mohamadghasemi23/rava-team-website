@@ -45,3 +45,32 @@ Good discovery pools include the [Vercel Next.js Template marketplace](https://v
 - **Approved RAVA uses:** Three-dimensional and cinematic carousels using `EffectCreative`, `EffectCoverflow` or `EffectCards`; drag/swipe, autoplay, keyboard navigation, pagination and accessibility through official modules rather than hand-built gesture math.
 - **Integration rule:** Import only required modules and CSS. Preserve reduced-motion behavior, semantic content, responsive review and the RAVA performance budget. Do not use Swiper Studio or premium output unless separately approved and licensed.
 - **Workflow status:** `swiper@14.2.0` is manifest-pinned and locally available; the global `swiper` MCP points to `https://swiperjs.com/mcp`. Embla remains temporarily installed until an owner-approved Swiper preview replaces the current implementation.
+
+## Complete Template candidates — first screening
+
+### Bigspring Light Next.js
+
+- **Source/demo:** https://github.com/themefisher/bigspring-light-nextjs and https://bigspring-light-nextjs.vercel.app/
+- **License:** MIT for code; bundled demonstration images are explicitly not licensed for reuse.
+- **Fit:** Strong structural candidate: Next.js 16.2, React 19, Tailwind 4, Swiper 14, nine-plus pages, blog, contact, features, FAQ, pricing, legal pages, SEO and responsive implementation.
+- **Assessment:** Highest compatibility and lowest integration risk in the first screening. Its stock visual identity is not sufficiently distinctive for flagship RAVA, so it is suitable as a page/component foundation only after an approved visual-direction pass and replacement of all demo imagery.
+
+### Creative Agency Portfolio by Terminal Blank
+
+- **Source:** https://github.com/Terminal-Blank/creative-agency-portfolio
+- **License:** MIT.
+- **Fit:** Next.js 15, React 19, Tailwind 4 and Framer Motion; includes Hero, service Bento grid, work, testimonials, team and contact sections with glass/gradient/motion styling.
+- **Assessment:** More expressive than Bigspring and straightforward to port, but it is a young, low-adoption single-page repository with less production evidence and fewer complete site pages. Visual and accessibility review are mandatory before selection.
+
+### Nextly
+
+- **Source/demo:** https://github.com/web3templates/nextly-template and http://nextly.web3templates.com/
+- **License:** MIT.
+- **Fit:** Next.js 14, React 18, Tailwind 3, Headless UI and a complete responsive marketing-page structure.
+- **Assessment:** Clean and legally reusable, but its technology and visual language are older than RAVA's current baseline. Retain as a simple fallback or source of content structure, not the leading flagship candidate.
+
+## Rejected during first screening
+
+- **Cruip Open:** polished and complete, but its stated terms prohibit republishing, redistribution or resale of the Template; unsuitable as a multi-customer RAVA Template foundation.
+- **Blazity Next SaaS Starter:** MIT and feature-rich, but built around Next.js 12/React 17 plus TinaCMS, SendGrid and styled-components. Integration would import obsolete and duplicate infrastructure.
+- **next-startd:** MIT but based on Next.js 10/React 17 and obsolete dependencies; rejected for the active platform.
