@@ -1,0 +1,22 @@
+{
+  "allowUncovered": true,
+  "regions": [
+    { "id": "creative-workspace-ground", "kind": "texture", "box": { "x": 0, "y": 0, "w": 1, "h": 0.645 }, "note": "Atmospheric web-design and content-production workspace texture behind the first viewport", "plate": "public/templates/rava-living-system/hero-workspace-background.png" },
+    { "id": "floating-navigation", "kind": "chrome", "box": { "x": 0.145, "y": 0.018, "w": 0.615, "h": 0.087 }, "note": "Pearl optical-glass floating navigation with brand, routes, platform trigger and compact primary action" },
+    { "id": "hero-headline", "kind": "text", "box": { "x": 0.072, "y": 0.142, "w": 0.245, "h": 0.162 }, "note": "Three-line Persian flagship promise with strong editorial hierarchy" },
+    { "id": "hero-deck", "kind": "text", "box": { "x": 0.078, "y": 0.326, "w": 0.225, "h": 0.074 }, "note": "Concise Persian explanation of the managed RAVA website operating system" },
+    { "id": "hero-actions", "kind": "control", "box": { "x": 0.078, "y": 0.409, "w": 0.212, "h": 0.079 }, "note": "Compact tactile consultation and platform-discovery actions" },
+    { "id": "editor-shell", "kind": "chrome", "box": { "x": 0.300, "y": 0.272, "w": 0.467, "h": 0.374 }, "note": "Perspective RAVA page editor shell with page tree, toolbar and editable canvas" },
+    { "id": "editor-site-visual", "kind": "image", "box": { "x": 0.358, "y": 0.325, "w": 0.390, "h": 0.293 }, "note": "RAVA product-system visualization connecting page building, bilingual content, brand design, SEO, responsive review and safe publishing", "bleed": true, "plate": "public/templates/rava-living-system/editor-site-visual.png" },
+    { "id": "responsive-device-preview", "kind": "chrome", "box": { "x": 0.854, "y": 0.298, "w": 0.117, "h": 0.335 }, "note": "Responsive phone frame showing the same RAVA site at a production breakpoint" },
+    { "id": "responsive-site-visual", "kind": "image", "box": { "x": 0.862, "y": 0.336, "w": 0.102, "h": 0.277 }, "note": "Portrait RAVA product-system visualization showing the same capability journey in responsive form", "bleed": true, "plate": "public/templates/rava-living-system/responsive-site-visual.png" },
+    { "id": "cinematic-journey-ground", "kind": "chrome", "box": { "x": 0, "y": 0.645, "w": 1, "h": 0.355 }, "note": "One continuous midnight journey surface with restrained luminous flow and depth", "container": true },
+    { "id": "walkthrough-heading", "kind": "text", "box": { "x": 0.672, "y": 0.701, "w": 0.266, "h": 0.086 }, "note": "Persian heading introducing the guided RAVA operating journey" },
+    { "id": "walkthrough-deck", "kind": "text", "box": { "x": 0.345, "y": 0.734, "w": 0.250, "h": 0.061 }, "note": "Supporting explanation for the four-step website journey" },
+    { "id": "journey-rail", "kind": "chrome", "box": { "x": 0.068, "y": 0.825, "w": 0.866, "h": 0.071 }, "note": "Continuous numbered progress rail linking content, design, review and publication" },
+    { "id": "content-step", "kind": "chrome", "box": { "x": 0.067, "y": 0.843, "w": 0.209, "h": 0.157 }, "note": "First journey step for structured content with concise evidence" },
+    { "id": "design-step", "kind": "chrome", "box": { "x": 0.290, "y": 0.843, "w": 0.209, "h": 0.157 }, "note": "Second journey step for modular visual design and brand controls" },
+    { "id": "preview-step", "kind": "chrome", "box": { "x": 0.512, "y": 0.843, "w": 0.209, "h": 0.157 }, "note": "Third journey step for responsive review and human approval" },
+    { "id": "publish-step", "kind": "chrome", "box": { "x": 0.735, "y": 0.843, "w": 0.209, "h": 0.157 }, "note": "Fourth journey step for verified and reversible publication" }
+  ]
+}

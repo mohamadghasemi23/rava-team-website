@@ -1,0 +1,6 @@
+.effect{position:absolute;inset:0;z-index:0;overflow:hidden;background:radial-gradient(circle at 70% 32%,rgba(108,146,255,.72),transparent 34%),linear-gradient(145deg,#071b56 0%,#183d94 46%,#050d2b 100%)}
+.effect::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,13,43,.9) 0 35%,rgba(5,13,43,.5) 58%,rgba(5,13,43,.16)),radial-gradient(circle at 76% 36%,transparent 0 24%,rgba(4,10,35,.35) 74%);pointer-events:none}
+.canvas,.canvas>canvas{position:absolute!important;inset:0;width:100%!important;height:100%!important;min-width:0;min-height:0;overflow:hidden}
+.canvas{isolation:isolate;background:#050d2b}.canvas>canvas{display:block;filter:hue-rotate(112deg) saturate(.92) contrast(1.08)}
+@media(max-width:760px){.effect::after{background:linear-gradient(180deg,rgba(5,13,43,.72),rgba(5,13,43,.42) 55%,rgba(5,13,43,.8))}}
+@media(prefers-reduced-motion:reduce){.effect{background:radial-gradient(circle at 72% 30%,#315fb9,transparent 36%),linear-gradient(145deg,#071b56,#050d2b)}}

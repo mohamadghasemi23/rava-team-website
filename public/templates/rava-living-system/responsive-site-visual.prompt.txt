@@ -1,0 +1,9 @@
+RAVA Living System D portrait interior plate, cup removed
+
+Use case: precise-object-edit
+Asset type: portrait responsive-device plate for the approved RAVA D Hero
+Source: Git commit 3308943, assets/plates/responsive-site-visual.png
+Edit: remove only the coffee cup and saucer at the lower-right; reconstruct the empty pale tabletop naturally.
+Invariants: preserve the hanging lamp, cord, marble blocks, wall, tabletop, lighting, shadows, colours, portrait crop, dimensions and perspective. Do not add, remove or redesign anything else. No replacement object, text, logo or watermark.
+Generated with: built-in image generation tool, 2026-09-02 UTC.
+Browser delivery: WebP quality 74, generated locally from the edited PNG with Sharp.

@@ -1,0 +1,244 @@
+{
+  "tool": "build-phase",
+  "version": 2,
+  "startedAt": "2026-09-01T23:49:51.242Z",
+  "comp": ".impeccable/mocks/rava-living-system-d2-candidate.png",
+  "direction": null,
+  "breakpoint": "1536x1024",
+  "artifact": null,
+  "phase": "sections",
+  "phases": {
+    "comps": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [
+        {
+          "at": "2026-09-01T23:49:51.242Z",
+          "text": "started with an approved comp; the comp round happened before this state (surface round or manual)"
+        }
+      ],
+      "gate": null,
+      "forced": null
+    },
+    "spec": {
+      "status": "closed",
+      "openedAt": "2026-09-01T23:49:51.242Z",
+      "closedAt": "2026-09-01T23:49:56.853Z",
+      "attempts": 1,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "17 regions, 3 plates, 4 text regions measured",
+        "at": "2026-09-01T23:49:56.852Z"
+      },
+      "forced": null
+    },
+    "plates": {
+      "status": "closed",
+      "openedAt": "2026-09-01T23:49:56.853Z",
+      "closedAt": "2026-09-01T23:51:30.714Z",
+      "attempts": 3,
+      "notes": [],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "3/3 plates",
+        "at": "2026-09-01T23:51:30.714Z"
+      },
+      "forced": null
+    },
+    "hero": {
+      "status": "closed",
+      "openedAt": "2026-09-01T23:51:30.714Z",
+      "closedAt": "2026-09-01T23:54:58.671Z",
+      "attempts": 2,
+      "notes": [
+        {
+          "at": "2026-09-01T23:51:45.945Z",
+          "text": "Hero repro uses the owner-approved real Chromium D2 capture from the unchanged cf2bbe0 implementation baseline; any subsequent UI code change requires a fresh browser capture."
+        }
+      ],
+      "gate": {
+        "ok": true,
+        "reasons": [],
+        "summary": "hero 100% (match)",
+        "score": 1,
+        "verdict": "match",
+        "report": ".impeccable/review/diff/hero/report.json",
+        "sideBySide": ".impeccable/review/diff/hero/side-by-side.png",
+        "worst": [
+          "creative-workspace-ground match 100%",
+          "floating-navigation match 100%",
+          "hero-headline match 100%"
+        ],
+        "worstIds": [
+          "creative-workspace-ground",
+          "floating-navigation",
+          "hero-headline"
+        ],
+        "worstCrops": [
+          {
+            "id": "creative-workspace-ground",
+            "verdict": "match",
+            "score": {
+              "overall": 1,
+              "structure": 1,
+              "color": 1,
+              "colorIntersection": 1,
+              "paletteMatch": 1,
+              "detail": 1,
+              "detailRaw": 1,
+              "detailAdded": 0,
+              "bands": 1
+            },
+            "file": ".impeccable/review/diff/hero/regions/creative-workspace-ground.png"
+          },
+          {
+            "id": "floating-navigation",
+            "verdict": "match",
+            "score": {
+              "overall": 1,
+              "structure": 1,
+              "color": 1,
+              "colorIntersection": 1,
+              "paletteMatch": 1,
+              "detail": 1,
+              "detailRaw": 1,
+              "detailAdded": 0,
+              "bands": 1
+            },
+            "file": ".impeccable/review/diff/hero/regions/floating-navigation.png"
+          },
+          {
+            "id": "hero-headline",
+            "verdict": "match",
+            "score": {
+              "overall": 1,
+              "structure": 1,
+              "color": 1,
+              "colorIntersection": 1,
+              "paletteMatch": 1,
+              "detail": 1,
+              "detailRaw": 1,
+              "detailAdded": 0,
+              "bands": 1
+            },
+            "file": ".impeccable/review/diff/hero/regions/hero-headline.png"
+          }
+        ],
+        "advisories": [],
+        "regionVerdicts": {
+          "creative-workspace-ground": "match",
+          "floating-navigation": "match",
+          "hero-headline": "match",
+          "hero-deck": "match",
+          "hero-actions": "match",
+          "editor-shell": "match",
+          "editor-site-visual": "match",
+          "responsive-device-preview": "match",
+          "responsive-site-visual": "match",
+          "cinematic-journey-ground": "match",
+          "walkthrough-heading": "match",
+          "walkthrough-deck": "match",
+          "journey-rail": "match",
+          "content-step": "match",
+          "design-step": "match",
+          "preview-step": "match",
+          "publish-step": "match"
+        },
+        "at": "2026-09-01T23:54:58.669Z"
+      },
+      "forced": null,
+      "records": 6,
+      "readingsSeen": {},
+      "history": [
+        {
+          "at": "2026-09-01T23:54:58.670Z",
+          "score": 1,
+          "worstIds": [
+            "creative-workspace-ground",
+            "floating-navigation",
+            "hero-headline"
+          ],
+          "regionVerdicts": {
+            "creative-workspace-ground": "match",
+            "floating-navigation": "match",
+            "hero-headline": "match",
+            "hero-deck": "match",
+            "hero-actions": "match",
+            "editor-shell": "match",
+            "editor-site-visual": "match",
+            "responsive-device-preview": "match",
+            "responsive-site-visual": "match",
+            "cinematic-journey-ground": "match",
+            "walkthrough-heading": "match",
+            "walkthrough-deck": "match",
+            "journey-rail": "match",
+            "content-step": "match",
+            "design-step": "match",
+            "preview-step": "match",
+            "publish-step": "match"
+          },
+          "artifactHash": null
+        }
+      ]
+    },
+    "sections": {
+      "status": "open",
+      "openedAt": "2026-09-01T23:54:58.671Z",
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "motion": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "responsive": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "review": {
+      "status": "pending",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    }
+  },
+  "finish": null,
+  "plates": {
+    "creative-workspace-ground": {
+      "status": "ok",
+      "score": 0.473,
+      "size": "1536x1024"
+    },
+    "editor-site-visual": {
+      "status": "ok",
+      "score": 0.5836,
+      "size": "1817x866"
+    },
+    "responsive-site-visual": {
+      "status": "ok",
+      "score": 0.6303,
+      "size": "941x1672"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(5);
+select is((select count(*)::bigint from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-journey' and tv.version=2 and tv.status='published'),1::bigint,'Visual Journey v2 is an immutable published catalog version');
+select is((select layout_blueprint->>'design_system' from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-journey' and tv.version=2),'rava-visual-journey-v2','version references its persisted design system');
+select ok((select (layout_blueprint->>'reduced_motion')::boolean and jsonb_array_length(layout_blueprint->'responsive_breakpoints')=4 from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-journey' and tv.version=2),'responsive and reduced-motion constraints are versioned');
+select is((select seo_defaults->>'content_policy' from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-journey' and tv.version=2),'verified-facts-only','template keeps the verified-facts-only content policy');
+select ok((select exists(select 1 from public.starter_pack_template_compatibility c join public.template_versions tv on tv.id=c.template_version_id join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-journey' and tv.version=2 and c.active)),'starter content is compatible with Visual Journey v2');
+select * from finish();
+rollback;

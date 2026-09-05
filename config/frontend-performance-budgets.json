@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "assetGroups": [
+    {
+      "key": "rava-living-system-hero",
+      "description": "Critical visual media for the RAVA TEAM flagship Hero",
+      "maxTotalBytes": 327680,
+      "maxAssetBytes": 102400,
+      "assets": [
+        "public/templates/rava-living-system/hero-v4/product-fa-desktop.webp",
+        "public/templates/rava-living-system/hero-v4/product-fa-mobile.webp",
+        "public/templates/rava-living-system/hero-v4/product-en-desktop.webp",
+        "public/templates/rava-living-system/hero-v4/product-en-mobile.webp"
+      ]
+    },
+    {
+      "key": "rava-living-system-hero-v4-4-states",
+      "description": "Lazy interaction-state media for the approved Persian flagship Hero",
+      "maxTotalBytes": 720000,
+      "maxAssetBytes": 130000,
+      "assets": [
+        "public/templates/rava-living-system/hero-v4-4/state-content-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-content-mobile.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-design-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-design-mobile.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-preview-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-preview-mobile.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-publish-desktop.webp",
+        "public/templates/rava-living-system/hero-v4-4/state-publish-mobile.webp"
+      ]
+    },
+    {
+      "key": "rava-commercial-homepage-sectors",
+      "description": "Responsive editorial media for the commercial homepage sector carousel",
+      "maxTotalBytes": 180000,
+      "maxAssetBytes": 70000,
+      "assets": [
+        "public/templates/rava-commercial-homepage/professional-consulting.webp",
+        "public/templates/rava-commercial-homepage/healthcare-doctor.webp",
+        "public/templates/rava-commercial-homepage/education-mentorship.webp"
+      ]
+    }
+  ]
+}

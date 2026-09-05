@@ -1,0 +1,12 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(7);
+select has_column('public','media_assets','media_kind','media kind is available');
+select has_column('public','media_assets','search_vector','media search vector is available');
+select has_index('public','media_assets','media_assets_search_idx','media search is indexed');
+select has_index('public','media_assets','media_assets_site_kind_created_idx','media type pagination is indexed');
+select is((select file_size_limit from storage.buckets where id='rava-media'),104857600::bigint,'media bucket accepts files up to 100 MB');
+select ok((select allowed_mime_types @> array['video/mp4'] from storage.buckets where id='rava-media'),'media bucket accepts MP4');
+select is((select count(*) from public.help_translations t join public.help_topics h on h.id=t.topic_id where h.key='media.library.manage' and t.locale in ('fa','en') and t.body_markdown like '%/admin/media%'),2::bigint,'media help is bilingual and links to its route');
+select * from finish();
+rollback;
