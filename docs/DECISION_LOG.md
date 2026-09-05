@@ -1,5 +1,12 @@
 # RAVA Decision Log
 
+## 2026-09-05 — Visual iteration uses a loopback-only fast preview
+
+- **Decision:** Routine visual iteration runs through a persistent Next.js development preview bound only to `127.0.0.1:13100`; Commit, GitHub CI, immutable-image Build and isolated Staging deployment are reserved for owner-approved release candidates.
+- **Reason:** Hot reload gives immediate visual feedback without repeatedly consuming registry bandwidth, VPS disk, CI time or deployment effort.
+- **Boundary:** The fast preview is disposable development evidence, never release evidence. An approved candidate still requires the complete repository Gates, immutable Staging image, real Staging review and explicit Production authorization.
+- **Operation:** `rava-preview start|stop|restart|status|logs` manages the preview. Access remains through the existing SSH tunnel; no public port, DNS or Production route is introduced.
+
 ## 2026-09-05 — Optional AI providers never block core deployment
 
 - **Decision:** OpenAI credentials are optional runtime configuration. Their absence disables only AI-backed suggestions and must never block the website, Admin, Staging deployment or core health Gates.

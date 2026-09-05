@@ -12,6 +12,7 @@ It is a maintained snapshot, not proof by itself. GitHub, the repository, CI, St
 - **Pull request:** Draft PR `#2`, `Build RAVA multi-tenant platform core`, targeting `main`
 - **Last confirmed product/design commit pushed to the GitHub branch:** `8b98252` (`design: isolate flagship hero interactions`)
 - **Production authorization:** Not granted. No Production deploy, merge, DNS change or `ravateam.ir` change is authorized by this status file.
+- **Fast visual loop:** `rava-preview` serves the guarded design route with hot reload on loopback-only port `13100`; Push, CI and immutable Staging deployment are reserved for owner-approved release candidates.
 
 ## Current verified position
 
