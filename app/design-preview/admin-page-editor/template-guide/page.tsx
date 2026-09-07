@@ -1,9 +1,16 @@
 import '@fontsource-variable/noto-sans-arabic'
 import Link from 'next/link'
+import {redirect} from 'next/navigation'
 import PreviewAdminHeader from '../PreviewAdminHeader'
 import styles from '../admin-editor-v2.module.css'
+import {PERMISSIONS,requirePermission} from '@/lib/authz/permissions'
+import {createClient} from '@/lib/supabase/server'
 
-export default function TemplateGuidePreview() {
+export default async function TemplateGuidePreview() {
+  const supabase=await createClient()
+  const{data}=await supabase.auth.getClaims()
+  if(!data?.claims?.sub)redirect('/login?next=%2Fdesign-preview%2Fadmin-page-editor%2Ftemplate-guide')
+  await requirePermission(PERMISSIONS.PLATFORM_SITES_MANAGE,{},'/admin')
   return <main className={styles.page} dir="rtl"><div className={styles.shell}>
     <PreviewAdminHeader pageTitle="راهنمای قالب"/>
     <div className={styles.guidePage}>

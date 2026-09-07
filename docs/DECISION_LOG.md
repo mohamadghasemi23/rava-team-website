@@ -430,3 +430,11 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Enforcement:** UI navigation reflects access but cannot grant it. Every protected mutation and read path must enforce the same scope, entitlement and permission rules at the server/database boundary.
 - **Visual Gate:** Before authenticated implementation, preview at least the owner and entitled-customer navigation/workspace states at desktop and mobile widths.
 - **Source:** Owner clarification on 2026-09-07.
+
+## 2026-09-07 — Design previews are owner-only; customer login resolves a scoped workspace
+
+- **Decision:** Admin design-review routes under `/design-preview` require an authenticated platform Site manager. They are not public demos and are not customer navigation destinations.
+- **Customer entry:** After a successful Login without a safe requested destination, a non-platform user with an accessible Site is routed directly to that Site's page-management workspace. Platform operators retain the parent Admin home.
+- **Redirect safety:** Only normalized same-origin `/admin` and `/design-preview` destinations may be honored after Login; external, protocol-relative and backslash-based destinations are rejected.
+- **Staging test identity:** Test-customer credentials are either entered interactively with terminal echo disabled or generated locally and saved only in a Root-readable mode-600 Staging file. They are never committed, printed or passed as command-line arguments. Provisioning requires Root, a healthy database, a fresh backup, a unique Organization/Site, a scoped customer role, explicit LaunchPad access and an audit event.
+- **Source:** Owner-reported unauthenticated Preview access and request for a real customer Login on 2026-09-07.
