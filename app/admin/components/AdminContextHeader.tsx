@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import {useState} from 'react'
+import {useAdminLocale} from './AdminLocale'
 import styles from './admin-context-header.module.css'
 
 export type AdminHeaderIssue={key:string;label:string;description:string;href:string}
 export type AdminHeaderIdentity={name:string;role:string;initials:string}
 
 type Props={
- locale:'fa'|'en'
  pageTitle:string
  site:{id:string;name:string}
  template:{name:string;href:string}
@@ -17,7 +17,8 @@ type Props={
  onHelp?:()=>void
 }
 
-export default function AdminContextHeader({locale,pageTitle,site,template,identity,issues=[],onHelp}:Props){
+export default function AdminContextHeader({pageTitle,site,template,identity,issues=[],onHelp}:Props){
+ const {language:locale}=useAdminLocale()
  const l=(fa:string,en:string)=>locale==='fa'?fa:en
  const [profileOpen,setProfileOpen]=useState(false)
  const [notificationsOpen,setNotificationsOpen]=useState(false)

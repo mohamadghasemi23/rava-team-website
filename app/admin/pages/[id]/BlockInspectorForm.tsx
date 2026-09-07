@@ -1,16 +1,18 @@
 'use client'
 
 import {useActionState, useEffect} from 'react'
+import {useAdminLocale} from '../../components/AdminLocale'
 import MediaPicker from '../../components/MediaPicker'
 import {updateBlock, type AdminActionState} from '../actions'
 import styles from './page-editor-workspace.module.css'
 
 export type SavePhase='clean'|'dirty'|'saving'|'saved'|'error'|'demo'
 type Block={id:string;block_type:string;data:Record<string,unknown>}
-type Props={block:Block;pageId:string;siteId:string;locale:'fa'|'en';demo:boolean;onStatusChange:(phase:SavePhase)=>void;onSaved:()=>void;onFullPreview:()=>void}
+type Props={block:Block;pageId:string;siteId:string;demo:boolean;onStatusChange:(phase:SavePhase)=>void;onSaved:()=>void;onFullPreview:()=>void}
 const initialState:AdminActionState={}
 
-export default function BlockInspectorForm({block,pageId,siteId,locale,demo,onStatusChange,onSaved,onFullPreview}:Props){
+export default function BlockInspectorForm({block,pageId,siteId,demo,onStatusChange,onSaved,onFullPreview}:Props){
+ const {language:locale}=useAdminLocale()
  const l=(fa:string,en:string)=>locale==='fa'?fa:en
  const [state,formAction,pending]=useActionState(updateBlock,initialState)
  const data=block.data??{}

@@ -36,7 +36,7 @@ export default async function TemplateGuide({params}:{params:Promise<{id:string}
  const description=template?(locale==='fa'?template.description_fa:template.description_en):l('اطلاعات این قالب هنوز تکمیل نشده است.','This template description has not been completed yet.')
  return <main className={styles.page} dir={locale==='fa'?'rtl':'ltr'}>
   <div className={styles.shell}>
-   <AdminContextHeader locale={locale} pageTitle={l('راهنمای قالب','Template guide')} site={{id:site.id,name:site.name}} template={{name:templateName,href:`/admin/platform/sites/${site.id}/template-guide`}} identity={{name:displayName,role:roleNames[String(profile.role)]??l('کاربر مجاز','Authorized user'),initials}}/>
+   <AdminContextHeader pageTitle={l('راهنمای قالب','Template guide')} site={{id:site.id,name:site.name}} template={{name:templateName,href:`/admin/platform/sites/${site.id}/template-guide`}} identity={{name:displayName,role:roleNames[String(profile.role)]??l('کاربر مجاز','Authorized user'),initials}}/>
    <div className={styles.layout}>
     <nav className={styles.side} aria-label={l('بخش‌های راهنمای قالب','Template guide sections')}><span>{l('راهنمای قالب','Template guide')}</span><a href="#overview">{l('معرفی کلی','Overview')}</a><a href="#features">{l('امکانات','Capabilities')}</a><a href="#editing">{l('مدیریت محتوا','Content editing')}</a><a href="#protection">{l('محافظت از طراحی','Design protection')}</a></nav>
     <article className={styles.content}>

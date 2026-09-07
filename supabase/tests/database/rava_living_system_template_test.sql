@@ -3,9 +3,9 @@ create extension if not exists pgtap with schema extensions;
 select plan(6);
 
 select is(
-  (select count(*)::bigint from public.template_catalog where key='rava-service-living-system' and status='active' and is_public),
+  (select count(*)::bigint from public.template_catalog where key='rava-service-living-system' and status='active' and not is_public),
   1::bigint,
-  'Living System is an active discoverable Template'
+  'Living System remains active as the non-public LaunchPad Template'
 );
 
 select is(
