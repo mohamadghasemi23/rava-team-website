@@ -53,7 +53,8 @@ async function operationalFailure(error:unknown,scope:Scope|undefined,eventType:
 export async function uploadMedia(formData:FormData):Promise<MediaActionResult>{
   const{l}=await translator();const current=await actor();if(!current)return{ok:false,message:l('نشست کاربری معتبر نیست.','The user session is invalid.')}
   const siteId=String(formData.get('site_id')??'');const scope=await authorizeSite(current.supabase,siteId);if(!scope)return{ok:false,message:l('سایت پیدا نشد یا اجازه مدیریت رسانه آن را ندارید.','The site was not found or you cannot manage its media.')}
-  const value=formData.get('file');if(!(value instanceof File)||value.size<1||value.size>MAX_BYTES)return{ok:false,message:l('فایل باید تصویری و حداکثر ۱۰ مگابایت باشد.','The file must be an image no larger than 10 MB.')}
+  const requestedLimit=Number(formData.get('max_bytes')??MAX_BYTES);const effectiveLimit=requestedLimit===2*1024*1024?requestedLimit:MAX_BYTES
+  const value=formData.get('file');if(!(value instanceof File)||value.size<1||value.size>effectiveLimit)return{ok:false,message:effectiveLimit===2*1024*1024?l('فایل این جایگاه باید تصویری و حداکثر ۲ مگابایت باشد.','This slot requires an image no larger than 2 MB.'):l('فایل باید تصویری و حداکثر ۱۰ مگابایت باشد.','The file must be an image no larger than 10 MB.')}
   if(value.name.length>180)return{ok:false,message:l('نام فایل بیش از حد طولانی است.','The file name is too long.')}
   const alt=String(formData.get('alt_text')??'').trim();if(alt.length>300)return{ok:false,message:l('متن جایگزین باید حداکثر ۳۰۰ نویسه باشد.','Alternative text must be at most 300 characters.')}
   const bytes=new Uint8Array(await value.arrayBuffer());const mime=detectedMime(bytes)

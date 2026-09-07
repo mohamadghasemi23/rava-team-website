@@ -46,7 +46,7 @@ function itemMatches(item:NavItem,query:string):boolean{if(!query)return true;co
 function isItemActive(item:NavItem,pathname:string):boolean{return item.href?pathname===item.href||(item.href!=='/admin'&&pathname.startsWith(`${item.href}/`)):Boolean(item.children?.some(child=>isItemActive(child,pathname)))}
 function currentLabel(pathname:string,language:AdminLanguage){for(const item of navigation){if(item.href&&isItemActive(item,pathname))return item.label[language];const child=item.children?.find(entry=>isItemActive(entry,pathname));if(child)return child.label[language]}return copy[language].controlCenter}
 
-export default function AdminShell({children,initialLanguage,canProvisionSites}:{children:React.ReactNode;initialLanguage:AdminLanguage;canProvisionSites:boolean}){
+export default function AdminShell({children,initialLanguage,canProvisionSites,isPlatformOperator}:{children:React.ReactNode;initialLanguage:AdminLanguage;canProvisionSites:boolean;isPlatformOperator:boolean}){
   const defaultFont:AdminFont=initialLanguage==='fa'?'vazirmatn':'inter'
   const pathname=usePathname(),[language,setLanguageState]=useState<AdminLanguage>(initialLanguage),[font,setFont]=useState<AdminFont>(defaultFont),[pendingFont,setPendingFont]=useState<AdminFont>(defaultFont),[query,setQuery]=useState(''),[mobileOpen,setMobileOpen]=useState(false),[helpOpen,setHelpOpen]=useState(false),[fontOpen,setFontOpen]=useState(false),[help,setHelp]=useState<ContextHelp|null>(null),[helpLoading,setHelpLoading]=useState(false),[collapsed,setCollapsed]=useState<Record<string,boolean>>(()=>initialCollapsed)
   useEffect(()=>{const savedFont=window.localStorage.getItem(`rava-admin-font-${language}`),matching=fonts.find(item=>item.key===savedFont&&item.language===language);if(matching){setFont(matching.key);setPendingFont(matching.key)}},[language])
@@ -55,7 +55,15 @@ export default function AdminShell({children,initialLanguage,canProvisionSites}:
   function setLanguage(next:AdminLanguage){setLanguageState(next);document.cookie=`rava-admin-language=${next}; Path=/admin; Max-Age=31536000; SameSite=Lax`;window.location.reload()}
   function openFontSettings(){setPendingFont(font);setFontOpen(true)}
   function saveFont(){setFont(pendingFont);window.localStorage.setItem(`rava-admin-font-${language}`,pendingFont);setFontOpen(false)}
-  const availableNavigation=useMemo(()=>navigation.map(item=>({...item,children:item.children?.filter(child=>canProvisionSites||child.href!=='/admin/platform/sites/new')})),[canProvisionSites])
+  const availableNavigation=useMemo(()=>{
+    if(isPlatformOperator)return navigation.map(item=>({...item,children:item.children?.filter(child=>canProvisionSites||child.href!=='/admin/platform/sites/new')}))
+    const customerRoutes=new Set(['/admin','/admin/pages','/admin/media','/admin/academy'])
+    return navigation.flatMap(item=>{
+      if(item.href)return customerRoutes.has(item.href)?[item]:[]
+      const children=item.children?.filter(child=>child.href&&customerRoutes.has(child.href))??[]
+      return children.length?[{...item,children}]:[]
+    })
+  },[canProvisionSites,isPlatformOperator])
   const filteredNavigation=useMemo(()=>availableNavigation.filter(item=>itemMatches(item,query.trim())),[availableNavigation,query]),visibleFonts=fonts.filter(item=>item.language===language),t=copy[language],isRtl=language==='fa',tr=help?.translation,pageTitle=currentLabel(pathname,language),previewFont=fontOpen?pendingFont:font
   return <AdminLocaleContext.Provider value={{language,setLanguage}}><div className="rava-admin-frame" dir={isRtl?'rtl':'ltr'} lang={language} data-admin-font={previewFont}>
     <button className="rava-admin-mobile-trigger" type="button" onClick={()=>setMobileOpen(true)} aria-label={t.menu}><AdminIcon name="menu"/></button>{mobileOpen&&<button className="rava-admin-scrim" type="button" aria-label={t.close} onClick={()=>setMobileOpen(false)}/>}<aside className={`rava-admin-sidebar${mobileOpen?' is-open':''}`} aria-label={t.menu}>

@@ -46,6 +46,25 @@ async function authorize(scope: Scope, permission: typeof PERMISSIONS.CMS_MANAGE
 }
 
 function cleanSlug(value: string) { return value.trim().toLowerCase().replace(/^\/+|\/+$/g, '').replace(/\s+/g, '-').replace(/[^a-z0-9\u0600-\u06ff-]/g, '') }
+const BLOCK_TYPES=['hero','text','image','cta','gallery'] as const
+type BlockType=typeof BLOCK_TYPES[number]
+function readText(formData:FormData,key:string){return String(formData.get(key)??'').trim()}
+function validContentUrl(value:string,allowEmpty=true){if(!value)return allowEmpty;if(value.startsWith('/')||value.startsWith('#'))return !value.startsWith('//');try{const url=new URL(value);return url.protocol==='https:'||url.protocol==='http:'}catch{return false}}
+function readOptionalMedia(formData:FormData){
+ const mediaUrl=readText(formData,'media_url'),mediaAlt=readText(formData,'media_alt')
+ if(mediaUrl.length>1200||mediaAlt.length>300||!validContentUrl(mediaUrl,true)||Boolean(mediaUrl)!==Boolean(mediaAlt))return null
+ return mediaUrl?{media_url:mediaUrl,media_alt:mediaAlt}:{}
+}
+function parseBlockData(blockType:BlockType,formData:FormData):Record<string,unknown>|null{
+ const title=readText(formData,'title'),text=readText(formData,'text'),buttonLabel=readText(formData,'button_label'),buttonUrl=readText(formData,'button_url')
+ if(title.length>160||text.length>5000||buttonLabel.length>60||buttonUrl.length>500)return null
+ const media=readOptionalMedia(formData);if(media===null)return null
+ if(blockType==='hero'){if(title.length<3||title.length>72||text.length>600||!buttonLabel||!validContentUrl(buttonUrl,false))return null;return{title,text,button_label:buttonLabel,button_url:buttonUrl,...media}}
+ if(blockType==='text'){if(!title||text.length<1)return null;return{title,text,...media}}
+ if(blockType==='cta'){if(!title||!buttonLabel||!validContentUrl(buttonUrl,false))return null;return{title,text,button_label:buttonLabel,button_url:buttonUrl,...media}}
+ if(blockType==='image'){const url=readText(formData,'url'),alt=readText(formData,'alt'),caption=readText(formData,'caption');if(url.length>1200||alt.length>300||caption.length>500||!validContentUrl(url,false)||!alt)return null;return{url,alt,caption}}
+ const images=String(formData.get('images')??'').split('\n').map(item=>item.trim()).filter(Boolean);if(!title||images.length<1||images.length>24||images.some(item=>item.length>1200||!validContentUrl(item,false)))return null;return{title,images}
+}
 function errorMessage(error: { code?: string; message?: string } | null, fallback: string, duplicate: string) {
   if (!error) return fallback
   if (error.code === '23505') return duplicate
@@ -81,19 +100,16 @@ export async function setPageStatus(_state:AdminActionState,formData:FormData):P
 }
 
 export async function createBlock(_state:AdminActionState,formData:FormData):Promise<AdminActionState>{
- const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en;const {supabase}=await getActor();const pageId=String(formData.get('page_id')??'');const blockType=String(formData.get('block_type')??'text');const scoped=await pageScope(supabase,pageId);if(!scoped||!await authorize(scoped,PERMISSIONS.CMS_MANAGE))return{ok:false,message:l('صفحه پیدا نشد یا اجازه ویرایش آن را ندارید.','The page was not found or you cannot edit it.'),nonce:Date.now()};
+ const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en;const {supabase}=await getActor();const pageId=String(formData.get('page_id')??'');const blockType=String(formData.get('block_type')??'text');const scoped=await pageScope(supabase,pageId);if(!scoped||!BLOCK_TYPES.includes(blockType as BlockType)||!await authorize(scoped,PERMISSIONS.CMS_MANAGE))return{ok:false,message:l('صفحه یا نوع بخش معتبر نیست، یا اجازه ویرایش آن را ندارید.','The page or block type is invalid, or you cannot edit it.'),nonce:Date.now()};
  const {data:last}=await supabase.from('page_blocks').select('position').eq('page_id',pageId).order('position',{ascending:false}).limit(1).maybeSingle();
- const defaults:Record<string,object>={hero:{title:l('عنوان اصلی','Main heading'),text:l('توضیح کوتاه این بخش','A short description of this section'),button_label:l('بیشتر بدانید','Learn more'),button_url:'#'},text:{title:l('عنوان بخش','Section heading'),text:l('متن این بخش را وارد کنید.','Enter this section’s content.')},image:{url:'',alt:'',caption:''},cta:{title:l('آماده شروع هستید؟','Ready to get started?'),text:l('برای شروع همکاری با ما در تماس باشید.','Contact us to begin working together.'),button_label:l('تماس با ما','Contact us'),button_url:'/contact'},gallery:{title:l('گالری','Gallery'),images:[]}};
+ const defaults:Record<string,object>={hero:{title:l('عنوان اصلی','Main heading'),text:l('توضیح کوتاه این بخش','A short description of this section'),button_label:l('بیشتر بدانید','Learn more'),button_url:'#',media_url:'',media_alt:''},text:{title:l('عنوان بخش','Section heading'),text:l('متن این بخش را وارد کنید.','Enter this section’s content.'),media_url:'',media_alt:''},image:{url:'',alt:'',caption:''},cta:{title:l('آماده شروع هستید؟','Ready to get started?'),text:l('برای شروع همکاری با ما در تماس باشید.','Contact us to begin working together.'),button_label:l('تماس با ما','Contact us'),button_url:'/contact',media_url:'',media_alt:''},gallery:{title:l('گالری','Gallery'),images:[]}};
  const {error}=await supabase.from('page_blocks').insert({page_id:pageId,block_type:blockType,position:(last?.position??-1)+1,visible:true,data:defaults[blockType]??{}});if(error)return{ok:false,message:errorMessage(error,l('افزودن بخش انجام نشد.','The block could not be added.'),l('این آدرس قبلاً استفاده شده است.','This address is already in use.')),nonce:Date.now()};revalidatePath(`/admin/pages/${pageId}`);return{ok:true,message:l('بخش جدید با موفقیت اضافه شد.','The new block was added successfully.'),nonce:Date.now()}
 }
 
 export async function updateBlock(_state:AdminActionState,formData:FormData):Promise<AdminActionState>{
- const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en;const {supabase}=await getActor();const id=String(formData.get('id')??'');const pageId=String(formData.get('page_id')??'');const blockType=String(formData.get('block_type')??'text');const scoped=await pageScope(supabase,pageId);if(!scoped||!UUID_RE.test(id)||!await authorize(scoped,PERMISSIONS.CMS_MANAGE))return{ok:false,message:l('بخش پیدا نشد یا اجازه ویرایش آن را ندارید.','The block was not found or you cannot edit it.'),nonce:Date.now()};let data:Record<string,unknown>={};
- if(blockType==='hero'||blockType==='text'||blockType==='cta')data={title:String(formData.get('title')??''),text:String(formData.get('text')??'')};
- if(blockType==='hero'||blockType==='cta')data={...data,button_label:String(formData.get('button_label')??''),button_url:String(formData.get('button_url')??'')};
- if(blockType==='image')data={url:String(formData.get('url')??''),alt:String(formData.get('alt')??''),caption:String(formData.get('caption')??'')};
- if(blockType==='gallery')data={title:String(formData.get('title')??''),images:String(formData.get('images')??'').split('\n').map(x=>x.trim()).filter(Boolean)};
- const {error}=await supabase.from('page_blocks').update({data,updated_at:new Date().toISOString()}).eq('id',id).eq('page_id',pageId);if(error)return{ok:false,message:errorMessage(error,l('ویرایش بخش انجام نشد.','The block could not be updated.'),l('این آدرس قبلاً استفاده شده است.','This address is already in use.')),nonce:Date.now()};revalidatePath(`/admin/pages/${pageId}`);return{ok:true,message:l('تغییرات بخش با موفقیت ذخیره شد.','The block changes were saved successfully.'),nonce:Date.now()}
+ const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en;const {supabase,userId}=await getActor();const id=String(formData.get('id')??'');const pageId=String(formData.get('page_id')??'');const scoped=await pageScope(supabase,pageId);if(!scoped||!UUID_RE.test(id)||!await authorize(scoped,PERMISSIONS.CMS_MANAGE))return{ok:false,message:l('بخش پیدا نشد یا اجازه ویرایش آن را ندارید.','The block was not found or you cannot edit it.'),nonce:Date.now()};
+ const{data:stored}=await supabase.from('page_blocks').select('id,block_type,data').eq('id',id).eq('page_id',pageId).maybeSingle();if(!stored||!BLOCK_TYPES.includes(stored.block_type as BlockType))return{ok:false,message:l('نوع این بخش معتبر نیست یا دیگر در صفحه وجود ندارد.','This block type is invalid or the block no longer exists.'),nonce:Date.now()};const blockType=stored.block_type as BlockType,data=parseBlockData(blockType,formData);if(!data)return{ok:false,message:l('اطلاعات این بخش کامل یا معتبر نیست. فیلدهای مشخص‌شده را اصلاح کنید.','This section contains incomplete or invalid information. Correct the indicated fields.'),nonce:Date.now()};
+ const updatedAt=new Date().toISOString(),{data:updated,error}=await supabase.from('page_blocks').update({data,updated_at:updatedAt}).eq('id',id).eq('page_id',pageId).select('id').maybeSingle();if(error||!updated)return{ok:false,message:errorMessage(error,l('ویرایش بخش انجام نشد. دوباره تلاش کنید.','The block could not be updated. Try again.'),l('این آدرس قبلاً استفاده شده است.','This address is already in use.')),nonce:Date.now()};await recordAuditEvent({action:'cms.page_block.updated',entityType:'page_block',entityId:id,organizationId:scoped.organizationId,siteId:scoped.siteId,before:{blockType,data:stored.data},after:{blockType,data,updatedAt},context:{source:'admin_page_editor',pageId,actorId:userId}});revalidatePath(`/admin/pages/${pageId}`);revalidatePath(`/preview/sites/${scoped.siteId}`);return{ok:true,message:l('تغییرات بخش با موفقیت ذخیره شد.','The block changes were saved successfully.'),nonce:Date.now()}
 }
 
 export async function toggleBlock(_state:AdminActionState,formData:FormData):Promise<AdminActionState>{

@@ -18,6 +18,22 @@ import {hasPermission,PERMISSIONS} from '@/lib/authz/permissions'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const locale=await getAdminLocale()
-  const canProvisionSites=await hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE)
-  return <AdminShell initialLanguage={locale} canProvisionSites={canProvisionSites}>{children}</AdminShell>
+  const platformPermissions=[
+    PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE,
+    PERMISSIONS.PLATFORM_SITES_MANAGE,
+    PERMISSIONS.PLATFORM_MODULES_MANAGE,
+    PERMISSIONS.PLATFORM_ROLES_MANAGE,
+    PERMISSIONS.PLATFORM_ACCESS_MANAGE,
+    PERMISSIONS.PLATFORM_AUDIT_VIEW,
+    PERMISSIONS.PLATFORM_BILLING_MANAGE,
+    PERMISSIONS.PLATFORM_HELP_MANAGE,
+    PERMISSIONS.PLATFORM_SUPPORT_IMPERSONATE,
+    PERMISSIONS.TEMPLATES_MANAGE,
+  ] as const
+  const [canProvisionSites,...platformDecisions]=await Promise.all([
+    hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE),
+    ...platformPermissions.map(permission=>hasPermission(permission)),
+  ])
+  const isPlatformOperator=platformDecisions.some(Boolean)
+  return <AdminShell initialLanguage={locale} canProvisionSites={canProvisionSites} isPlatformOperator={isPlatformOperator}>{children}</AdminShell>
 }

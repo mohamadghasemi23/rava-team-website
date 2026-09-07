@@ -23,6 +23,7 @@ type Props = {
   confirmLabel?: string
   cancelLabel?: string
   danger?: boolean
+  requireConfirmation?: boolean
 }
 
 const initialState: AdminActionState = {}
@@ -36,6 +37,7 @@ export default function ActionForm({
   confirmLabel = 'بله، انجام شود',
   cancelLabel = 'انصراف',
   danger = false,
+  requireConfirmation = true,
 }: Props) {
   const {language}=useAdminLocale()
   const localized=language==='fa'?{confirmTitle:'تأیید عملیات',confirmMessage:'آیا از انجام این عملیات مطمئن هستید؟',confirmLabel:'بله، انجام شود',cancelLabel:'انصراف',help:'راهنمای این عملیات',success:'انجام شد',error:'خطا',close:'بستن پیام'}:{confirmTitle:'Confirm operation',confirmMessage:'Are you sure you want to run this operation?',confirmLabel:'Yes, continue',cancelLabel:'Cancel',help:'Help for this operation',success:'Completed',error:'Error',close:'Dismiss message'}
@@ -68,6 +70,7 @@ export default function ActionForm({
   }, [toast])
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
+    if (!requireConfirmation) return
     if (allowSubmit.current) {
       allowSubmit.current = false
       return

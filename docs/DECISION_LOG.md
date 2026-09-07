@@ -324,3 +324,109 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Replacement pool:** The MIT-licensed `pulkitxm/claude-directory` is registered as a bounded source pool. Candidate code remains subject to asset-provenance, accessibility, responsiveness, performance and architecture review before selective import.
 - **Gate:** No candidate is selected or authorized for implementation merely by appearing in the registry. The owner must review the actual demo and approve the exact adapted desktop/mobile visual before code integration.
 - **Source:** Owner rejection and follow-up direction on 2026-09-05.
+
+## 2026-09-05 — LaunchPad selected as the free flagship visual foundation
+
+- **Decision:** The owner rejected the generated LaunchPad/Magic-UI hybrid mock and selected the free MIT LaunchPad Template itself as the visual foundation, with RAVA content replacing the source product copy and demonstrations.
+- **Reuse boundary:** Preserve LaunchPad's inset mesh Hero, rounded composition, typography scale, Bento rhythm, product presentation, FAQ and conversion flow. Do not import its fictional logos, revenue metrics, testimonials, product claims or pricing.
+- **RAVA adaptation:** The page sells complete professional websites, Industry-aware starter content, distinct Template directions, preview-before-publish and simple ongoing management. The RAVA platform is supporting proof rather than the object customers must configure themselves.
+- **Gate:** This decision authorizes a local implementation trial only. Real coded desktop/mobile captures require owner acceptance before Commit, Push or Staging deployment.
+- **Source:** Owner instruction on 2026-09-05 and the MIT source at `haider484991/launchpad-nextjs-saas-template`.
+
+## 2026-09-05 — LaunchPad must first be isolated without RAVA adaptation
+
+- **Decision:** The first RAVA-content adaptation is visually rejected. Before another adaptation, the owner must inspect the original LaunchPad experience unchanged, including its source copy and branding, so visual fidelity has one unambiguous baseline.
+- **Temporary mechanism:** The loopback-only design-preview route may embed the official LaunchPad demo for comparison. This external iframe is preview scaffolding only—not a RAVA implementation, runtime dependency or deployable architecture.
+- **Next Gate:** After the untouched source is accepted as the baseline, replace its content and branding incrementally while preserving approved geometry and capture real desktop/mobile comparisons after each bounded stage.
+- **Source:** Owner correction on 2026-09-05.
+
+## 2026-09-05 — LaunchPad adaptation proceeds top-to-bottom in bounded visual Gates
+
+- **Decision:** Preserve the exact LaunchPad source composition and adapt it incrementally from the navigation downward. The first Gate is limited to a locally hosted light/readable Persian typeface, RTL document direction and Persian navigation labels.
+- **Typography:** The initial Vazirmatn choice was visually rejected and is superseded by a local Estedad Variable trial. It remains locally served and introduces no external font dependency.
+- **Navigation copy:** `امکانات`, `قالب‌ها`, `پرسش‌ها`, `فرایند` and `شروع پروژه` replace the five existing header labels without changing the header topology.
+- **Acceptance boundary:** Successful static build and HTTP checks are implementation evidence only; the owner must visually accept the desktop and mobile result before Commit, Push or deployment.
+- **Source:** Owner instruction on 2026-09-05.
+
+## 2026-09-06 — LaunchPad receives factual Persian RAVA copy without redesign
+
+- **Decision:** Replace every visible LaunchPad source string with natural Persian copy grounded in RAVA's existing product, services and delivery rules while preserving the source layout, colors, component count and geometry.
+- **Truth boundary:** Fictional testimonials, customers, revenue figures and unsupported performance claims are replaced with RAVA capabilities, delivery commitments, service paths and interface examples; no invented proof is introduced.
+- **Acceptance boundary:** This is a local visual trial. Desktop and mobile owner review is required before Commit, Push or deployment.
+- **Source:** Owner instruction on 2026-09-06.
+
+## 2026-09-06 — RAVA page editor adopts the approved calm visual workspace
+
+- **Decision:** The page editor uses one RTL task path: page structure on the right, real site preview in the center and contextual fields on the left; mobile prioritizes the preview and exposes editing in a bottom-oriented surface without compressing desktop sidebars.
+- **Visual authority:** `.impeccable/mocks/rava-admin-page-editor-desktop-approved.png`, `.impeccable/mocks/rava-admin-page-editor-desktop-states-approved.png` and `.impeccable/mocks/rava-admin-page-editor-mobile-states-approved.png`. The earlier mobile direction image is preserved as history, but its physical phone frame is rejected and not authoritative.
+- **Material states:** Normal, editing, contextual help, saved, validation error and full preview are required. Draft save and preview are the persistent mobile actions; publication remains separate and permission-gated.
+- **Migration boundary:** Existing secure CMS actions, tenant scope, private preview and advanced controls are preserved during incremental migration. Old controls may be collapsed but cannot be deleted until their replacement is verified.
+- **Acceptance boundary:** Preview approval authorizes implementation only. Authenticated real-browser desktop/mobile captures and comparison remain mandatory before Commit, Push or deployment.
+- **Source:** Owner explicit approval on 2026-09-06.
+
+## 2026-09-06 — Public content management and admin feedback become one coherent system
+
+- **Decision:** Every content-bearing element rendered by a RAVA public Template must have an intentional, permission-scoped management path in the page editor. Image and video fields use the central media library plus an in-context uploader; they do not store arbitrary unmanaged files or bypass site scope.
+- **Draft workflow:** Editing saves a versioned draft and refreshes the real private preview. Publishing remains a separate permission-gated action and is never implied by ordinary saving.
+- **Visual system:** Forms, buttons, media selection, modals, confirmations, toasts, alerts, validation, loading, empty and disabled states share one light RAVA admin component system. Legacy dark feedback surfaces are migration targets and must not remain mixed into newly accepted screens.
+- **Template safety:** Customer editing is schema-constrained by block type and Template limits; it cannot create unlimited sections or break responsive, accessibility or SEO rules. Authorized owner controls may expose additional capabilities without creating a second editing route.
+- **Typography:** Noto Sans Arabic Variable is the current Persian admin trial because of its calm, readable UI forms. It is not the global default until the owner approves its real rendered preview.
+- **Source:** Owner direction on 2026-09-06.
+
+## 2026-09-07 — Template media slots own presentation geometry
+
+- **Decision:** Customer-facing media controls do not expose free cropping, focal-point positioning or arbitrary placement. Each Template block defines its own aspect ratio, recommended dimensions, accepted formats, size limit and responsive rendering behavior.
+- **UX:** The editor explains the exact upload requirement beside the media field. Users select or replace an asset and provide accessible alternative text; the Template preserves the approved composition.
+- **Validation:** The eventual persisted implementation must validate media type, size and slot compatibility at the server boundary. Client-side guidance alone is insufficient.
+- **Owner boundary:** More advanced art-direction tools may remain owner-only in a future dedicated workflow, but they are not part of the ordinary page editor.
+- **Source:** Owner simplification decision on 2026-09-07.
+
+## 2026-09-06 — Admin context uses one consolidated header
+
+- **Decision:** The editor exposes RAVA identity, current page path, active site, active Template, signed-in profile and scoped role in one calm header. Draft/save feedback belongs to the editing surface rather than a second global bar.
+- **Rejected direction:** The detached identity/context bar stacked above the page-editor header is rejected and must not be implemented or reused.
+- **Profile fallback:** Use the user's uploaded profile image when present and localized initials otherwise; never fabricate a portrait.
+- **Template path:** The active Template name links to a dedicated, localized guide describing its intended industries, capabilities, editable fields and protective constraints.
+- **Acceptance boundary:** The current loopback composition is a replacement preview only and requires owner visual acceptance before real identity/Template data wiring, Commit, Push or deployment.
+- **Source:** Owner critique and correction on 2026-09-06.
+
+## 2026-09-06 — Page-block editing uses stored-type authority and explicit save states
+
+- **Decision:** The server-side block type stored in `page_blocks` is the only authority for parsing an update. A client-submitted type cannot choose the data schema or change a block into another type.
+- **Validation:** Every supported block has bounded server-side fields; content links accept only safe relative anchors/paths or HTTP(S) URLs; galleries contain 1–24 bounded image URLs.
+- **Editor contract:** Hero, text, image, gallery and call-to-action sections are edited in the same inspector. Mobile uses a real section selector, and the interface never claims a dirty or failed form is saved.
+- **Preview contract:** Successful draft saving refreshes the private preview only. It does not publish or change Production.
+- **Evidence boundary:** Static repository Gates passed locally, but the production Build and real browser acceptance remain open because a compatible local Node runtime and safe disk headroom are currently unavailable.
+- **Source:** Owner approval of the four P1 corrections on 2026-09-06.
+
+## 2026-09-07 — Admin pages use one persistent shell and actionable notifications
+
+- **Decision:** The current editor direction is accepted as a provisional base that may receive later polish. Every related admin destination, including Template guidance, must open inside one persistent application shell rather than as an isolated raw page.
+- **Shell contract:** RAVA identity, breadcrumb, signed-in profile, help and notifications remain stable. Active Site and Template context live in a subordinate context rail instead of occupying the center of the global header.
+- **Presence and notifications:** The profile uses a circular user image when available, localized initials as fallback, and an explicit online presence indicator. Unresolved notifications show an exact red count; completing an item removes it from the count and preserves a green completed state in notification history.
+- **Acceptance boundary:** The isolated preview implements this interaction direction, but the new shell polish still requires real rendered owner review before migration to authenticated admin routes.
+- **Source:** Owner direction on 2026-09-07.
+## 2026-09-07 — Screenshot-to-code is a measured workflow, not a heavy runtime dependency
+
+- **Decision:** Use the lightweight installed `rava-screenshot-fidelity` skill for approved-reference implementation and browser comparison. Do not install the full `abi/screenshot-to-code` application into RAVA or the constrained VPS.
+- **Reason:** The upstream project is a standalone React/FastAPI application with model-provider requirements rather than a Codex skill. RAVA needs its disciplined reference-to-code loop, not its service footprint or API cost.
+- **Acceptance rule:** A Build, HTTP 200 or visually plausible implementation is insufficient. The real coded desktop/mobile and material interaction states must be captured at matched viewports and compared with the approved authority before visual acceptance.
+- **Source:** Owner instruction on 2026-09-07 after reviewing the upstream repository's actual structure and operating requirements.
+
+## 2026-09-07 — RAVA has one Admin Shell; Templates never own a control panel
+
+- **Decision:** Consolidate the legacy platform navigation and the newer Template/page editing experience into one permission-aware RAVA Admin product. LaunchPad and future Templates supply rendering schemas, editable fields and constraints only.
+- **Navigation:** One persistent header exposes a responsive module menu; Site and Template context remain subordinate to it. Task workspaces do not add a second global header or independent navigation system.
+- **Migration:** Preserve all trusted routes, permissions and Server Actions; move their presentation incrementally, then hide each duplicate legacy surface only after functional and visual parity is verified.
+- **Gate:** The new closed-menu, open-menu and mobile visual states require owner review before authenticated-shell implementation. No legacy capability is deleted during this preview stage.
+- **Source:** Owner confirmation to proceed on 2026-09-07 after the dual-panel model was explained.
+
+## 2026-09-07 — LaunchPad is an entitled child workspace inside the RAVA Admin Shell
+
+- **Supersedes:** The wording in “RAVA has one Admin Shell; Templates never own a control panel” that reduced LaunchPad to rendering schemas and implied it could not have a dedicated management experience.
+- **Decision:** LaunchPad has a focused Template-specific workspace, but that workspace is always nested inside the parent RAVA Admin Shell and inherits its identity, Site context, navigation, localization, notifications, Help and authorization boundaries. It is not a second or parallel Admin product.
+- **Owner access:** An authorized RAVA owner may assign LaunchPad to any eligible Site and manage that Site through the LaunchPad workspace.
+- **Customer access:** A customer may enter the LaunchPad workspace only for a Site to which LaunchPad has been purchased or assigned. Available operations are the intersection of tenant/Site scope, LaunchPad entitlement, plan rules and granular permissions; owner-only platform controls remain unavailable.
+- **Enforcement:** UI navigation reflects access but cannot grant it. Every protected mutation and read path must enforce the same scope, entitlement and permission rules at the server/database boundary.
+- **Visual Gate:** Before authenticated implementation, preview at least the owner and entitled-customer navigation/workspace states at desktop and mobile widths.
+- **Source:** Owner clarification on 2026-09-07.
