@@ -438,3 +438,9 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Redirect safety:** Only normalized same-origin `/admin` and `/design-preview` destinations may be honored after Login; external, protocol-relative and backslash-based destinations are rejected.
 - **Staging test identity:** Test-customer credentials are either entered interactively with terminal echo disabled or generated locally and saved only in a Root-readable mode-600 Staging file. They are never committed, printed or passed as command-line arguments. Provisioning requires Root, a healthy database, a fresh backup, a unique Organization/Site, a scoped customer role, explicit LaunchPad access and an audit event.
 - **Source:** Owner-reported unauthenticated Preview access and request for a real customer Login on 2026-09-07.
+
+## 2026-09-08 — Post-auth redirects must preserve the external browser origin
+
+- **Decision:** Route Handlers operating behind the Staging reverse proxy must not build browser redirects from an internal Container request origin. The sign-out POST uses a `303 See Other` response with a relative `/login` location so the active tunnel/domain is preserved.
+- **Reason:** The prior absolute redirect resolved to `http://0.0.0.0:3000/login`, causing a browser error after an otherwise successful sign-out.
+- **Source:** Owner browser report and direct Staging response-header reproduction on 2026-09-08.
