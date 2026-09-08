@@ -444,3 +444,26 @@ If a decision changes, add a new entry that explicitly supersedes the old entry;
 - **Decision:** Route Handlers operating behind the Staging reverse proxy must not build browser redirects from an internal Container request origin. The sign-out POST uses a `303 See Other` response with a relative `/login` location so the active tunnel/domain is preserved.
 - **Reason:** The prior absolute redirect resolved to `http://0.0.0.0:3000/login`, causing a browser error after an otherwise successful sign-out.
 - **Source:** Owner browser report and direct Staging response-header reproduction on 2026-09-08.
+
+## 2026-09-08 — Customer Admin is a five-destination Site workspace
+
+- **Decision:** The ordinary customer Admin is not a reduced copy of the owner console. Its target information architecture contains at most five task destinations: Home, Site, Messages, Growth and Account. Contextual Help remains persistent in the shell; Academy and Template guidance are contextual learning surfaces rather than competing primary navigation groups.
+- **Access boundary:** Every destination and operation is generated from authenticated Site scope, granular Permission and active Entitlement. Navigation never grants access. Owner provisioning, raw Design configuration, Template grants, platform billing/access control, infrastructure, audit and technical error consoles remain owner-only.
+- **Commercial boundary:** Secure authentication, tenant isolation, accessibility, basic content/media/preview/publishing, basic SEO/analytics, Help and recovery are baseline. Additional Sites/seats/storage, premium Templates, advanced SEO/AI/analytics/automation, Commerce and Enterprise governance are commercially entitled.
+- **Delivery boundary:** Roadmap-only capabilities do not appear as empty customer navigation. Technical policy consolidation proceeds first; material shell changes require exact desktop/mobile/state preview approval and coded-browser comparison.
+- **Detailed audit:** `docs/CUSTOMER_ADMIN_PRODUCT_AUDIT.md`.
+- **Source:** Owner approval of the complete customer-panel audit on 2026-09-08.
+## 2026-09-08 — Customer analytics visualization is reserved under Growth
+
+- **Decision:** Keep the customer Home free of decorative charts. Reserve an extensible analytics region inside `رشد` for future real trend, acquisition and conversion visualizations; before sufficient data exists, show an intentional insufficient-data state rather than fabricated values or an empty graph.
+- **Rationale:** Customers need immediate actions on Home, while the product still needs a stable place for later analytics development without redesigning navigation or the shared shell.
+- **Commercial boundary:** Basic understandable analytics belong to the customer baseline; advanced comparisons, funnels, attribution, exports and scheduled reports may be commercially entitled. Security, accessibility and tenant isolation are never premium gates.
+- **Implementation gate:** The Growth page and its loading, insufficient-data, populated and entitlement-locked states require exact desktop and mobile visual approval before implementation.
+
+## 2026-09-08 — Customer Messages is a real Site-scoped inbox
+
+- **Decision:** The customer Messages destination reads only form submissions belonging to the authenticated Site and exposes search plus unread, resolved and archived lifecycle views.
+- **Lifecycle:** `new` is presented as unread, `replied` as resolved and `closed` as archived. Status mutations require `leads.manage`, remain Site-scoped at the server/database boundary and emit non-PII audit events.
+- **Product boundary:** RAVA does not show a fake reply composer. Email and telephone links may hand off to an installed client; an in-product reply workflow requires a real provider-backed delivery and conversation model later.
+- **Access:** Read access requires `leads.view` or `leads.manage`. The customer navigation exposes Messages only when that capability is genuinely available.
+- **Source:** Owner approval of the exact desktop and mobile Messages preview on 2026-09-08.

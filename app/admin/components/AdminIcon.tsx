@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react'
 
-export type AdminIconName='home'|'business'|'sites'|'add'|'billing'|'content'|'pages'|'media'|'learning'|'help'|'academy'|'settings'|'activity'|'errors'|'access'|'search'|'chevron'|'menu'|'close'|'language'|'check'|'clock'|'lock'|'arrow'
+export type AdminIconName='home'|'business'|'sites'|'add'|'billing'|'content'|'pages'|'media'|'messages'|'learning'|'help'|'academy'|'settings'|'activity'|'errors'|'access'|'search'|'chevron'|'menu'|'close'|'language'|'check'|'clock'|'lock'|'arrow'
 
 const paths:Record<AdminIconName,ReactNode>={
   home:<><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5M9 20v-6h6v6"/></>,
@@ -11,6 +11,7 @@ const paths:Record<AdminIconName,ReactNode>={
   content:<><path d="M4 5h16v14H4zM8 9h8M8 13h5"/></>,
   pages:<><path d="M7 3h8l4 4v14H7z"/><path d="M15 3v5h4M10 12h6M10 16h6"/></>,
   media:<><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="m3 17 5-4 4 3 3-2 6 4"/></>,
+  messages:<><path d="M4 5h16v12H7l-3 3V5Z"/><path d="M8 9h8M8 13h5"/></>,
   learning:<><path d="m3 10 9-5 9 5-9 5-9-5Z"/><path d="M7 13v4c3 2 7 2 10 0v-4M21 10v6"/></>,
   help:<><circle cx="12" cy="12" r="9"/><path d="M9.8 9a2.4 2.4 0 1 1 3.5 2.1c-.9.5-1.3 1-1.3 1.9M12 17h.01"/></>,
   academy:<><path d="M5 4h14v16H5zM9 4v16M9 8h6M9 12h6M9 16h4"/></>,

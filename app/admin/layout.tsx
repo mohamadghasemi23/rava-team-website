@@ -15,35 +15,41 @@ import './admin-fixes.css'
 import AdminShell from './components/AdminShell'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 import {hasPermission,PERMISSIONS} from '@/lib/authz/permissions'
-import {createClient} from '@/lib/supabase/server'
+import {resolveCustomerCapabilityManifest,resolveIsPlatformOperator} from '@/lib/admin/customer-capabilities'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const locale=await getAdminLocale()
-  const platformPermissions=[
-    PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE,
-    PERMISSIONS.PLATFORM_SITES_MANAGE,
-    PERMISSIONS.PLATFORM_MODULES_MANAGE,
-    PERMISSIONS.PLATFORM_ROLES_MANAGE,
-    PERMISSIONS.PLATFORM_ACCESS_MANAGE,
-    PERMISSIONS.PLATFORM_AUDIT_VIEW,
-    PERMISSIONS.PLATFORM_BILLING_MANAGE,
-    PERMISSIONS.PLATFORM_HELP_MANAGE,
-    PERMISSIONS.PLATFORM_SUPPORT_IMPERSONATE,
-    PERMISSIONS.TEMPLATES_MANAGE,
-  ] as const
-  const [canProvisionSites,...platformDecisions]=await Promise.all([
+  const [canProvisionSites,isPlatformOperator]=await Promise.all([
     hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE),
-    ...platformPermissions.map(permission=>hasPermission(permission)),
+    resolveIsPlatformOperator(),
   ])
-  const isPlatformOperator=platformDecisions.some(Boolean)
-  let customerWorkspace:null|{siteId:string;siteName:string;templateName:{fa:string;en:string};templateKey:string}=null
+  let customerWorkspace:null|{
+    identity:{name:string;role:{fa:string;en:string};initials:string}
+    siteId:string
+    siteName:string
+    templateName:{fa:string;en:string}
+    templateKey:string|null
+    homeHref:string
+    canViewPages:boolean
+    canManageMedia:boolean
+    canViewMessages:boolean
+    canViewHelp:boolean
+  }=null
   if(!isPlatformOperator){
-    const supabase=await createClient()
-    const{data:sites}=await supabase.from('sites').select('id,name').order('created_at',{ascending:true}).limit(1)
-    const site=sites?.[0]
-    if(site){
-      const{data:hasLaunchPad}=await supabase.rpc('has_template_workspace_access',{p_site_id:site.id,p_template_key:'rava-service-living-system'})
-      if(hasLaunchPad===true)customerWorkspace={siteId:site.id,siteName:site.name,templateName:{fa:'لانچ‌پد راوا',en:'RAVA LaunchPad'},templateKey:'rava-service-living-system'}
+    const manifest=await resolveCustomerCapabilityManifest()
+    if(manifest){
+      customerWorkspace={
+        identity:manifest.identity,
+        siteId:manifest.site.id,
+        siteName:manifest.site.name,
+        templateName:manifest.template?.name??{fa:manifest.site.name,en:manifest.site.name},
+        templateKey:manifest.template?.key??null,
+        homeHref:manifest.destination,
+        canViewPages:manifest.permissions.pagesView||manifest.permissions.pagesManage,
+        canManageMedia:manifest.permissions.mediaManage,
+        canViewMessages:manifest.permissions.leadsView||manifest.permissions.leadsManage,
+        canViewHelp:manifest.permissions.helpView,
+      }
     }
   }
   return <AdminShell initialLanguage={locale} canProvisionSites={canProvisionSites} isPlatformOperator={isPlatformOperator} customerWorkspace={customerWorkspace}>{children}</AdminShell>

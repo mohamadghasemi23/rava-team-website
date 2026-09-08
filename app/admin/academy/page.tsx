@@ -1,8 +1,11 @@
 import { createClient } from '@/lib/supabase/server'
 import { markLessonAction } from '@/app/admin/help/actions'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
+import {redirect} from 'next/navigation'
+import {canAccessAdminLearning} from '@/lib/admin/customer-capabilities'
 
 export default async function AcademyPage(){
+  if(!await canAccessAdminLearning())redirect('/admin')
   const locale=await getAdminLocale(),l=(fa:string,en:string)=>locale==='fa'?fa:en
   const supabase=await createClient(); const {data:claims}=await supabase.auth.getClaims(); const userId=String(claims?.claims?.sub??'')
   const [coursesR,ctR,mapR,topicsR,trR,progressR]=await Promise.all([

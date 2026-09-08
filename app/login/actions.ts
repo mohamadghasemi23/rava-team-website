@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import {resolveCustomerCapabilityManifest,resolveIsPlatformOperator} from '@/lib/admin/customer-capabilities'
 
 export type LoginState = { error?: string }
 
@@ -51,17 +52,10 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   const requestedDestination=safeAdminDestination(formData.get('next'))
   if(requestedDestination)redirect(requestedDestination)
 
-  const {data:isPlatformOperator}=await supabase.rpc('has_permission',{
-    required_permission:'platform.sites.manage',organization_scope:null,site_scope:null,
-  })
-  if(isPlatformOperator!==true){
-    const{data:sites}=await supabase.from('sites').select('id').order('created_at',{ascending:true}).limit(1)
-    if(sites?.[0]?.id){
-      const siteId=sites[0].id
-      const{data:hasLaunchPad}=await supabase.rpc('has_template_workspace_access',{p_site_id:siteId,p_template_key:'rava-service-living-system'})
-      if(hasLaunchPad===true)redirect(`/admin/platform/sites/${encodeURIComponent(siteId)}`)
-      redirect(`/admin/pages?site=${encodeURIComponent(siteId)}`)
-    }
+  const isPlatformOperator=await resolveIsPlatformOperator()
+  if(!isPlatformOperator){
+    const manifest=await resolveCustomerCapabilityManifest()
+    if(manifest)redirect(manifest.destination)
   }
   redirect('/admin')
 }

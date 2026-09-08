@@ -27,6 +27,8 @@ export const PERMISSIONS = {
   STARTER_PACKS_MANAGE: 'starter_packs.manage',
   STARTER_PACKS_INSTALL: 'starter_packs.install',
   MEDIA_MANAGE: 'media.manage',
+  LEADS_VIEW: 'leads.view',
+  LEADS_MANAGE: 'leads.manage',
   SEO_MANAGE: 'seo.manage',
   SEO_AI_GENERATE: 'seo.ai.generate',
   ANALYTICS_VIEW: 'analytics.view',

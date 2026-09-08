@@ -99,7 +99,7 @@ select (:'provision_result'::jsonb->>'organization_id')::uuid as organization_id
 select public.create_custom_role(
   'site','launchpad-customer','مشتری لانچ‌پد','LaunchPad customer','','',
   :'organization_id'::uuid,:'site_id'::uuid,
-  array['sites.view','cms.view','cms.manage','media.manage','seo.manage','design.manage','help.view']
+  array['sites.view','cms.view','cms.manage','media.manage','leads.view','leads.manage','seo.manage','help.view']
 ) as customer_role_id \gset
 select public.add_existing_member(
   :'customer_id'::uuid,'site',:'organization_id'::uuid,:'site_id'::uuid,array[(:'customer_role_id')::uuid],true

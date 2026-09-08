@@ -4,6 +4,8 @@ import GettingStarted from './components/GettingStarted'
 import DashboardSummary from './components/DashboardSummary'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 import {hasPermission,PERMISSIONS} from '@/lib/authz/permissions'
+import {resolveCustomerCapabilityManifest,resolveIsPlatformOperator} from '@/lib/admin/customer-capabilities'
+import CustomerHome from './components/CustomerHome'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,6 +21,19 @@ export default async function AdminPage() {
     hasPermission(PERMISSIONS.PLATFORM_ORGANIZATIONS_MANAGE),
   ])
   if (!profile?.active) redirect('/login')
+
+  const isPlatformOperator=await resolveIsPlatformOperator()
+  if(!isPlatformOperator){
+    const manifest=await resolveCustomerCapabilityManifest()
+    if(!manifest)redirect('/login')
+    const[{data:customerPages},{data:customerMedia},{data:customerDesign}]=await Promise.all([
+      supabase.from('pages').select('id,title,status,seo,updated_at').eq('site_id',manifest.site.id).order('updated_at',{ascending:false}),
+      manifest.permissions.mediaManage?supabase.from('media_assets').select('size_bytes').eq('site_id',manifest.site.id).is('deleted_at',null):Promise.resolve({data:[] as {size_bytes:number|null}[]}),
+      supabase.from('site_design_state').select('published_release_id').eq('site_id',manifest.site.id).maybeSingle(),
+    ])
+    const media=customerMedia??[]
+    return <CustomerHome site={{id:manifest.site.id,name:manifest.site.name}} pages={(customerPages??[]) as {id:string;title:string;status:string;seo:unknown;updated_at:string}[]} mediaCount={media.length} mediaBytes={media.reduce((total,item)=>total+(Number(item.size_bytes)||0),0)} published={Boolean(customerDesign?.published_release_id)} canManagePages={manifest.permissions.pagesManage} canManageMedia={manifest.permissions.mediaManage}/>
+  }
 
   const sites = await supabase.from('sites').select('id,name,created_at', { count: 'exact' }).order('created_at',{ascending:false}).limit(1)
   const site=sites.data?.[0]??null

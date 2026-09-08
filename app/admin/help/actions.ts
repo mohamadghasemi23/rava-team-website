@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { createTraceContext, recordErrorEvent } from '@/lib/observability/events'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
+import {canAccessAdminLearning} from '@/lib/admin/customer-capabilities'
 
 type State={ok?:boolean;message?:string;errorId?:string;nonce?:number}
 
@@ -59,5 +60,6 @@ export async function saveCurriculumAction(_s:State,fd:FormData):Promise<State>{
 }
 
 export async function markLessonAction(fd:FormData){
+  if(!await canAccessAdminLearning())return
   const supabase=await createClient(); await supabase.rpc('mark_academy_topic_complete',{p_course_id:String(fd.get('course_id')??''),p_topic_id:String(fd.get('topic_id')??''),p_completed:String(fd.get('completed')??'true')==='true'}); revalidatePath('/admin/academy')
 }
