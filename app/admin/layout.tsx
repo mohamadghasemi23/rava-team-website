@@ -15,6 +15,7 @@ import './admin-fixes.css'
 import AdminShell from './components/AdminShell'
 import {getAdminLocale} from '@/lib/i18n/admin-locale'
 import {hasPermission,PERMISSIONS} from '@/lib/authz/permissions'
+import {createClient} from '@/lib/supabase/server'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const locale=await getAdminLocale()
@@ -35,5 +36,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ...platformPermissions.map(permission=>hasPermission(permission)),
   ])
   const isPlatformOperator=platformDecisions.some(Boolean)
-  return <AdminShell initialLanguage={locale} canProvisionSites={canProvisionSites} isPlatformOperator={isPlatformOperator}>{children}</AdminShell>
+  let customerWorkspace:null|{siteId:string;siteName:string;templateName:{fa:string;en:string};templateKey:string}=null
+  if(!isPlatformOperator){
+    const supabase=await createClient()
+    const{data:sites}=await supabase.from('sites').select('id,name').order('created_at',{ascending:true}).limit(1)
+    const site=sites?.[0]
+    if(site){
+      const{data:hasLaunchPad}=await supabase.rpc('has_template_workspace_access',{p_site_id:site.id,p_template_key:'rava-service-living-system'})
+      if(hasLaunchPad===true)customerWorkspace={siteId:site.id,siteName:site.name,templateName:{fa:'لانچ‌پد راوا',en:'RAVA LaunchPad'},templateKey:'rava-service-living-system'}
+    }
+  }
+  return <AdminShell initialLanguage={locale} canProvisionSites={canProvisionSites} isPlatformOperator={isPlatformOperator} customerWorkspace={customerWorkspace}>{children}</AdminShell>
 }

@@ -8,6 +8,7 @@ import {AdminLocaleContext,type AdminLanguage} from './AdminLocale'
 
 type NavItem={label:{fa:string;en:string};href?:string;icon:AdminIconName;keywords:string[];children?:NavItem[]}
 type ContextHelp={key:string;estimated_minutes:number;translation?:{title:string;summary:string;body_markdown:string;steps:unknown[];warnings:unknown[];version:number}|null}
+type CustomerWorkspace={siteId:string;siteName:string;templateName:{fa:string;en:string};templateKey:string}
 type AdminFont='vazirmatn'|'estedad'|'noto'|'cairo'|'kufi'|'plexArabic'|'inter'|'manrope'|'sourceSans'
 const fonts:{key:AdminFont;language:AdminLanguage;family:string;label:{fa:string;en:string};sample:{fa:string;en:string}}[]=[
   {key:'vazirmatn',language:'fa',family:'"Vazirmatn Variable",sans-serif',label:{fa:'وزیرمتن',en:'Vazirmatn'},sample:{fa:'راوا؛ مدیریت روشن، روان و دقیق وب‌سایت',en:'RAVA — clear, fluent, precise website management'}},
@@ -43,10 +44,10 @@ const copy={
   en:{controlCenter:'Management center',search:'Where would you like to go?',noResult:'No matching section was found.',menu:'Open menu',close:'Close',language:'Persian language',helpTitle:'Help for this page',loading:'Preparing this guide…',empty:'A guide has not been published for this page yet.',academy:'View related learning',warnings:'Important notes',minute:'min',current:'You are here',pageLink:'Open the related page',font:'Choose typeface',fontTitle:'Admin typeface',fontSummary:'Preview each typeface and apply your choice across the entire administration experience.',selected:'Selected',saveFont:'Save and apply typeface'},
 }
 function itemMatches(item:NavItem,query:string):boolean{if(!query)return true;const haystack=[item.label.fa,item.label.en,...item.keywords].join(' ').toLowerCase();return haystack.includes(query.toLowerCase())||Boolean(item.children?.some(child=>itemMatches(child,query)))}
-function isItemActive(item:NavItem,pathname:string):boolean{return item.href?pathname===item.href||(item.href!=='/admin'&&pathname.startsWith(`${item.href}/`)):Boolean(item.children?.some(child=>isItemActive(child,pathname)))}
-function currentLabel(pathname:string,language:AdminLanguage){for(const item of navigation){if(item.href&&isItemActive(item,pathname))return item.label[language];const child=item.children?.find(entry=>isItemActive(entry,pathname));if(child)return child.label[language]}return copy[language].controlCenter}
+function isItemActive(item:NavItem,pathname:string):boolean{if(!item.href)return Boolean(item.children?.some(child=>isItemActive(child,pathname)));const hrefPath=item.href.split(/[?#]/,1)[0];return pathname===hrefPath||(hrefPath!=='/admin'&&pathname.startsWith(`${hrefPath}/`))}
+function currentLabel(pathname:string,language:AdminLanguage,items:NavItem[]){for(const item of items){if(item.href&&isItemActive(item,pathname))return item.label[language];const child=item.children?.find(entry=>isItemActive(entry,pathname));if(child)return child.label[language]}return copy[language].controlCenter}
 
-export default function AdminShell({children,initialLanguage,canProvisionSites,isPlatformOperator}:{children:React.ReactNode;initialLanguage:AdminLanguage;canProvisionSites:boolean;isPlatformOperator:boolean}){
+export default function AdminShell({children,initialLanguage,canProvisionSites,isPlatformOperator,customerWorkspace}:{children:React.ReactNode;initialLanguage:AdminLanguage;canProvisionSites:boolean;isPlatformOperator:boolean;customerWorkspace:CustomerWorkspace|null}){
   const defaultFont:AdminFont=initialLanguage==='fa'?'vazirmatn':'inter'
   const pathname=usePathname(),[language,setLanguageState]=useState<AdminLanguage>(initialLanguage),[font,setFont]=useState<AdminFont>(defaultFont),[pendingFont,setPendingFont]=useState<AdminFont>(defaultFont),[query,setQuery]=useState(''),[mobileOpen,setMobileOpen]=useState(false),[helpOpen,setHelpOpen]=useState(false),[fontOpen,setFontOpen]=useState(false),[help,setHelp]=useState<ContextHelp|null>(null),[helpLoading,setHelpLoading]=useState(false),[collapsed,setCollapsed]=useState<Record<string,boolean>>(()=>initialCollapsed)
   useEffect(()=>{const savedFont=window.localStorage.getItem(`rava-admin-font-${language}`),matching=fonts.find(item=>item.key===savedFont&&item.language===language);if(matching){setFont(matching.key);setPendingFont(matching.key)}},[language])
@@ -57,14 +58,26 @@ export default function AdminShell({children,initialLanguage,canProvisionSites,i
   function saveFont(){setFont(pendingFont);window.localStorage.setItem(`rava-admin-font-${language}`,pendingFont);setFontOpen(false)}
   const availableNavigation=useMemo(()=>{
     if(isPlatformOperator)return navigation.map(item=>({...item,children:item.children?.filter(child=>canProvisionSites||child.href!=='/admin/platform/sites/new')}))
+    if(customerWorkspace){
+      const site=encodeURIComponent(customerWorkspace.siteId)
+      return [
+        {label:customerWorkspace.templateName,href:`/admin/platform/sites/${site}`,icon:'home' as AdminIconName,keywords:['launchpad','workspace','لانچ پد','فضای کاری']},
+        {label:{fa:'مدیریت سایت',en:'Site management'},icon:'content' as AdminIconName,keywords:['site','content','media','seo','سایت','محتوا','رسانه','سئو'],children:[
+          {label:{fa:'صفحه‌ها و محتوا',en:'Pages & content'},href:`/admin/pages?site=${site}`,icon:'pages' as AdminIconName,keywords:['pages','content','صفحه','محتوا']},
+          {label:{fa:'تصاویر و فایل‌ها',en:'Media library'},href:`/admin/media?site=${site}`,icon:'media' as AdminIconName,keywords:['media','image','رسانه','تصویر']},
+          {label:{fa:'راهنمای لانچ‌پد',en:'LaunchPad guide'},href:`/admin/platform/sites/${site}/template-guide`,icon:'help' as AdminIconName,keywords:['launchpad','template','guide','لانچ پد','قالب','راهنما']},
+        ]},
+        {label:{fa:'آموزش‌های راوا',en:'RAVA Academy'},href:'/admin/academy',icon:'academy' as AdminIconName,keywords:['academy','learning','آموزش']},
+      ]
+    }
     const customerRoutes=new Set(['/admin','/admin/pages','/admin/media','/admin/academy'])
     return navigation.flatMap(item=>{
       if(item.href)return customerRoutes.has(item.href)?[item]:[]
       const children=item.children?.filter(child=>child.href&&customerRoutes.has(child.href))??[]
       return children.length?[{...item,children}]:[]
     })
-  },[canProvisionSites,isPlatformOperator])
-  const filteredNavigation=useMemo(()=>availableNavigation.filter(item=>itemMatches(item,query.trim())),[availableNavigation,query]),visibleFonts=fonts.filter(item=>item.language===language),t=copy[language],isRtl=language==='fa',tr=help?.translation,pageTitle=currentLabel(pathname,language),previewFont=fontOpen?pendingFont:font
+  },[canProvisionSites,customerWorkspace,isPlatformOperator])
+  const filteredNavigation=useMemo(()=>availableNavigation.filter(item=>itemMatches(item,query.trim())),[availableNavigation,query]),visibleFonts=fonts.filter(item=>item.language===language),t=copy[language],isRtl=language==='fa',tr=help?.translation,pageTitle=currentLabel(pathname,language,availableNavigation),previewFont=fontOpen?pendingFont:font
   return <AdminLocaleContext.Provider value={{language,setLanguage}}><div className="rava-admin-frame" dir={isRtl?'rtl':'ltr'} lang={language} data-admin-font={previewFont}>
     <button className="rava-admin-mobile-trigger" type="button" onClick={()=>setMobileOpen(true)} aria-label={t.menu}><AdminIcon name="menu"/></button>{mobileOpen&&<button className="rava-admin-scrim" type="button" aria-label={t.close} onClick={()=>setMobileOpen(false)}/>}<aside className={`rava-admin-sidebar${mobileOpen?' is-open':''}`} aria-label={t.menu}>
       <div className="rava-admin-brand-row"><Link className="rava-admin-brand" href="/admin">{language==='fa'?<><b>راوا</b> تیم</>:<><b>RAVA</b> TEAM</>}<small>{t.controlCenter}</small></Link><button className="rava-admin-close" type="button" onClick={()=>setMobileOpen(false)} aria-label={t.close}><AdminIcon name="close"/></button></div>

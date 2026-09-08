@@ -56,7 +56,12 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   })
   if(isPlatformOperator!==true){
     const{data:sites}=await supabase.from('sites').select('id').order('created_at',{ascending:true}).limit(1)
-    if(sites?.[0]?.id)redirect(`/admin/pages?site=${encodeURIComponent(sites[0].id)}`)
+    if(sites?.[0]?.id){
+      const siteId=sites[0].id
+      const{data:hasLaunchPad}=await supabase.rpc('has_template_workspace_access',{p_site_id:siteId,p_template_key:'rava-service-living-system'})
+      if(hasLaunchPad===true)redirect(`/admin/platform/sites/${encodeURIComponent(siteId)}`)
+      redirect(`/admin/pages?site=${encodeURIComponent(siteId)}`)
+    }
   }
   redirect('/admin')
 }
