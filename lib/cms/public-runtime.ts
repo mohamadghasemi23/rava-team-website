@@ -35,6 +35,34 @@ export async function getRequestSiteHostname() {
   )
 }
 
+export async function getRequestSiteOrigin() {
+  const requestHeaders = await headers()
+  const hostname = await getRequestSiteHostname()
+  if (!hostname) return null
+  const forwardedProto = requestHeaders.get('x-forwarded-proto')?.split(',')[0]?.trim().toLowerCase()
+  const protocol = forwardedProto === 'http' || forwardedProto === 'https'
+    ? forwardedProto
+    : hostname === 'localhost' || hostname.startsWith('127.') ? 'http' : 'https'
+  return `${protocol}://${hostname}`
+}
+
+export async function getPublicSeoContext() {
+  const hostname = await getRequestSiteHostname()
+  const empty={canonicalHostname:hostname,pages:[] as Array<{slug:string;updatedAt:string|null;locale:string}>}
+  if (!hostname) return empty
+  const supabase = await createClient()
+  const {data,error} = await supabase.rpc('get_public_sitemap',{p_hostname:hostname})
+  if (error || !data || typeof data!=='object' || Array.isArray(data)) {
+    const errorId=crypto.randomUUID()
+    console.error(JSON.stringify({event:'seo.sitemap.resolve_failed',errorId}))
+    return empty
+  }
+  const value=data as {canonicalHostname?:unknown;pages?:unknown}
+  const canonicalHostname=typeof value.canonicalHostname==='string'&&normalizedHostname(value.canonicalHostname)?normalizedHostname(value.canonicalHostname):hostname
+  const pages=Array.isArray(value.pages)?value.pages.filter((item):item is {slug:string;updatedAt:string|null;locale:string}=>Boolean(item&&typeof item==='object'&&typeof item.slug==='string'&&normalizedSlug(item.slug))):[]
+  return{canonicalHostname,pages}
+}
+
 export async function getPublishedPage(slugInput: string): Promise<PublicPagePayload | null> {
   const hostname = await getRequestSiteHostname()
   const slug = normalizedSlug(slugInput)
