@@ -1,0 +1,16 @@
+project_id = "rava-platform-ci"
+
+[db]
+major_version = 17
+
+[db.seed]
+enabled = false
+
+[studio]
+enabled = false
+
+[local_smtp]
+enabled = false
+
+[analytics]
+enabled = false

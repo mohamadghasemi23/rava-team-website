@@ -1,0 +1,682 @@
+{
+  "tool": "comp-diff",
+  "version": 1,
+  "createdAt": "2026-09-01T23:54:56.205Z",
+  "label": "hero",
+  "comp": ".impeccable/mocks/rava-living-system-d2-candidate.png",
+  "build": ".impeccable/review/hero-repro.png",
+  "spec": ".impeccable/build/spec.json",
+  "compSize": "1536x1024",
+  "buildSize": "1536x1024",
+  "align": "top",
+  "overall": 1,
+  "verdict": "match",
+  "scores": {
+    "overall": 1,
+    "structure": 1,
+    "color": 1,
+    "colorIntersection": 1,
+    "paletteMatch": 1,
+    "detail": 1,
+    "detailRaw": 1,
+    "detailAdded": 0,
+    "bands": 1
+  },
+  "palette": {
+    "comp": [
+      {
+        "hex": "#e5e2e4",
+        "coverage": 0.4947
+      },
+      {
+        "hex": "#090d1c",
+        "coverage": 0.3406
+      },
+      {
+        "hex": "#0a193c",
+        "coverage": 0.0767
+      },
+      {
+        "hex": "#adafbb",
+        "coverage": 0.0416
+      },
+      {
+        "hex": "#0a2170",
+        "coverage": 0.0396
+      },
+      {
+        "hex": "#354052",
+        "coverage": 0.0068
+      }
+    ],
+    "build": [
+      {
+        "hex": "#e5e2e4",
+        "coverage": 0.4947
+      },
+      {
+        "hex": "#090d1c",
+        "coverage": 0.3406
+      },
+      {
+        "hex": "#0a193c",
+        "coverage": 0.0767
+      },
+      {
+        "hex": "#adafbb",
+        "coverage": 0.0416
+      },
+      {
+        "hex": "#0a2170",
+        "coverage": 0.0396
+      },
+      {
+        "hex": "#354052",
+        "coverage": 0.0068
+      }
+    ]
+  },
+  "regions": [
+    {
+      "id": "creative-workspace-ground",
+      "x": 0,
+      "y": 0,
+      "w": 1,
+      "h": 0.645,
+      "kind": "texture",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 34,
+          "w": 1536,
+          "h": 626
+        },
+        "build": {
+          "x": 0,
+          "y": 34,
+          "w": 1536,
+          "h": 626
+        }
+      }
+    },
+    {
+      "id": "floating-navigation",
+      "x": 0.145,
+      "y": 0.018,
+      "w": 0.615,
+      "h": 0.087,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 25,
+          "y": 16,
+          "w": 904,
+          "h": 74
+        },
+        "build": {
+          "x": 25,
+          "y": 16,
+          "w": 904,
+          "h": 74
+        }
+      }
+    },
+    {
+      "id": "hero-headline",
+      "x": 0.072,
+      "y": 0.142,
+      "w": 0.245,
+      "h": 0.162,
+      "kind": "text",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 93,
+          "y": 0,
+          "w": 261,
+          "h": 158
+        },
+        "build": {
+          "x": 93,
+          "y": 0,
+          "w": 261,
+          "h": 158
+        }
+      }
+    },
+    {
+      "id": "hero-deck",
+      "x": 0.078,
+      "y": 0.326,
+      "w": 0.225,
+      "h": 0.074,
+      "kind": "text",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 293,
+          "h": 76
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 293,
+          "h": 76
+        }
+      }
+    },
+    {
+      "id": "hero-actions",
+      "x": 0.078,
+      "y": 0.409,
+      "w": 0.212,
+      "h": 0.079,
+      "kind": "control",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 191,
+          "h": 42
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 191,
+          "h": 42
+        }
+      }
+    },
+    {
+      "id": "editor-shell",
+      "x": 0.3,
+      "y": 0.272,
+      "w": 0.467,
+      "h": 0.374,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 717,
+          "h": 383
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 717,
+          "h": 383
+        }
+      }
+    },
+    {
+      "id": "editor-site-visual",
+      "x": 0.358,
+      "y": 0.325,
+      "w": 0.39,
+      "h": 0.293,
+      "kind": "image",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 599,
+          "h": 300
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 599,
+          "h": 300
+        }
+      }
+    },
+    {
+      "id": "responsive-device-preview",
+      "x": 0.854,
+      "y": 0.298,
+      "w": 0.117,
+      "h": 0.335,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 179,
+          "h": 343
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 179,
+          "h": 343
+        }
+      }
+    },
+    {
+      "id": "responsive-site-visual",
+      "x": 0.862,
+      "y": 0.336,
+      "w": 0.102,
+      "h": 0.277,
+      "kind": "image",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 157,
+          "h": 284
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 157,
+          "h": 284
+        }
+      }
+    },
+    {
+      "id": "cinematic-journey-ground",
+      "x": 0,
+      "y": 0.645,
+      "w": 1,
+      "h": 0.355,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 236,
+          "y": 59,
+          "w": 1194,
+          "h": 269
+        },
+        "build": {
+          "x": 236,
+          "y": 59,
+          "w": 1194,
+          "h": 269
+        }
+      }
+    },
+    {
+      "id": "walkthrough-heading",
+      "x": 0.672,
+      "y": 0.701,
+      "w": 0.266,
+      "h": 0.086,
+      "kind": "text",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 22,
+          "y": 1,
+          "w": 376,
+          "h": 78
+        },
+        "build": {
+          "x": 22,
+          "y": 1,
+          "w": 376,
+          "h": 78
+        }
+      }
+    },
+    {
+      "id": "walkthrough-deck",
+      "x": 0.345,
+      "y": 0.734,
+      "w": 0.25,
+      "h": 0.061,
+      "kind": "text",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 1,
+          "y": 0,
+          "w": 383,
+          "h": 37
+        },
+        "build": {
+          "x": 1,
+          "y": 0,
+          "w": 383,
+          "h": 37
+        }
+      }
+    },
+    {
+      "id": "journey-rail",
+      "x": 0.068,
+      "y": 0.825,
+      "w": 0.866,
+      "h": 0.071,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 129,
+          "y": 9,
+          "w": 1197,
+          "h": 42
+        },
+        "build": {
+          "x": 129,
+          "y": 9,
+          "w": 1197,
+          "h": 42
+        }
+      }
+    },
+    {
+      "id": "content-step",
+      "x": 0.067,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 130,
+          "y": 0,
+          "w": 191,
+          "h": 124
+        },
+        "build": {
+          "x": 130,
+          "y": 0,
+          "w": 191,
+          "h": 124
+        }
+      }
+    },
+    {
+      "id": "design-step",
+      "x": 0.29,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 321,
+          "h": 125
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 321,
+          "h": 125
+        }
+      }
+    },
+    {
+      "id": "preview-step",
+      "x": 0.512,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 321,
+          "h": 124
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 321,
+          "h": 124
+        }
+      }
+    },
+    {
+      "id": "publish-step",
+      "x": 0.735,
+      "y": 0.843,
+      "w": 0.209,
+      "h": 0.157,
+      "kind": "chrome",
+      "score": {
+        "overall": 1,
+        "structure": 1,
+        "color": 1,
+        "colorIntersection": 1,
+        "paletteMatch": 1,
+        "detail": 1,
+        "detailRaw": 1,
+        "detailAdded": 0,
+        "bands": 1
+      },
+      "verdict": "match",
+      "inkBox": {
+        "comp": {
+          "x": 0,
+          "y": 0,
+          "w": 301,
+          "h": 124
+        },
+        "build": {
+          "x": 0,
+          "y": 0,
+          "w": 301,
+          "h": 124
+        }
+      }
+    }
+  ],
+  "files": {
+    "sideBySide": ".impeccable/review/diff/hero/side-by-side.png",
+    "heatmap": ".impeccable/review/diff/hero/heatmap.png",
+    "regionFiles": [
+      ".impeccable/review/diff/hero/regions/creative-workspace-ground.png",
+      ".impeccable/review/diff/hero/regions/floating-navigation.png",
+      ".impeccable/review/diff/hero/regions/hero-headline.png",
+      ".impeccable/review/diff/hero/regions/hero-deck.png",
+      ".impeccable/review/diff/hero/regions/hero-actions.png",
+      ".impeccable/review/diff/hero/regions/editor-shell.png",
+      ".impeccable/review/diff/hero/regions/editor-site-visual.png",
+      ".impeccable/review/diff/hero/regions/responsive-device-preview.png",
+      ".impeccable/review/diff/hero/regions/responsive-site-visual.png",
+      ".impeccable/review/diff/hero/regions/cinematic-journey-ground.png",
+      ".impeccable/review/diff/hero/regions/walkthrough-heading.png",
+      ".impeccable/review/diff/hero/regions/walkthrough-deck.png",
+      ".impeccable/review/diff/hero/regions/journey-rail.png",
+      ".impeccable/review/diff/hero/regions/content-step.png",
+      ".impeccable/review/diff/hero/regions/design-step.png",
+      ".impeccable/review/diff/hero/regions/preview-step.png",
+      ".impeccable/review/diff/hero/regions/publish-step.png"
+    ]
+  }
+}

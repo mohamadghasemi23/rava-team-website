@@ -1,0 +1,968 @@
+{
+  "tool": "comp-spec",
+  "version": 1,
+  "createdAt": "2026-09-01T23:51:23.944Z",
+  "comp": ".impeccable/mocks/rava-living-system-d2-candidate.png",
+  "warnings": [
+    "region editor-site-visual: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
+    "region responsive-site-visual: \"bleed\": true set in the regions file (the clipped-artwork refusal is overridden: the page crops it there)",
+    "region cinematic-journey-ground: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+  ],
+  "uncoveredInkCells": [
+    "I2",
+    "I3",
+    "A4",
+    "I4",
+    "I5"
+  ],
+  "compSize": {
+    "width": 1536,
+    "height": 1024
+  },
+  "aspect": 1.5,
+  "orientation": "landscape",
+  "palette": [
+    {
+      "hex": "#e5e2e4",
+      "coverage": 0.4981
+    },
+    {
+      "hex": "#090d1c",
+      "coverage": 0.3429
+    },
+    {
+      "hex": "#0a193c",
+      "coverage": 0.0772
+    },
+    {
+      "hex": "#adafbb",
+      "coverage": 0.0419
+    },
+    {
+      "hex": "#0a2170",
+      "coverage": 0.0399
+    }
+  ],
+  "bands": [
+    {
+      "y": 0.1059,
+      "strength": 0.2142
+    },
+    {
+      "y": 0.3412,
+      "strength": 0.242
+    },
+    {
+      "y": 0.4824,
+      "strength": 0.3455
+    },
+    {
+      "y": 0.5647,
+      "strength": 0.2794
+    },
+    {
+      "y": 0.6353,
+      "strength": 1
+    },
+    {
+      "y": 0.7647,
+      "strength": 0.2518
+    }
+  ],
+  "regions": [
+    {
+      "id": "creative-workspace-ground",
+      "kind": "texture",
+      "note": "Atmospheric web-design and content-production workspace texture behind the first viewport",
+      "grid": null,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 0.645
+      },
+      "px": {
+        "x": 0,
+        "y": 0,
+        "w": 1536,
+        "h": 660
+      },
+      "aspect": 2.3273,
+      "palette": [
+        {
+          "hex": "#e4e2e4",
+          "coverage": 0.7752
+        },
+        {
+          "hex": "#aeafbb",
+          "coverage": 0.0641
+        },
+        {
+          "hex": "#0b2171",
+          "coverage": 0.0636
+        },
+        {
+          "hex": "#101e29",
+          "coverage": 0.0508
+        },
+        {
+          "hex": "#0e1c3f",
+          "coverage": 0.0463
+        }
+      ],
+      "detail": {
+        "energy": 26.9821
+      },
+      "medium": "raster",
+      "plate": "public/templates/rava-living-system/hero-workspace-background.png",
+      "text": null
+    },
+    {
+      "id": "floating-navigation",
+      "kind": "chrome",
+      "note": "Pearl optical-glass floating navigation with brand, routes, platform trigger and compact primary action",
+      "grid": null,
+      "box": {
+        "x": 0.145,
+        "y": 0.018,
+        "w": 0.615,
+        "h": 0.087
+      },
+      "px": {
+        "x": 223,
+        "y": 18,
+        "w": 945,
+        "h": 89
+      },
+      "aspect": 10.618,
+      "palette": [
+        {
+          "hex": "#ebebf0",
+          "coverage": 0.9146
+        },
+        {
+          "hex": "#122035",
+          "coverage": 0.0758
+        },
+        {
+          "hex": "#4f5f6f",
+          "coverage": 0.0052
+        },
+        {
+          "hex": "#081818",
+          "coverage": 0.0026
+        },
+        {
+          "hex": "#bbbdc6",
+          "coverage": 0.0018
+        }
+      ],
+      "detail": {
+        "energy": 19.8088
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "hero-headline",
+      "kind": "text",
+      "note": "Three-line Persian flagship promise with strong editorial hierarchy",
+      "grid": null,
+      "box": {
+        "x": 0.072,
+        "y": 0.142,
+        "w": 0.245,
+        "h": 0.162
+      },
+      "px": {
+        "x": 111,
+        "y": 145,
+        "w": 376,
+        "h": 166
+      },
+      "aspect": 2.2651,
+      "palette": [
+        {
+          "hex": "#e8e7e6",
+          "coverage": 0.8439
+        },
+        {
+          "hex": "#081838",
+          "coverage": 0.1211
+        },
+        {
+          "hex": "#414e5f",
+          "coverage": 0.0147
+        },
+        {
+          "hex": "#aeaeb5",
+          "coverage": 0.0131
+        },
+        {
+          "hex": "#787e8c",
+          "coverage": 0.0073
+        }
+      ],
+      "detail": {
+        "energy": 38.341
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 2,
+          "glyphs": 9,
+          "capHeightPx": 33.3,
+          "inkIsDark": true,
+          "allCaps": true,
+          "advance": 1.1079,
+          "advTall": 1.0802,
+          "advX": null,
+          "gap": 0.1385,
+          "xRatio": null,
+          "stemW": 0.1914,
+          "contrast": 0.9143,
+          "serif": null,
+          "densTall": 0.4495,
+          "densX": null,
+          "weight": 0.4495
+        },
+        "widthClass": "wide",
+        "weightClass": "regular",
+        "chosen": {
+          "family": "Gochi Hand",
+          "weight": 400,
+          "fontSizePx": 48,
+          "source": "catalog",
+          "estimatedSize": true,
+          "stamp": "8cdcdc73df33"
+        }
+      }
+    },
+    {
+      "id": "hero-deck",
+      "kind": "text",
+      "note": "Concise Persian explanation of the managed RAVA website operating system",
+      "grid": null,
+      "box": {
+        "x": 0.078,
+        "y": 0.326,
+        "w": 0.225,
+        "h": 0.074
+      },
+      "px": {
+        "x": 120,
+        "y": 334,
+        "w": 346,
+        "h": 76
+      },
+      "aspect": 4.5526,
+      "palette": [
+        {
+          "hex": "#e7e6e6",
+          "coverage": 0.9558
+        },
+        {
+          "hex": "#516074",
+          "coverage": 0.0166
+        },
+        {
+          "hex": "#8e94a2",
+          "coverage": 0.0143
+        },
+        {
+          "hex": "#adb2b5",
+          "coverage": 0.008
+        },
+        {
+          "hex": "#081828",
+          "coverage": 0.0053
+        }
+      ],
+      "detail": {
+        "energy": 21.1795
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 24,
+          "capHeightPx": 9.7,
+          "inkIsDark": true,
+          "allCaps": true,
+          "advance": 0.6002,
+          "advTall": 0.7888,
+          "advX": null,
+          "gap": 0.2058,
+          "xRatio": null,
+          "stemW": 0.178,
+          "contrast": 1.0763,
+          "serif": 0.5585,
+          "densTall": 0.4566,
+          "densX": null,
+          "weight": 0.4566
+        },
+        "widthClass": "wide",
+        "weightClass": "regular"
+      }
+    },
+    {
+      "id": "hero-actions",
+      "kind": "control",
+      "note": "Compact tactile consultation and platform-discovery actions",
+      "grid": null,
+      "box": {
+        "x": 0.078,
+        "y": 0.409,
+        "w": 0.212,
+        "h": 0.079
+      },
+      "px": {
+        "x": 120,
+        "y": 419,
+        "w": 326,
+        "h": 81
+      },
+      "aspect": 4.0247,
+      "palette": [
+        {
+          "hex": "#e7e5e6",
+          "coverage": 0.8978
+        },
+        {
+          "hex": "#081521",
+          "coverage": 0.0913
+        },
+        {
+          "hex": "#bdb4c2",
+          "coverage": 0.0068
+        },
+        {
+          "hex": "#0d1d3d",
+          "coverage": 0.0024
+        },
+        {
+          "hex": "#223242",
+          "coverage": 0.0017
+        }
+      ],
+      "detail": {
+        "energy": 11.1079
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "editor-shell",
+      "kind": "chrome",
+      "note": "Perspective RAVA page editor shell with page tree, toolbar and editable canvas",
+      "grid": null,
+      "box": {
+        "x": 0.3,
+        "y": 0.272,
+        "w": 0.467,
+        "h": 0.374
+      },
+      "px": {
+        "x": 461,
+        "y": 279,
+        "w": 717,
+        "h": 383
+      },
+      "aspect": 1.8721,
+      "palette": [
+        {
+          "hex": "#efeee8",
+          "coverage": 0.323
+        },
+        {
+          "hex": "#dcd5de",
+          "coverage": 0.2668
+        },
+        {
+          "hex": "#0b2272",
+          "coverage": 0.2285
+        },
+        {
+          "hex": "#132045",
+          "coverage": 0.0964
+        },
+        {
+          "hex": "#1c2838",
+          "coverage": 0.0853
+        }
+      ],
+      "detail": {
+        "energy": 18.1574
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "editor-site-visual",
+      "kind": "image",
+      "note": "RAVA product-system visualization connecting page building, bilingual content, brand design, SEO, responsive review and safe publishing",
+      "grid": null,
+      "bleed": true,
+      "box": {
+        "x": 0.358,
+        "y": 0.325,
+        "w": 0.39,
+        "h": 0.293
+      },
+      "px": {
+        "x": 550,
+        "y": 333,
+        "w": 599,
+        "h": 300
+      },
+      "aspect": 1.9967,
+      "palette": [
+        {
+          "hex": "#dcd9df",
+          "coverage": 0.376
+        },
+        {
+          "hex": "#0b2272",
+          "coverage": 0.3192
+        },
+        {
+          "hex": "#1f293f",
+          "coverage": 0.1587
+        },
+        {
+          "hex": "#adb4cc",
+          "coverage": 0.0807
+        },
+        {
+          "hex": "#1d326a",
+          "coverage": 0.0653
+        }
+      ],
+      "detail": {
+        "energy": 18.6775
+      },
+      "medium": "raster",
+      "plate": "public/templates/rava-living-system/editor-site-visual.png",
+      "text": null
+    },
+    {
+      "id": "responsive-device-preview",
+      "kind": "chrome",
+      "note": "Responsive phone frame showing the same RAVA site at a production breakpoint",
+      "grid": null,
+      "box": {
+        "x": 0.854,
+        "y": 0.298,
+        "w": 0.117,
+        "h": 0.335
+      },
+      "px": {
+        "x": 1312,
+        "y": 305,
+        "w": 180,
+        "h": 343
+      },
+      "aspect": 0.5248,
+      "palette": [
+        {
+          "hex": "#e9e6e6",
+          "coverage": 0.3965
+        },
+        {
+          "hex": "#09191c",
+          "coverage": 0.2111
+        },
+        {
+          "hex": "#d5d2e2",
+          "coverage": 0.1887
+        },
+        {
+          "hex": "#0b1d66",
+          "coverage": 0.1323
+        },
+        {
+          "hex": "#0b1a3f",
+          "coverage": 0.0714
+        }
+      ],
+      "detail": {
+        "energy": 18.8092
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "responsive-site-visual",
+      "kind": "image",
+      "note": "Portrait RAVA product-system visualization showing the same capability journey in responsive form",
+      "grid": null,
+      "bleed": true,
+      "box": {
+        "x": 0.862,
+        "y": 0.336,
+        "w": 0.102,
+        "h": 0.277
+      },
+      "px": {
+        "x": 1324,
+        "y": 344,
+        "w": 157,
+        "h": 284
+      },
+      "aspect": 0.5528,
+      "palette": [
+        {
+          "hex": "#eae6e6",
+          "coverage": 0.3875
+        },
+        {
+          "hex": "#d5d2e2",
+          "coverage": 0.2532
+        },
+        {
+          "hex": "#0b1d66",
+          "coverage": 0.1785
+        },
+        {
+          "hex": "#0e1b33",
+          "coverage": 0.1053
+        },
+        {
+          "hex": "#0b258a",
+          "coverage": 0.0754
+        }
+      ],
+      "detail": {
+        "energy": 13.7554
+      },
+      "medium": "raster",
+      "plate": "public/templates/rava-living-system/responsive-site-visual.png",
+      "text": null
+    },
+    {
+      "id": "cinematic-journey-ground",
+      "kind": "chrome",
+      "note": "One continuous midnight journey surface with restrained luminous flow and depth",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0,
+        "y": 0.645,
+        "w": 1,
+        "h": 0.355
+      },
+      "px": {
+        "x": 0,
+        "y": 660,
+        "w": 1536,
+        "h": 364
+      },
+      "aspect": 4.2198,
+      "palette": [
+        {
+          "hex": "#080c1b",
+          "coverage": 0.8559
+        },
+        {
+          "hex": "#081739",
+          "coverage": 0.1296
+        },
+        {
+          "hex": "#f6f6f6",
+          "coverage": 0.0086
+        },
+        {
+          "hex": "#2874f8",
+          "coverage": 0.0035
+        },
+        {
+          "hex": "#99a9b9",
+          "coverage": 0.0024
+        }
+      ],
+      "detail": {
+        "energy": 10.1339
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "walkthrough-heading",
+      "kind": "text",
+      "note": "Persian heading introducing the guided RAVA operating journey",
+      "grid": null,
+      "box": {
+        "x": 0.672,
+        "y": 0.701,
+        "w": 0.266,
+        "h": 0.086
+      },
+      "px": {
+        "x": 1032,
+        "y": 718,
+        "w": 409,
+        "h": 88
+      },
+      "aspect": 4.6477,
+      "palette": [
+        {
+          "hex": "#080b1a",
+          "coverage": 0.8614
+        },
+        {
+          "hex": "#f6f6f6",
+          "coverage": 0.114
+        },
+        {
+          "hex": "#adadb4",
+          "coverage": 0.0102
+        },
+        {
+          "hex": "#273048",
+          "coverage": 0.0084
+        },
+        {
+          "hex": "#6b8bcd",
+          "coverage": 0.006
+        }
+      ],
+      "detail": {
+        "energy": 43.82
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 10,
+          "capHeightPx": 32.5,
+          "inkIsDark": false,
+          "allCaps": true,
+          "advance": 0.4154,
+          "advTall": 0.2154,
+          "advX": null,
+          "gap": 0.2462,
+          "xRatio": null,
+          "stemW": 0.2125,
+          "contrast": 0.9093,
+          "serif": 1,
+          "densTall": 0.9867,
+          "densX": null,
+          "weight": 0.9867
+        },
+        "widthClass": "compressed",
+        "weightClass": "black"
+      }
+    },
+    {
+      "id": "walkthrough-deck",
+      "kind": "text",
+      "note": "Supporting explanation for the four-step website journey",
+      "grid": null,
+      "box": {
+        "x": 0.345,
+        "y": 0.734,
+        "w": 0.25,
+        "h": 0.061
+      },
+      "px": {
+        "x": 530,
+        "y": 752,
+        "w": 384,
+        "h": 62
+      },
+      "aspect": 6.1935,
+      "palette": [
+        {
+          "hex": "#081834",
+          "coverage": 0.9452
+        },
+        {
+          "hex": "#95a4bb",
+          "coverage": 0.0261
+        },
+        {
+          "hex": "#53627a",
+          "coverage": 0.0168
+        },
+        {
+          "hex": "#293757",
+          "coverage": 0.0119
+        }
+      ],
+      "detail": {
+        "energy": 16.9557
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "type": {
+        "comp": {
+          "lines": 1,
+          "glyphs": 35,
+          "capHeightPx": 9.2,
+          "inkIsDark": false,
+          "allCaps": true,
+          "advance": 0.2525,
+          "advTall": 0.2164,
+          "advX": null,
+          "gap": 0.1443,
+          "xRatio": null,
+          "stemW": 0.2057,
+          "contrast": 1.0395,
+          "serif": 0.2755,
+          "densTall": 0.8348,
+          "densX": null,
+          "weight": 0.8348
+        },
+        "widthClass": "compressed",
+        "weightClass": "black"
+      }
+    },
+    {
+      "id": "journey-rail",
+      "kind": "chrome",
+      "note": "Continuous numbered progress rail linking content, design, review and publication",
+      "grid": null,
+      "box": {
+        "x": 0.068,
+        "y": 0.825,
+        "w": 0.866,
+        "h": 0.071
+      },
+      "px": {
+        "x": 104,
+        "y": 845,
+        "w": 1330,
+        "h": 73
+      },
+      "aspect": 18.2192,
+      "palette": [
+        {
+          "hex": "#080c1d",
+          "coverage": 0.9415
+        },
+        {
+          "hex": "#092848",
+          "coverage": 0.042
+        },
+        {
+          "hex": "#084030",
+          "coverage": 0.0102
+        },
+        {
+          "hex": "#284858",
+          "coverage": 0.0033
+        },
+        {
+          "hex": "#082f2f",
+          "coverage": 0.0031
+        }
+      ],
+      "detail": {
+        "energy": 5.9485
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "content-step",
+      "kind": "chrome",
+      "note": "First journey step for structured content with concise evidence",
+      "grid": null,
+      "box": {
+        "x": 0.067,
+        "y": 0.843,
+        "w": 0.209,
+        "h": 0.157
+      },
+      "px": {
+        "x": 103,
+        "y": 863,
+        "w": 321,
+        "h": 161
+      },
+      "aspect": 1.9938,
+      "palette": [
+        {
+          "hex": "#080818",
+          "coverage": 0.9588
+        },
+        {
+          "hex": "#0b2948",
+          "coverage": 0.0245
+        },
+        {
+          "hex": "#98a8bc",
+          "coverage": 0.0077
+        },
+        {
+          "hex": "#4f5b6b",
+          "coverage": 0.0061
+        },
+        {
+          "hex": "#f3f3f3",
+          "coverage": 0.003
+        }
+      ],
+      "detail": {
+        "energy": 7.8264
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "design-step",
+      "kind": "chrome",
+      "note": "Second journey step for modular visual design and brand controls",
+      "grid": null,
+      "box": {
+        "x": 0.29,
+        "y": 0.843,
+        "w": 0.209,
+        "h": 0.157
+      },
+      "px": {
+        "x": 445,
+        "y": 863,
+        "w": 321,
+        "h": 161
+      },
+      "aspect": 1.9938,
+      "palette": [
+        {
+          "hex": "#080a1c",
+          "coverage": 0.9623
+        },
+        {
+          "hex": "#0a2848",
+          "coverage": 0.0241
+        },
+        {
+          "hex": "#636e7e",
+          "coverage": 0.0059
+        },
+        {
+          "hex": "#9dadbf",
+          "coverage": 0.0049
+        },
+        {
+          "hex": "#f2f2f2",
+          "coverage": 0.0028
+        }
+      ],
+      "detail": {
+        "energy": 8.8938
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "preview-step",
+      "kind": "chrome",
+      "note": "Third journey step for responsive review and human approval",
+      "grid": null,
+      "box": {
+        "x": 0.512,
+        "y": 0.843,
+        "w": 0.209,
+        "h": 0.157
+      },
+      "px": {
+        "x": 786,
+        "y": 863,
+        "w": 321,
+        "h": 161
+      },
+      "aspect": 1.9938,
+      "palette": [
+        {
+          "hex": "#080b1c",
+          "coverage": 0.9587
+        },
+        {
+          "hex": "#0a2848",
+          "coverage": 0.0245
+        },
+        {
+          "hex": "#5f6878",
+          "coverage": 0.0068
+        },
+        {
+          "hex": "#f6f6f6",
+          "coverage": 0.006
+        },
+        {
+          "hex": "#8898a8",
+          "coverage": 0.004
+        }
+      ],
+      "detail": {
+        "energy": 10.559
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    },
+    {
+      "id": "publish-step",
+      "kind": "chrome",
+      "note": "Fourth journey step for verified and reversible publication",
+      "grid": null,
+      "box": {
+        "x": 0.735,
+        "y": 0.843,
+        "w": 0.209,
+        "h": 0.157
+      },
+      "px": {
+        "x": 1129,
+        "y": 863,
+        "w": 321,
+        "h": 161
+      },
+      "aspect": 1.9938,
+      "palette": [
+        {
+          "hex": "#080818",
+          "coverage": 0.9635
+        },
+        {
+          "hex": "#083f2f",
+          "coverage": 0.0167
+        },
+        {
+          "hex": "#0a2e2e",
+          "coverage": 0.0074
+        },
+        {
+          "hex": "#9cacbf",
+          "coverage": 0.007
+        },
+        {
+          "hex": "#616b7b",
+          "coverage": 0.0054
+        }
+      ],
+      "detail": {
+        "energy": 9.4483
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null
+    }
+  ]
+}

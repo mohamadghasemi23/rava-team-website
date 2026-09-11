@@ -1,0 +1,9 @@
+.git
+.github
+.next
+node_modules
+.env*
+supabase/.temp
+supabase/tests
+docs
+infra

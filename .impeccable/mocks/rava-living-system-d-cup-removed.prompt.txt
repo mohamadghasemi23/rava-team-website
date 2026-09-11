@@ -1,0 +1,6 @@
+Use case: precise-object-edit
+Asset type: approved desktop website design comp for RAVA TEAM
+Source: .impeccable/mocks/rava-living-system-d.png
+Edit: remove only the small coffee cup and saucer from the lower-right edge of the large tilted website-builder canvas in the upper light section; reconstruct the neutral surface beneath it.
+Invariants: preserve the 1536x1024 composition, Persian copy, RAVA branding, glass navigation, open Mega Menu, guides, editor, lamp, stone blocks, responsive devices, release rail, lower journey, lighting, colours, shadows and proportions. Do not remove or redesign anything else.
+Generated with: built-in image generation tool, precise-object-edit mode, 2026-09-02 UTC.

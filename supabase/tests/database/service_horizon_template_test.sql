@@ -1,0 +1,10 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(5);
+select is((select count(*)::bigint from public.template_catalog where key='rava-service-horizon' and status='active' and commercial_tier='premium' and is_public),1::bigint,'Dynamic Horizon is a visible premium template');
+select is((select metadata->>'effect' from public.template_catalog where key='rava-service-horizon'),'threeui-emerald-horizon','catalog records the exact effect');
+select is((select layout_blueprint#>>'{effect,fallback}' from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-horizon' and tv.version=1),'static-gradient','template versions the static fallback');
+select is((select layout_blueprint#>>'{effect,reduced_motion}' from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-horizon' and tv.version=1),'static','template versions reduced-motion behavior');
+select ok((select exists(select 1 from public.starter_pack_template_compatibility c join public.template_versions tv on tv.id=c.template_version_id join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-horizon' and tv.version=1 and c.active)),'RAVA service starter content is compatible');
+select * from finish();
+rollback;

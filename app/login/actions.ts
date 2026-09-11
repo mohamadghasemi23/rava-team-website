@@ -2,8 +2,22 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import {resolveCustomerCapabilityManifest,resolveIsPlatformOperator} from '@/lib/admin/customer-capabilities'
 
 export type LoginState = { error?: string }
+
+function safeAdminDestination(value:FormDataEntryValue|null){
+  const candidate=String(value??'').trim()
+  if(!candidate||candidate.startsWith('//')||candidate.includes('\\'))return null
+  try{
+    const url=new URL(candidate,'http://rava.local')
+    if(url.origin!=='http://rava.local')return null
+    const adminPath=url.pathname==='/admin'||url.pathname.startsWith('/admin/')
+    const designPreviewPath=url.pathname==='/design-preview'||url.pathname.startsWith('/design-preview/')
+    if(!adminPath&&!designPreviewPath)return null
+    return `${url.pathname}${url.search}${url.hash}`
+  }catch{return null}
+}
 
 export async function login(_state: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get('email') ?? '').trim().toLowerCase()
@@ -35,5 +49,13 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     return { error: 'این حساب غیرفعال است.' }
   }
 
+  const requestedDestination=safeAdminDestination(formData.get('next'))
+  if(requestedDestination)redirect(requestedDestination)
+
+  const isPlatformOperator=await resolveIsPlatformOperator()
+  if(!isPlatformOperator){
+    const manifest=await resolveCustomerCapabilityManifest()
+    if(manifest)redirect(manifest.destination)
+  }
   redirect('/admin')
 }

@@ -1,0 +1,21 @@
+RAVA TEAM flagship BASE v1 — pre-implementation visual candidate
+
+Use case: ui-mockup
+Asset type: 1536x1024 desktop homepage comp
+Reference 1: .impeccable/mocks/rava-living-system-d.png — structural reference for the glass navbar, asymmetric Hero, perspective builder, responsive/release rail and curved transition.
+Reference 2: .impeccable/mocks/rava-living-system-d2-candidate.png — supporting reference for RAVA-specific product imagery and the pearl/navy/cobalt/verified-green material system.
+
+Direction: preserve D's density and topology while replacing every lamp, cup, stone, furniture and interior scene with one connected RAVA product demonstration. Show content architecture, brand controls, page building, responsive previews and safe publishing as one system. Keep the Platform menu closed by default. Use a clearly authored curved transition into the navy four-stage journey.
+
+Required Persian copy:
+- سایت حرفه‌ای؛ با یک سیستم واقعی پشت آن
+- راوا یک سیستم کامل برای ساخت، مدیریت و رشد سایت‌های حرفه‌ای است؛ سریع، منظم و قابل اعتماد.
+- شروع پروژه
+- دیدن نسخه زنده
+- راوا را در عمل ببینید
+- محتوا، طراحی، پیش‌نمایش، انتشار
+
+Exclusions: buildings, architecture photography, lamps, cups, stones, furniture, rooms, stock photography, fake clients, fake awards, fake metrics, meaningless charts, disconnected icon grids, open initial menu, flat Hero boundary, gradient text and watermarks.
+
+Generated with: built-in image generation tool, 2026-09-02 UTC.
+Status: candidate only; not approved and not implementation authority until explicit owner approval.

@@ -1,0 +1,16 @@
+{
+  auto_https off
+  admin off
+}
+
+:80 {
+  encode zstd gzip
+
+  @health path /_infra/health
+  respond @health 200
+
+  @supabase path /auth/v1/* /rest/v1/* /storage/v1/* /realtime/v1/* /functions/v1/* /graphql/v1
+  reverse_proxy @supabase supabase-envoy:8000
+
+  reverse_proxy app:3000
+}

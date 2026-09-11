@@ -1,0 +1,15 @@
+[Unit]
+Description=RAVA Staging PostgreSQL backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/rava-staging-backup
+User=root
+Group=root
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/rava/backups/staging
+ProtectHome=true
+NoNewPrivileges=true

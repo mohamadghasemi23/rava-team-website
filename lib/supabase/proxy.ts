@@ -5,7 +5,7 @@ export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_INTERNAL_URL || process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
@@ -26,7 +26,7 @@ export async function updateSession(request: NextRequest) {
   const authenticated = Boolean(data?.claims)
   const path = request.nextUrl.pathname
 
-  if (path.startsWith('/admin') && !authenticated) {
+  if ((path.startsWith('/admin') || path.startsWith('/design-preview')) && !authenticated) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     url.searchParams.set('next', path)

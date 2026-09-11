@@ -1,175 +1,43 @@
 'use client'
 
-import { ChangeEvent, useMemo, useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import {ChangeEvent,type ReactNode,useEffect,useMemo,useState} from 'react'
+import {Upload} from 'tus-js-client'
+import {createClient} from '@/lib/supabase/client'
+import {deleteMedia,finalizeVideoUpload,updateMediaAlt,uploadMedia} from './actions'
+import {useAdminLocale} from '@/app/admin/components/AdminLocale'
 
-type Asset = {
-  id: string
-  storage_path: string
-  file_name: string
-  mime_type: string
-  alt_text: string
-  size_bytes: number | null
-  created_at: string
-}
+type Asset={id:string;storage_path:string;file_name:string;mime_type:string;media_kind:'image'|'video';alt_text:string;size_bytes:number|null;duration_seconds:number|null;created_at:string}
+type Toast={ok:boolean;message:string}|null
+type ConfirmState={kind:'upload'}|{kind:'delete';asset:Asset}|{kind:'alt';asset:Asset;value:string}|null
+const IMAGE_TYPES=['image/jpeg','image/png','image/webp','image/gif'],VIDEO_TYPES=['video/mp4','video/webm']
 
-type Toast = { ok: boolean; message: string } | null
-type ConfirmState =
-  | { kind: 'upload' }
-  | { kind: 'delete'; asset: Asset }
-  | { kind: 'alt'; asset: Asset; value: string }
-  | null
+async function videoDuration(file:File){return new Promise<number>((resolve)=>{const video=document.createElement('video'),url=URL.createObjectURL(file);video.preload='metadata';video.onloadedmetadata=()=>{const value=Number.isFinite(video.duration)?video.duration:0;URL.revokeObjectURL(url);resolve(value)};video.onerror=()=>{URL.revokeObjectURL(url);resolve(0)};video.src=url})}
 
-export default function MediaManager({ initialAssets, userId }: { initialAssets: Asset[]; userId: string }) {
-  const supabase = useMemo(() => createClient(), [])
-  const [assets, setAssets] = useState(initialAssets)
-  const [file, setFile] = useState<File | null>(null)
-  const [alt, setAlt] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [toast, setToast] = useState<Toast>(null)
-  const [confirmState, setConfirmState] = useState<ConfirmState>(null)
-  const [previewAsset, setPreviewAsset] = useState<Asset | null>(null)
-  const [altDrafts, setAltDrafts] = useState<Record<string, string>>(() => Object.fromEntries(initialAssets.map((a) => [a.id, a.alt_text])))
-  const [copiedId, setCopiedId] = useState<string | null>(null)
-
-  function publicUrl(path: string) {
-    return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl
-  }
-
-  function notify(ok: boolean, message: string) {
-    setToast({ ok, message })
-    window.setTimeout(() => setToast(null), 4200)
-  }
-
-  function onFile(event: ChangeEvent<HTMLInputElement>) {
-    const next = event.target.files?.[0] ?? null
-    if (!next) return
-    if (!next.type.startsWith('image/')) return notify(false, 'فقط فایل تصویری مجاز است.')
-    if (next.size > 10 * 1024 * 1024) return notify(false, 'حجم فایل باید کمتر از ۱۰ مگابایت باشد.')
-    setFile(next)
-    if (!alt) setAlt(next.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' '))
-  }
-
-  async function uploadConfirmed() {
-    if (!file) return
-    setConfirmState(null)
-    setBusy(true)
-    const safeName = file.name.toLowerCase().replace(/[^a-z0-9._-]+/g, '-')
-    const path = `${userId}/${Date.now()}-${crypto.randomUUID()}-${safeName}`
-    const uploaded = await supabase.storage.from('rava-media').upload(path, file, { cacheControl: '31536000', upsert: false, contentType: file.type })
-    if (uploaded.error) { setBusy(false); return notify(false, `آپلود انجام نشد: ${uploaded.error.message}`) }
-
-    const inserted = await supabase.from('media_assets').insert({
-      storage_path: path,
-      file_name: file.name,
-      mime_type: file.type,
-      alt_text: alt.trim(),
-      size_bytes: file.size,
-      uploaded_by: userId,
-    }).select('id,storage_path,file_name,mime_type,alt_text,size_bytes,created_at').single()
-
-    if (inserted.error || !inserted.data) {
-      await supabase.storage.from('rava-media').remove([path])
-      setBusy(false)
-      return notify(false, `ثبت اطلاعات فایل انجام نشد: ${inserted.error?.message ?? 'خطای ناشناخته'}`)
-    }
-
-    const asset = inserted.data as Asset
-    setAssets((current) => [asset, ...current])
-    setAltDrafts((current) => ({ ...current, [asset.id]: asset.alt_text }))
-    setFile(null)
-    setAlt('')
-    setBusy(false)
-    const input = document.getElementById('media-upload-input') as HTMLInputElement | null
-    if (input) input.value = ''
-    notify(true, 'تصویر با موفقیت آپلود و در کتابخانه رسانه ثبت شد.')
-  }
-
-  async function saveAltConfirmed() {
-    if (!confirmState || confirmState.kind !== 'alt') return
-    const { asset, value } = confirmState
-    setConfirmState(null)
-    setBusy(true)
-    const result = await supabase.from('media_assets').update({ alt_text: value }).eq('id', asset.id)
-    setBusy(false)
-    if (result.error) return notify(false, `ویرایش انجام نشد: ${result.error.message}`)
-    setAssets((current) => current.map((item) => item.id === asset.id ? { ...item, alt_text: value } : item))
-    notify(true, 'Alt Text تصویر با موفقیت روی سرور ویرایش شد.')
-  }
-
-  async function removeConfirmed() {
-    if (!confirmState || confirmState.kind !== 'delete') return
-    const asset = confirmState.asset
-    setConfirmState(null)
-    setBusy(true)
-    const storageResult = await supabase.storage.from('rava-media').remove([asset.storage_path])
-    if (storageResult.error) { setBusy(false); return notify(false, `حذف فایل انجام نشد: ${storageResult.error.message}`) }
-    const dbResult = await supabase.from('media_assets').delete().eq('id', asset.id)
-    if (dbResult.error) { setBusy(false); return notify(false, `حذف رکورد انجام نشد: ${dbResult.error.message}`) }
-    setAssets((current) => current.filter((item) => item.id !== asset.id))
-    setBusy(false)
-    notify(true, 'تصویر با موفقیت از Storage و کتابخانه رسانه حذف شد.')
-  }
-
-  async function copyUrl(asset: Asset) {
-    const url = publicUrl(asset.storage_path)
-    try {
-      await navigator.clipboard.writeText(url)
-      setCopiedId(asset.id)
-      window.setTimeout(() => setCopiedId(null), 1800)
-      notify(true, 'لینک عمومی تصویر در کلیپ‌بورد کپی شد.')
-    } catch {
-      window.prompt('لینک تصویر را کپی کن:', url)
-    }
-  }
-
-  function confirmTitle() {
-    if (!confirmState) return ''
-    if (confirmState.kind === 'upload') return 'تأیید آپلود تصویر'
-    if (confirmState.kind === 'delete') return 'حذف تصویر'
-    return 'تأیید ویرایش Alt Text'
-  }
-
-  function confirmMessage() {
-    if (!confirmState) return ''
-    if (confirmState.kind === 'upload') return `تصویر «${file?.name ?? ''}» روی سرور آپلود و در کتابخانه ثبت شود؟`
-    if (confirmState.kind === 'delete') return `تصویر «${confirmState.asset.file_name}» برای همیشه از Storage و کتابخانه رسانه حذف شود؟`
-    return `Alt Text تصویر «${confirmState.asset.file_name}» به «${confirmState.value || 'بدون متن'}» تغییر کند؟`
-  }
-
-  return <>
-    <section className="admin-panel">
-      <h2>آپلود تصویر</h2>
-      <p>تصویر را از گوشی یا کامپیوتر انتخاب کن. حداکثر حجم هر فایل ۱۰ مگابایت است.</p>
-      <div className="admin-form">
-        <label>انتخاب فایل<input id="media-upload-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml" onChange={onFile}/></label>
-        <label>Alt Text<input value={alt} onChange={(e) => setAlt(e.target.value)} placeholder="توضیح کوتاه و دقیق تصویر"/></label>
-        {file ? <div className="admin-upload-preview"><img src={URL.createObjectURL(file)} alt="پیش‌نمایش فایل انتخاب‌شده"/><div><b>{file.name}</b><small>{Math.round(file.size / 1024)} KB</small></div></div> : null}
-        <button className="admin-primary-button" type="button" disabled={busy || !file} onClick={() => setConfirmState({ kind: 'upload' })}>{busy ? 'در حال انجام عملیات…' : 'آپلود و ثبت در کتابخانه'}</button>
-      </div>
-    </section>
-
-    <section className="admin-panel">
-      <div className="admin-section-title"><h2>کتابخانه رسانه</h2><span>{assets.length} فایل</span></div>
-      {assets.length === 0 ? <div className="admin-empty">هنوز تصویری آپلود نشده.</div> : <div className="admin-media-grid">
-        {assets.map((asset) => <article className="admin-media-card" key={asset.id}>
-          <button type="button" className="admin-media-image-button" onClick={() => setPreviewAsset(asset)} aria-label={`پیش‌نمایش ${asset.file_name}`}><img src={publicUrl(asset.storage_path)} alt={asset.alt_text || asset.file_name}/></button>
-          <div className="admin-media-meta"><b>{asset.file_name}</b><small>{asset.mime_type}{asset.size_bytes ? ` · ${Math.round(asset.size_bytes / 1024)} KB` : ''}</small></div>
-          <label>Alt Text<input value={altDrafts[asset.id] ?? ''} onChange={(e) => setAltDrafts((current) => ({ ...current, [asset.id]: e.target.value }))}/></label>
-          <div className="admin-media-actions">
-            <button type="button" className="admin-primary-button" disabled={busy || (altDrafts[asset.id] ?? '') === asset.alt_text} onClick={() => setConfirmState({ kind: 'alt', asset, value: altDrafts[asset.id] ?? '' })}>ذخیره Alt</button>
-            <button type="button" className="admin-muted-button" onClick={() => setPreviewAsset(asset)}>پیش‌نمایش</button>
-            <button type="button" className="admin-muted-button" onClick={() => copyUrl(asset)}>{copiedId === asset.id ? 'کپی شد ✓' : 'کپی لینک'}</button>
-            <button type="button" className="admin-danger-button" onClick={() => setConfirmState({ kind: 'delete', asset })}>حذف تصویر</button>
-          </div>
-        </article>)}
-      </div>}
-    </section>
-
-    {previewAsset ? <div className="admin-modal-backdrop" onMouseDown={() => setPreviewAsset(null)}><div className="admin-modal admin-media-preview-modal" role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><h3>{previewAsset.file_name}</h3><img className="admin-media-large-preview" src={publicUrl(previewAsset.storage_path)} alt={previewAsset.alt_text || previewAsset.file_name}/><p>{previewAsset.alt_text || 'Alt Text ثبت نشده است.'}</p><div className="admin-modal-actions"><button type="button" className="admin-muted-button" onClick={() => setPreviewAsset(null)}>بستن</button></div></div></div> : null}
-
-    {confirmState ? <div className="admin-modal-backdrop" onMouseDown={() => !busy && setConfirmState(null)}><div className={`admin-modal ${confirmState.kind === 'delete' ? 'admin-modal-danger' : ''}`} role="dialog" aria-modal="true" onMouseDown={(e) => e.stopPropagation()}><div className="admin-modal-icon">{confirmState.kind === 'delete' ? '!' : '✓'}</div><h3>{confirmTitle()}</h3><p>{confirmMessage()}</p><div className="admin-modal-actions"><button type="button" className={confirmState.kind === 'delete' ? 'admin-danger-button' : 'admin-primary-button'} disabled={busy} onClick={confirmState.kind === 'upload' ? uploadConfirmed : confirmState.kind === 'delete' ? removeConfirmed : saveAltConfirmed}>{busy ? 'در حال انجام…' : 'بله، انجام شود'}</button><button type="button" className="admin-muted-button" disabled={busy} onClick={() => setConfirmState(null)}>انصراف</button></div></div></div> : null}
-
-    {toast ? <div className={`admin-toast ${toast.ok ? 'admin-toast-success' : 'admin-toast-error'}`} role="status" aria-live="polite"><b>{toast.ok ? 'انجام شد' : 'خطا'}</b><span>{toast.message}</span><button type="button" onClick={() => setToast(null)}>×</button></div> : null}
-  </>
+export default function MediaManager({initialAssets,siteId,total,libraryToolbar}:{initialAssets:Asset[];siteId:string;total:number;libraryToolbar?:ReactNode}){
+  const{language}=useAdminLocale(),l=(fa:string,en:string)=>language==='fa'?fa:en,supabase=useMemo(()=>createClient(),[])
+  const[assets,setAssets]=useState(initialAssets),[file,setFile]=useState<File|null>(null),[alt,setAlt]=useState(''),[duration,setDuration]=useState(0),[busy,setBusy]=useState(false),[progress,setProgress]=useState<number|null>(null),[toast,setToast]=useState<Toast>(null),[confirmState,setConfirmState]=useState<ConfirmState>(null),[previewAsset,setPreviewAsset]=useState<Asset|null>(null),[altDrafts,setAltDrafts]=useState<Record<string,string>>(()=>Object.fromEntries(initialAssets.map(asset=>[asset.id,asset.alt_text]))),[copiedId,setCopiedId]=useState<string|null>(null)
+  const localPreview=useMemo(()=>file?URL.createObjectURL(file):null,[file]);useEffect(()=>()=>{if(localPreview)URL.revokeObjectURL(localPreview)},[localPreview])
+  const isVideo=file?VIDEO_TYPES.includes(file.type):false
+  function publicUrl(path:string){return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl}
+  function notify(ok:boolean,message:string){setToast({ok,message});window.setTimeout(()=>setToast(null),4200)}
+  async function onFile(event:ChangeEvent<HTMLInputElement>){const next=event.target.files?.[0]??null;if(!next)return;const image=IMAGE_TYPES.includes(next.type),video=VIDEO_TYPES.includes(next.type);if(!image&&!video)return notify(false,l('فقط تصویر یا ویدیوی ام‌پی‌فور و وب‌ام مجاز است.','Only images and MP4 or WebM videos are allowed.'));if(next.size>(video?100:10)*1024*1024)return notify(false,video?l('ویدیو باید حداکثر ۱۰۰ مگابایت باشد.','The video must be no larger than 100 MB.'):l('تصویر باید حداکثر ۱۰ مگابایت باشد.','The image must be no larger than 10 MB.'));setFile(next);setDuration(video?await videoDuration(next):0);if(!alt)setAlt(next.name.replace(/\.[^.]+$/,'').replace(/[-_]+/g,' '))}
+  async function uploadVideo(selected:File){const{data:{session}}=await supabase.auth.getSession();if(!session?.access_token)throw new Error(l('نشست کاربری معتبر نیست.','The user session is invalid.'));const extension=selected.type==='video/mp4'?'mp4':'webm',path=`${siteId}/${crypto.randomUUID()}.${extension}`,base=process.env.NEXT_PUBLIC_SUPABASE_URL;if(!base)throw new Error(l('نشانی فضای ذخیره‌سازی تنظیم نشده است.','The storage URL is not configured.'))
+    await new Promise<void>((resolve,reject)=>{const upload=new Upload(selected,{endpoint:`${base}/storage/v1/upload/resumable`,headers:{authorization:`Bearer ${session.access_token}`},uploadSize:selected.size,chunkSize:6*1024*1024,retryDelays:[0,1000,3000,5000,10000],metadata:{bucketName:'rava-media',objectName:path,contentType:selected.type,cacheControl:'31536000'},removeFingerprintOnSuccess:true,onError:reject,onProgress:(sent,all)=>setProgress(Math.round(sent/all*100)),onSuccess:()=>resolve()});upload.findPreviousUploads().then(previous=>{if(previous[0])upload.resumeFromPreviousUpload(previous[0]);upload.start()}).catch(reject)})
+    const formData=new FormData();formData.set('site_id',siteId);formData.set('storage_path',path);formData.set('file_name',selected.name);formData.set('mime_type',selected.type);formData.set('alt_text',alt);formData.set('duration_seconds',String(duration));return finalizeVideoUpload(formData)}
+  async function uploadConfirmed(){if(!file)return;setConfirmState(null);setBusy(true);setProgress(isVideo?0:null);try{let result;if(isVideo)result=await uploadVideo(file);else{const formData=new FormData();formData.set('site_id',siteId);formData.set('file',file);formData.set('alt_text',alt);result=await uploadMedia(formData)}if(!result.ok||!result.asset)return notify(false,result.message);const asset=result.asset as Asset;setAssets(current=>[asset,...current]);setAltDrafts(current=>({...current,[asset.id]:asset.alt_text}));setFile(null);setAlt('');setDuration(0);const input=document.getElementById('media-upload-input')as HTMLInputElement|null;if(input)input.value='';notify(true,asset.media_kind==='video'?l('ویدیو در کتابخانه ثبت شد.','The video was added to the media library.'):l('تصویر در کتابخانه ثبت شد.','The image was added to the media library.'))}catch(error){notify(false,error instanceof Error?error.message:l('بارگذاری انجام نشد.','The upload failed.'))}finally{setBusy(false);setProgress(null)}}
+  async function saveAltConfirmed(){if(!confirmState||confirmState.kind!=='alt')return;const{asset,value}=confirmState;setConfirmState(null);setBusy(true);const result=await updateMediaAlt(asset.id,value);setBusy(false);if(!result.ok)return notify(false,result.message);setAssets(current=>current.map(item=>item.id===asset.id?{...item,alt_text:value}:item));notify(true,l('متن جایگزین ذخیره شد.','The alternative text was saved.'))}
+  async function removeConfirmed(){if(!confirmState||confirmState.kind!=='delete')return;const asset=confirmState.asset;setConfirmState(null);setBusy(true);const result=await deleteMedia(asset.id);setBusy(false);if(!result.ok)return notify(false,result.message);setAssets(current=>current.filter(item=>item.id!==asset.id));notify(true,l('رسانه از فضای ذخیره‌سازی و کتابخانه حذف شد.','The media item was removed from storage and the library.'))}
+  async function copyUrl(asset:Asset){const url=publicUrl(asset.storage_path);try{await navigator.clipboard.writeText(url);setCopiedId(asset.id);window.setTimeout(()=>setCopiedId(null),1800);notify(true,l('پیوند عمومی رسانه کپی شد.','The public media link was copied.'))}catch{window.prompt(l('پیوند رسانه را کپی کنید:','Copy the media link:'),url)}}
+  const mediaLabel=(asset:Asset)=>asset.media_kind==='video'?l('ویدیو','Video'):l('تصویر','Image')
+  function preview(asset:Asset,className?:string){return asset.media_kind==='video'?<video className={className} src={publicUrl(asset.storage_path)} controls preload="metadata" aria-label={asset.alt_text||asset.file_name}/>:<img className={className} src={publicUrl(asset.storage_path)} alt={asset.alt_text||asset.file_name}/>}
+  function confirmTitle(){if(!confirmState)return'';if(confirmState.kind==='upload')return isVideo?l('تأیید بارگذاری ویدیو','Confirm video upload'):l('تأیید بارگذاری تصویر','Confirm image upload');if(confirmState.kind==='delete')return l('حذف رسانه','Delete media');return l('تأیید ویرایش متن جایگزین','Confirm alternative text update')}
+  function confirmMessage(){if(!confirmState)return'';if(confirmState.kind==='upload')return l(`فایل «${file?.name??''}» بارگذاری و در کتابخانه ثبت شود؟`,`Upload “${file?.name??''}” to the media library?`);if(confirmState.kind==='delete')return l(`رسانه «${confirmState.asset.file_name}» برای همیشه حذف شود؟`,`Permanently delete “${confirmState.asset.file_name}”?`);return l(`متن جایگزین «${confirmState.asset.file_name}» تغییر کند؟`,`Update the alternative text for “${confirmState.asset.file_name}”?`)}
+  return <div className="admin-media-sections">
+    <div className="admin-media-library-toolbar">{libraryToolbar}</div>
+    <section className="admin-panel"><h2>{l('بارگذاری رسانه','Upload media')}</h2><p>{l('تصویر تا ۱۰ مگابایت یا ویدیوی ام‌پی‌فور و وب‌ام تا ۱۰۰ مگابایت انتخاب کنید. بارگذاری ویدیو ادامه‌پذیر است.','Choose an image up to 10 MB or an MP4 or WebM video up to 100 MB. Video uploads are resumable.')}</p><div className="admin-form"><label>{l('انتخاب فایل','Choose file')}<input id="media-upload-input" type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/webm" onChange={onFile}/></label><label>{l('متن جایگزین یا توضیح رسانه','Alternative text or media description')}<input value={alt} maxLength={300} onChange={event=>setAlt(event.target.value)} placeholder={l('توضیح کوتاه و دقیق','A concise, accurate description')}/></label>{file&&localPreview?<div className="admin-upload-preview">{isVideo?<video src={localPreview} controls preload="metadata"/>:<img src={localPreview} alt={l('پیش‌نمایش فایل انتخاب‌شده','Selected file preview')}/>}<div><b>{file.name}</b><small>{(file.size/1024/1024).toFixed(1)} {l('مگابایت','MB')}</small></div></div>:null}{progress!==null?<div className="admin-upload-progress"><span style={{width:`${progress}%`}}/><b>{language==='fa'?`${progress} درصد`:`${progress}%`}</b></div>:null}<button className="admin-primary-button" type="button" disabled={busy||!file} onClick={()=>setConfirmState({kind:'upload'})}>{busy?l('در حال بارگذاری…','Uploading…'):l('بارگذاری و ثبت در کتابخانه','Upload to library')}</button></div></section>
+    <section className="admin-panel"><div className="admin-section-title"><h2>{l('کتابخانه رسانه','Media library')}</h2><span>{total} {l('رسانه','items')}</span></div>{assets.length===0?<div className="admin-empty">{l('رسانه‌ای با این فیلتر پیدا نشد.','No media matched these filters.')}</div>:<div className="admin-media-grid">{assets.map(asset=><article className="admin-media-card" key={asset.id}><button type="button" className="admin-media-image-button" onClick={()=>setPreviewAsset(asset)} aria-label={l(`پیش‌نمایش ${asset.file_name}`,`Preview ${asset.file_name}`)}>{asset.media_kind==='video'?<video src={publicUrl(asset.storage_path)} muted preload="metadata"/>:<img src={publicUrl(asset.storage_path)} alt={asset.alt_text||asset.file_name}/>}<span>{mediaLabel(asset)}</span></button><div className="admin-media-meta"><b>{asset.file_name}</b><small>{asset.mime_type}{asset.size_bytes?` · ${(asset.size_bytes/1024/1024).toFixed(1)} MB`:''}</small></div><label>{l('متن جایگزین','Alternative text')}<input value={altDrafts[asset.id]??''} onChange={event=>setAltDrafts(current=>({...current,[asset.id]:event.target.value}))}/></label><div className="admin-media-actions"><button type="button" className="admin-primary-button" disabled={busy||(altDrafts[asset.id]??'')===asset.alt_text} onClick={()=>setConfirmState({kind:'alt',asset,value:altDrafts[asset.id]??''})}>{l('ذخیره توضیح','Save description')}</button><button type="button" className="admin-muted-button" onClick={()=>setPreviewAsset(asset)}>{l('پیش‌نمایش','Preview')}</button><button type="button" className="admin-muted-button" onClick={()=>copyUrl(asset)}>{copiedId===asset.id?l('کپی شد ✓','Copied ✓'):l('کپی پیوند','Copy link')}</button><button type="button" className="admin-danger-button" onClick={()=>setConfirmState({kind:'delete',asset})}>{l('حذف رسانه','Delete media')}</button></div></article>)}</div>}</section>
+    {previewAsset?<div className="admin-modal-backdrop" onMouseDown={()=>setPreviewAsset(null)}><div className="admin-modal admin-media-preview-modal" role="dialog" aria-modal="true" onMouseDown={event=>event.stopPropagation()}><h3>{previewAsset.file_name}</h3>{preview(previewAsset,'admin-media-large-preview')}<p>{previewAsset.alt_text||l('توضیحی ثبت نشده است.','No description has been provided.')}</p><div className="admin-modal-actions"><button type="button" className="admin-muted-button" onClick={()=>setPreviewAsset(null)}>{l('بستن','Close')}</button></div></div></div>:null}
+    {confirmState?<div className="admin-modal-backdrop" onMouseDown={()=>!busy&&setConfirmState(null)}><div className={`admin-modal ${confirmState.kind==='delete'?'admin-modal-danger':''}`} role="dialog" aria-modal="true" onMouseDown={event=>event.stopPropagation()}><div className="admin-modal-icon">{confirmState.kind==='delete'?'!':'✓'}</div><h3>{confirmTitle()}</h3><p>{confirmMessage()}</p><div className="admin-modal-actions"><button type="button" className={confirmState.kind==='delete'?'admin-danger-button':'admin-primary-button'} disabled={busy} onClick={confirmState.kind==='upload'?uploadConfirmed:confirmState.kind==='delete'?removeConfirmed:saveAltConfirmed}>{busy?l('در حال انجام…','Processing…'):l('بله، انجام شود','Yes, continue')}</button><button type="button" className="admin-muted-button" disabled={busy} onClick={()=>setConfirmState(null)}>{l('انصراف','Cancel')}</button></div></div></div>:null}
+    {toast?<div className={`admin-toast ${toast.ok?'admin-toast-success':'admin-toast-error'}`} role="status" aria-live="polite"><b>{toast.ok?l('انجام شد','Completed'):l('خطا','Error')}</b><span>{toast.message}</span><button type="button" aria-label={l('بستن پیام','Dismiss message')} onClick={()=>setToast(null)}>×</button></div>:null}
+  </div>
 }

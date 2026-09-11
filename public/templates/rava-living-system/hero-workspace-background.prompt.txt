@@ -1,0 +1,11 @@
+RAVA Living System Hero workspace background
+
+Use case: a supporting environmental background behind the code-rendered Persian Hero copy, optical navigation and blueprint-to-live-site product sculpture.
+
+Subject: professional web design and content production expressed as one connected creative operating system through translucent page grids, website wireframes, content hierarchy lines, image-crop guides, baseline grids and a controlled cobalt signal moving from content planning into a finished digital layout.
+
+Visual language: pearl-white and pale smoke ground, physically plausible optical glass, soft deep-navy linework, controlled cobalt refraction and subtle depth. The background remains quieter than the foreground product and preserves calm negative space beneath copy.
+
+Required exclusions: readable or fake text, external logos, people, rooms, desks, computers, buildings, architecture photography, lamps, cups, furniture, ecommerce products, analytics dashboards, disconnected icon clouds, excessive neon, dark ground or a second central Hero object.
+
+Source generation: OpenAI image generation, 2026-09-01. The preserved generation master is exec-094a80bb-16cd-429b-b179-747eaef1b732.png in the Codex generated-images directory for this task.

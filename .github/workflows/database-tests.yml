@@ -1,0 +1,27 @@
+name: Database Security Tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  postgres-security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: 2.115.0
+      - name: Start local Supabase
+        run: supabase start
+      - name: Rebuild database from migrations
+        run: supabase db reset --local
+      - name: Run PostgreSQL security tests
+        run: supabase test db --local

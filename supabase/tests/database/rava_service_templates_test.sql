@@ -1,0 +1,13 @@
+begin;
+create extension if not exists pgtap with schema extensions;
+select plan(8);
+select is((select count(*)::bigint from public.template_catalog where key in ('rava-service-minimal','rava-service-editorial','rava-service-midnight') and status='active'),3::bigint,'three active service design directions exist');
+select is((select count(*)::bigint from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key in ('rava-service-editorial','rava-service-midnight') and tv.version=1 and tv.status='published'),2::bigint,'new service templates have published immutable versions');
+select is((select count(*)::bigint from public.starter_pack_template_compatibility c join public.starter_content_pack_versions pv on pv.id=c.starter_pack_version_id join public.starter_content_packs p on p.id=pv.starter_pack_id join public.template_versions tv on tv.id=c.template_version_id join public.template_catalog tc on tc.id=tv.template_id where p.key='services.digital-agency.rava-team' and c.active and tc.key in ('rava-service-minimal','rava-service-editorial','rava-service-midnight')),3::bigint,'RAVA starter content supports all three service templates');
+select is((select count(*)::bigint from public.starter_pack_template_compatibility c join public.starter_content_pack_versions pv on pv.id=c.starter_pack_version_id join public.starter_content_packs p on p.id=pv.starter_pack_id where p.key='services.digital-agency.rava-team' and c.is_default and c.active),1::bigint,'starter pack retains exactly one default template');
+select ok((select theme_defaults ? 'colors' and layout_blueprint ? 'sections' from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-editorial' and tv.version=1),'editorial template includes versioned theme and layout constraints');
+select ok((select seo_defaults->>'content_policy'='verified-facts-only' from public.template_versions tv join public.template_catalog tc on tc.id=tv.template_id where tc.key='rava-service-midnight' and tv.version=1),'midnight template forbids unverified claims');
+select ok(not has_table_privilege('anon','public.template_versions','SELECT,INSERT,UPDATE,DELETE'),'anon has no direct template catalog access');
+select ok(has_table_privilege('authenticated','public.template_versions','SELECT') and not has_table_privilege('authenticated','public.template_versions','INSERT,UPDATE,DELETE'),'authenticated catalog access is read-only before RLS');
+select * from finish();
+rollback;
