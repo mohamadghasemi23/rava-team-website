@@ -11,11 +11,12 @@ type Option={site_type:{key:string;name_fa:string;name_en:string};industry:{key:
 
 const copy={fa:{title:'راه‌اندازی سایت خدماتی',intro:'بسته محتوایی و قالب سازگار را انتخاب کن؛ قبل از نصب، خروجی پیش‌نویس را ببین.',pack:'بسته و قالب',brand:'نام برند',languages:'زبان‌های محتوا',preview:'پیش‌نمایش تغییرات',pages:'صفحه پیش‌نویس',install:'ساخت پیش‌نویس‌های سایت',warning:'اطلاعات نمونه و جای‌نگهدار باید پیش از انتشار توسط مالک تأیید شوند.',empty:'بسته سازگاری برای این سایت وجود ندارد.'},en:{title:'Service website setup',intro:'Choose compatible content and design, then review every draft before installation.',pack:'Pack and template',brand:'Brand name',languages:'Content languages',preview:'Change preview',pages:'draft pages',install:'Create website drafts',warning:'Placeholders and sample facts require owner verification before publishing.',empty:'No compatible starter option is available.'}}
 
-export default function StarterWizard({siteId,siteName,options}:{siteId:string;siteName:string;options:Option[]}){
-  const {language:locale}=useAdminLocale();const [selected,setSelected]=useState(0);const [fa,setFa]=useState(true);const [en,setEn]=useState(true)
+export default function StarterWizard({siteId,siteName,primaryLocale,installedLocales=[],options}:{siteId:string;siteName:string;primaryLocale:string;installedLocales?:string[];options:Option[]}){
+  const faInstalled=installedLocales.includes('fa'),enInstalled=installedLocales.includes('en')
+  const {language:locale}=useAdminLocale();const [selected,setSelected]=useState(0);const [fa,setFa]=useState(primaryLocale!=='en'&&!faInstalled);const [en,setEn]=useState(primaryLocale==='en'&&!enInstalled)
   const option=options[selected];const t=copy[locale]
   const pages=useMemo(()=>[...(fa?(option?.pack.manifest.locales.fa?.pages??[]):[]),...(en?(option?.pack.manifest.locales.en?.pages??[]):[])],[option,fa,en])
-  const idempotency=useMemo(()=>crypto.randomUUID(),[selected])
+  const idempotency=useMemo(()=>crypto.randomUUID(),[selected,fa,en])
   return <section className="starter-wizard" dir={locale==='fa'?'rtl':'ltr'}>
     <div className="starter-heading"><div><span>{locale==='fa'?'نصب‌کننده ایمن پیش‌نویس':'SAFE DRAFT INSTALLER'}</span><h2>{t.title}</h2><p>{t.intro}</p></div><b>{siteName}</b></div>
     {!option?<div className="admin-empty">{t.empty}</div>:<div className="starter-grid">
@@ -25,7 +26,7 @@ export default function StarterWizard({siteId,siteName,options}:{siteId:string;s
         <ActionForm action={installStarterAction} className="admin-form" confirmTitle={locale==='fa'?'تأیید نصب پیش‌نویس':'Confirm draft installation'} confirmMessage={locale==='fa'?`برای ${siteName} تعداد ${pages.length} صفحه پیش‌نویس ساخته شود؟ هیچ چیزی منتشر نمی‌شود.`:`Create ${pages.length} draft pages for ${siteName}? Nothing will be published.`} confirmLabel={locale==='fa'?'بله، پیش‌نویس‌ها ساخته شوند':'Yes, create drafts'}>
           <input type="hidden" name="site_id" value={siteId}/><input type="hidden" name="pack_version_id" value={option.pack.version_id}/><input type="hidden" name="template_version_id" value={option.template.version_id}/><input type="hidden" name="idempotency_key" value={idempotency}/>
           <label>{t.brand}<input name="brand_name" maxLength={120} defaultValue={siteName}/></label>
-          <fieldset className="starter-locales"><legend>{t.languages}</legend><label><input type="checkbox" name="locale_fa" checked={fa} onChange={event=>setFa(event.target.checked)}/> {locale==='fa'?'فارسی':'Persian'}</label><label><input type="checkbox" name="locale_en" checked={en} onChange={event=>setEn(event.target.checked)}/> {locale==='fa'?'انگلیسی':'English'}</label></fieldset>
+          <fieldset className="starter-locales"><legend>{t.languages}</legend><label><input type="checkbox" name="locale_fa" checked={fa} disabled={faInstalled} onChange={event=>setFa(event.target.checked)}/> {locale==='fa'?'فارسی':'Persian'} {faInstalled?<small>{locale==='fa'?'· قبلاً ساخته شده':'· already created'}</small>:null}</label><label><input type="checkbox" name="locale_en" checked={en} disabled={enInstalled} onChange={event=>setEn(event.target.checked)}/> {locale==='fa'?'انگلیسی':'English'} {enInstalled?<small>{locale==='fa'?'· قبلاً ساخته شده':'· already created'}</small>:null}</label></fieldset>
           <p className="starter-warning">{t.warning}</p><button className="admin-primary-button" type="submit" disabled={!fa&&!en}>{t.install}</button>
         </ActionForm>
       </div>

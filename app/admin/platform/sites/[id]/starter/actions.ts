@@ -14,7 +14,7 @@ function knownMessage(message:string,locale:'fa'|'en'){
   const known:Record<string,[string,string]>={
     permission_denied:['این حساب اجازه نصب بسته شروع روی این سایت را ندارد.','This account cannot install a starter pack on this site.'],feature_not_entitled:['ماژول مدیریت محتوا برای این سایت فعال نیست.','The content management module is not active for this site.'],
     incompatible_template:['قالب انتخاب‌شده با این بسته سازگار نیست.','The selected template is not compatible with this pack.'],locale_unavailable:['یکی از زبان‌های انتخاب‌شده در بسته موجود نیست.','One of the selected languages is unavailable in this pack.'],
-    content_conflict:['یکی از آدرس‌های صفحات از قبل استفاده شده است.','One of the page addresses is already in use.'],invalid_locales:['انتخاب زبان معتبر نیست.','The language selection is invalid.'],
+    content_conflict:['یکی از آدرس‌های صفحات از قبل استفاده شده است.','One of the page addresses is already in use.'],starter_page_slug_conflict:['صفحات این زبان قبلاً ساخته شده‌اند؛ هیچ صفحه تکراری ایجاد نشد.','Pages for this language already exist; no duplicates were created.'],invalid_locales:['انتخاب زبان معتبر نیست.','The language selection is invalid.'],
     invalid_brand_inputs:['اطلاعات برند معتبر نیست.','The brand information is invalid.'],idempotency_key_reused:['این درخواست قبلاً با تنظیمات دیگری استفاده شده است.','This request was previously used with different settings.']
   }
   const pair=Object.entries(known).find(([key])=>message.includes(key))?.[1];return pair?.[locale==='fa'?0:1]
