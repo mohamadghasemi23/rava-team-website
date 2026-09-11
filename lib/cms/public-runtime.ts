@@ -9,7 +9,7 @@ export type PublicBlock = {
 }
 
 export type PublicPagePayload = {
-  site: { id: string; name: string; locale: string; theme: Record<string, unknown>; templateKey?: string; templateVersion?: number; layout?: Record<string, unknown> }
+  site: { id: string; name: string; locale: string; theme: Record<string, unknown>; templateKey?: string; templateVersion?: number; layout?: Record<string, unknown>; canonicalHostname?: string }
   page: { id: string; title: string; slug: string; seo: Record<string, unknown>; published_at: string | null }
   blocks: PublicBlock[]
 }
@@ -23,6 +23,11 @@ function normalizedHostname(value: string) {
 function normalizedSlug(value: string) {
   const slug = value.trim().toLowerCase().replace(/^\/+|\/+$/g, '')
   return slug.length <= 180 && slug.length > 0 && !/[\/\\?#\s]/.test(slug) ? slug : ''
+}
+
+function preferredRequestLocale(value: string | null) {
+  const locale = value?.split(',')[0]?.split(';')[0]?.trim().toLowerCase() ?? ''
+  return /^[a-z]{2,3}(?:-[a-z0-9]{2,8})*$/.test(locale) ? locale : ''
 }
 
 export async function getRequestSiteHostname() {
@@ -73,6 +78,27 @@ export async function getPublishedPage(slugInput: string): Promise<PublicPagePay
   if (error) {
     const errorId = crypto.randomUUID()
     console.error(JSON.stringify({ event: 'cms.public.resolve_failed', errorId }))
+    return null
+  }
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return null
+  const payload = data as unknown as PublicPagePayload
+  if (!payload.site?.id || !payload.page?.id || !Array.isArray(payload.blocks)) return null
+  return payload
+}
+
+export async function getPublishedHomePage(): Promise<PublicPagePayload | null> {
+  const hostname = await getRequestSiteHostname()
+  if (!hostname) return null
+  const requestHeaders = await headers()
+  const locale = preferredRequestLocale(requestHeaders.get('accept-language'))
+  const supabase = await createClient()
+  const { data, error } = await supabase.rpc('get_published_home_page', {
+    p_hostname: hostname,
+    p_locale: locale || null,
+  })
+  if (error) {
+    const errorId = crypto.randomUUID()
+    console.error(JSON.stringify({ event: 'cms.public.home_resolve_failed', errorId }))
     return null
   }
   if (!data || typeof data !== 'object' || Array.isArray(data)) return null

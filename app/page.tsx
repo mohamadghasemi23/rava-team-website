@@ -1,4 +1,35 @@
+import type {Metadata} from 'next'
+import {cache} from 'react'
+import PublicPageView,{publicText} from '@/app/components/PublicPageView'
+import {getPublishedHomePage,getRequestSiteOrigin} from '@/lib/cms/public-runtime'
+import type {PublicPagePayload} from '@/lib/cms/public-runtime'
 import styles from './home.module.css'
+
+export const dynamic='force-dynamic'
+
+const getHomeRequestData=cache(async()=>Promise.all([
+  getPublishedHomePage(),getRequestSiteOrigin(),
+]))
+
+function homeCanonical(origin:string,hostname:string){return`${origin.startsWith('http://')?'http':'https'}://${hostname}/`}
+function homeJsonLd(payload:PublicPagePayload,canonical:string){
+  const seo=payload.page.seo||{},name=publicText(seo.title||seo.metaTitle)||payload.page.title
+  const description=publicText(seo.description||seo.metaDescription)||undefined
+  const websiteId=`${canonical}#website`
+  return{'@context':'https://schema.org','@graph':[
+    {'@type':'WebSite','@id':websiteId,url:canonical,name:payload.site.name,inLanguage:payload.site.locale},
+    {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name,...(description?{description}:{}),inLanguage:payload.site.locale,isPartOf:{'@id':websiteId},...(payload.page.published_at?{datePublished:payload.page.published_at}:{})},
+  ]}
+}
+
+export async function generateMetadata():Promise<Metadata>{
+  const[payload,origin]=await getHomeRequestData()
+  if(!payload)return{}
+  const seo=payload.page.seo||{},title=publicText(seo.title||seo.metaTitle)||payload.page.title
+  const description=publicText(seo.description||seo.metaDescription)||undefined
+  const canonical=origin&&payload.site.canonicalHostname?homeCanonical(origin,payload.site.canonicalHostname):undefined
+  return{title,description,alternates:canonical?{canonical}:undefined,robots:seo.noIndex?{index:false,follow:false,nocache:true}:{index:true,follow:true},openGraph:{title,description,url:canonical,siteName:payload.site.name,locale:payload.site.locale,type:'website'},twitter:{card:'summary_large_image',title,description}}
+}
 
 const services = [
   { no: '01', title: 'طراحی و توسعه وب‌سایت', en: 'WEB EXPERIENCE', body: 'وب‌سایت خدماتی سریع، امن و قابل توسعه؛ از معماری محتوا و تجربه کاربری تا اجرا و تحویل.' },
@@ -20,7 +51,7 @@ const process = [
 
 const enamadHtml = `<a referrerpolicy='origin' target='_blank' rel='noopener noreferrer' href='https://trustseal.enamad.ir/?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev'><img referrerpolicy='origin' src='https://trustseal.enamad.ir/logo.aspx?id=7351410&Code=XHzd3GoRDofutohK4DoiakcUJAxvtGev' alt='نماد اعتماد الکترونیکی RAVA TEAM' code='XHzd3GoRDofutohK4DoiakcUJAxvtGev'></a>`
 
-export default function HomePage() {
+function RavaTeamHomePage() {
   return <main className={styles.site}>
     <header className={styles.header}><a className={styles.logo} href="#top" aria-label="RAVA TEAM — صفحه نخست"><span>RAVA</span><b>TEAM</b></a><nav aria-label="منوی اصلی"><a href="#services">خدمات</a><a href="#work">پلتفرم</a><a href="#about">درباره</a></nav><a className={styles.headerCta} href="#contact">شروع گفتگو <span>↗</span></a></header>
     <section className={styles.hero} id="top"><div className={styles.heroCopy}><span className={styles.eyebrow}>INDEPENDENT DIGITAL STUDIO · TEHRAN / WORLDWIDE</span><h1>فقط سایت<br/>نمی‌سازیم؛<br/><em>زیرساخت رشد</em><br/>می‌سازیم.</h1><p>RAVA TEAM طراحی، محتوا و تکنولوژی را کنار هم می‌گذارد تا کسب‌وکارها یک حضور دیجیتال حرفه‌ای، قابل مدیریت و آماده آینده داشته باشند.</p><div className={styles.heroActions}><a href="#contact">پروژه‌تان را تعریف کنید <span>←</span></a><a href="#work">دیدن مسیر RAVA</a></div></div><div className={styles.heroVisual} aria-hidden="true"><div className={styles.orbit}><span>STRATEGY</span><span>DESIGN</span><span>TECHNOLOGY</span></div><strong>R</strong><div className={styles.signal}/><small>DESIGNED TO EVOLVE — 2026</small></div><div className={styles.heroIndex}><b>01</b><span>RAVA TEAM<br/>DIGITAL EXPERIENCE</span></div></section>
@@ -32,4 +63,12 @@ export default function HomePage() {
     <section className={styles.contact} id="contact"><span>HAVE A PROJECT IN MIND?</span><h2>بیایید چیزی بسازیم<br/>که <em>ارزش ماندن</em> داشته باشد.</h2><p>برای شروع، درباره کسب‌وکار، مسئله و نتیجه‌ای که انتظار دارید صحبت می‌کنیم.</p><a href="mailto:hello@ravateam.ir">hello@ravateam.ir <b>↗</b></a></section>
     <footer className={styles.footer}><div><a className={styles.logo} href="#top"><span>RAVA</span><b>TEAM</b></a><p>DESIGN · CONTENT · TECHNOLOGY</p></div><div><a href="#services">خدمات</a><a href="#work">پلتفرم</a><a href="#about">درباره</a></div><div className={styles.enamad} dangerouslySetInnerHTML={{__html:enamadHtml}}/><small>© 2026 RAVA TEAM<br/>ALL RIGHTS RESERVED</small></footer>
   </main>
+}
+
+export default async function HomePage(){
+  const[payload,origin]=await getHomeRequestData()
+  if(!payload)return <RavaTeamHomePage/>
+  const canonical=origin&&payload.site.canonicalHostname?homeCanonical(origin,payload.site.canonicalHostname):null
+  const jsonLd=canonical?homeJsonLd(payload,canonical):null
+  return <>{jsonLd?<script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(jsonLd).replace(/</g,'\\u003c')}}/>:null}<PublicPageView payload={payload}/></>
 }
