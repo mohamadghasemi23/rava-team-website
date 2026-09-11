@@ -7,7 +7,7 @@ import { hasPermission, PERMISSIONS } from '@/lib/authz/permissions'
 import { recordAuditEvent, recordSecurityEvent } from '@/lib/observability/events'
 import { getAdminLocale } from '@/lib/i18n/admin-locale'
 
-export type AdminActionState = { ok?: boolean; message?: string; redirectTo?: string; nonce?: number }
+export type AdminActionState = { ok?: boolean; message?: string; redirectTo?: string; nonce?: number; locale?: string; pageId?: string | null }
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
@@ -81,6 +81,23 @@ export async function createPage(_state: AdminActionState, formData: FormData): 
   await recordAuditEvent({action:'cms.page.created',entityType:'page',entityId:data.id,organizationId:scope.organizationId,siteId:scope.siteId,after:{title,slug,status:'draft'},context:{source:'admin_pages'}})
   revalidatePath('/admin'); revalidatePath('/admin/pages')
   return { ok:true,message:l(`صفحه «${title}» با موفقیت ساخته شد.`,`Page “${title}” was created successfully.`),redirectTo:`/admin/pages/${data.id}`,nonce:Date.now() }
+}
+
+export async function setSiteHomePage(_state: AdminActionState, formData: FormData): Promise<AdminActionState> {
+  const adminLocale=await getAdminLocale(),l=(fa:string,en:string)=>adminLocale==='fa'?fa:en
+  const {supabase}=await getActor()
+  const siteId=readText(formData,'site_id'),locale=readText(formData,'locale').toLowerCase(),rawPageId=readText(formData,'page_id')
+  if(!UUID_RE.test(siteId)||!locale.match(/^[a-z]{2,3}(-[a-z0-9]{2,8})*$/)||locale.length>35||(rawPageId&&!UUID_RE.test(rawPageId)))return{ok:false,message:l('انتخاب صفحهٔ خانه معتبر نیست.','The homepage selection is invalid.'),locale,pageId:rawPageId||null,nonce:Date.now()}
+  const scope=await siteScope(supabase,siteId)
+  if(!scope||!await authorize(scope,PERMISSIONS.CMS_PUBLISH))return{ok:false,message:l('اجازهٔ تغییر صفحهٔ خانهٔ این سایت را ندارید.','You cannot change this site’s homepage.'),locale,pageId:rawPageId||null,nonce:Date.now()}
+  if(rawPageId){
+    const{data:page}=await supabase.from('pages').select('id').eq('id',rawPageId).eq('site_id',scope.siteId).maybeSingle()
+    if(!page)return{ok:false,message:l('صفحهٔ انتخاب‌شده متعلق به این سایت نیست.','The selected page does not belong to this site.'),locale,pageId:rawPageId,nonce:Date.now()}
+  }
+  const{error}=await supabase.rpc('set_site_home_page',{p_site_id:scope.siteId,p_locale:locale,p_page_id:rawPageId||null})
+  if(error)return{ok:false,message:l('ذخیرهٔ صفحهٔ خانه انجام نشد. دوباره تلاش کنید.','The homepage could not be saved. Try again.'),locale,pageId:rawPageId||null,nonce:Date.now()}
+  revalidatePath('/admin/pages');revalidatePath('/')
+  return{ok:true,message:rawPageId?l('صفحهٔ خانه با موفقیت ذخیره شد.','The homepage was saved successfully.'):l('انتخاب صفحهٔ خانه برداشته شد.','The homepage selection was removed.'),locale,pageId:rawPageId||null,nonce:Date.now()}
 }
 
 export async function updatePage(_state: AdminActionState, formData: FormData): Promise<AdminActionState> {
