@@ -2,14 +2,15 @@
 
 import {useActionState,useEffect,useMemo,useState} from 'react'
 import {setSiteHomePage,type AdminActionState} from './actions'
+import {useAdminLocale} from '../components/AdminLocale'
 
 type Page={id:string;title:string;slug:string;status:string}
 type Mapping={locale:string;page_id:string}
-type Props={siteId:string;primaryLocale:string;adminLocale:'fa'|'en';pages:Page[];mappings:Mapping[]}
+type Props={siteId:string;primaryLocale:string;pages:Page[];mappings:Mapping[]}
 const initialState:AdminActionState={}
 
-export default function HomePageSelector({siteId,primaryLocale,adminLocale,pages,mappings}:Props){
- const l=(fa:string,en:string)=>adminLocale==='fa'?fa:en
+export default function HomePageSelector({siteId,primaryLocale,pages,mappings}:Props){
+ const {language}=useAdminLocale(),l=(fa:string,en:string)=>language==='fa'?fa:en
  const locales=useMemo(()=>Array.from(new Set([primaryLocale==='en'?'en':'fa',primaryLocale==='en'?'fa':'en'])),[primaryLocale])
  const initial=useMemo(()=>Object.fromEntries(locales.map(locale=>[locale,mappings.find(item=>item.locale===locale)?.page_id??''])),[locales,mappings])
  const [active,setActive]=useState(locales[0]),[saved,setSaved]=useState<Record<string,string>>(initial),[selected,setSelected]=useState<Record<string,string>>(initial)
@@ -26,7 +27,7 @@ export default function HomePageSelector({siteId,primaryLocale,adminLocale,pages
       <input type="hidden" name="site_id" value={siteId}/><input type="hidden" name="locale" value={active}/>
       <label htmlFor={`home-page-${active}`}>{l(`صفحهٔ خانهٔ ${active==='fa'?'فارسی':'انگلیسی'}`,`${active==='fa'?'Persian':'English'} homepage`)}</label>
       <select id={`home-page-${active}`} name="page_id" value={selected[active]??''} disabled={pending} onChange={event=>setSelected(current=>({...current,[active]:event.target.value}))}><option value="">{l('بدون انتخاب','No selection')}</option>{pages.map(item=><option key={item.id} value={item.id}>{item.title} · /{item.slug}</option>)}</select>
-      <div className={`rava-homepage-status status-${page?.status??'empty'}`}><i/><span><b>{status}</b><small>{page&&page.status!=='published'?l('این صفحه تا زمان انتشار در سایت عمومی دیده نمی‌شود.','This page stays private until it is published.'):page?l('این صفحه در آدرس اصلی سایت نمایش داده می‌شود.','This page appears at the site’s main address.'):l('آدرس اصلی تا انتخاب یک صفحه، خروجی CMS ندارد.','The site root has no CMS output until a page is selected.')}</small></span></div>
+      <div className={`rava-homepage-status status-${page?.status??'empty'}`}><i/><span><b>{status}</b><small>{page&&page.status!=='published'?l('این صفحه تا زمان انتشار در سایت عمومی دیده نمی‌شود.','This page stays private until it is published.'):page?l('این صفحه در آدرس اصلی سایت نمایش داده می‌شود.','This page appears at the site’s main address.'):l('آدرس اصلی تا انتخاب یک صفحه، خروجی سامانهٔ مدیریت محتوا ندارد.','The site root has no CMS output until a page is selected.')}</small></span></div>
       {state.message&&state.locale===active?<p className={`rava-homepage-result ${state.ok?'is-success':'is-error'}`} role="status">{state.message}</p>:null}
       <button className="admin-primary-button" type="submit" disabled={!dirty||pending}>{pending?l('در حال ذخیره…','Saving…'):dirty?l('ذخیرهٔ صفحهٔ خانه','Save homepage'):l('تغییری برای ذخیره نیست','No changes to save')}</button>
     </form>
