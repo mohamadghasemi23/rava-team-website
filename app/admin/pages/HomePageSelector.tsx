@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {useActionState,useEffect,useMemo,useState} from 'react'
 import {setSiteHomePage,type AdminActionState} from './actions'
 import {useAdminLocale} from '../components/AdminLocale'
@@ -18,19 +19,18 @@ export default function HomePageSelector({siteId,primaryLocale,pages,mappings}:P
  useEffect(()=>{if(state.ok&&state.locale){const value=state.pageId??'';setSaved(current=>({...current,[state.locale!]:value}));setSelected(current=>({...current,[state.locale!]:value}))}},[state])
  const page=pages.find(item=>item.id===selected[active]),dirty=(selected[active]??'')!==(saved[active]??'')
  const status=page?.status==='published'?l('منتشرشده','Published'):page?.status==='scheduled'?l('زمان‌بندی‌شده','Scheduled'):page?.status==='hidden'?l('مخفی','Hidden'):page?l('پیش‌نویس','Draft'):l('انتخاب نشده','Not selected')
- return <section className="admin-panel rava-homepage-card" aria-labelledby="homepage-title">
-   <div className="rava-homepage-heading"><div><span className="rava-homepage-kicker">{l('مسیر اصلی سایت','SITE ROOT')}</span><h2 id="homepage-title">{l('صفحهٔ خانه','Homepage')}</h2><p>{l('صفحه‌ای را تعیین کنید که مخاطب با ورود به آدرس اصلی سایت می‌بیند.','Choose the page visitors see at the site’s main address.')}</p></div><code dir="ltr">/</code></div>
+ return <section className="rava-homepage-card" aria-labelledby="homepage-title">
+   <div className="rava-homepage-heading"><div><h2 id="homepage-title">{l('صفحهٔ خانه','Homepage')}</h2><p>{l('اولین صفحه‌ای که بازدیدکننده می‌بیند.','The first page visitors see.')}</p></div><code dir="ltr">/</code></div>
    <div className="rava-homepage-tabs" role="tablist" aria-label={l('زبان صفحهٔ خانه','Homepage language')}>{locales.map(locale=><button type="button" role="tab" aria-selected={active===locale} className={active===locale?'is-active':''} key={locale} disabled={pending} onClick={()=>setActive(locale)}><span>{locale==='fa'?'فارسی':'English'}</span>{locale===primaryLocale?<small>{l('زبان اصلی','Primary')}</small>:null}</button>)}</div>
    <div className="rava-homepage-body">
-    <div className="rava-homepage-preview" aria-hidden="true"><div className="rava-homepage-browser"><i/><i/><i/></div><div className="rava-homepage-canvas"><span>{page?.title??l('هنوز صفحه‌ای انتخاب نشده','No page selected yet')}</span><b>{page?`/${page.slug}`:'/'}</b></div></div>
     <form action={formAction} className="rava-homepage-form" aria-busy={pending}>
       <input type="hidden" name="site_id" value={siteId}/><input type="hidden" name="locale" value={active}/>
-      <label htmlFor={`home-page-${active}`}>{l(`صفحهٔ خانهٔ ${active==='fa'?'فارسی':'انگلیسی'}`,`${active==='fa'?'Persian':'English'} homepage`)}</label>
+      <label htmlFor={`home-page-${active}`}>{l('صفحهٔ انتخاب‌شده','Selected page')}</label>
       <select id={`home-page-${active}`} name="page_id" value={selected[active]??''} disabled={pending} onChange={event=>setSelected(current=>({...current,[active]:event.target.value}))}><option value="">{l('بدون انتخاب','No selection')}</option>{pages.map(item=><option key={item.id} value={item.id}>{item.title} · /{item.slug}</option>)}</select>
-      <div className={`rava-homepage-status status-${page?.status??'empty'}`}><i/><span><b>{status}</b><small>{page&&page.status!=='published'?l('این صفحه تا زمان انتشار در سایت عمومی دیده نمی‌شود.','This page stays private until it is published.'):page?l('این صفحه در آدرس اصلی سایت نمایش داده می‌شود.','This page appears at the site’s main address.'):l('آدرس اصلی تا انتخاب یک صفحه، خروجی سامانهٔ مدیریت محتوا ندارد.','The site root has no CMS output until a page is selected.')}</small></span></div>
-      {state.message&&state.locale===active?<p className={`rava-homepage-result ${state.ok?'is-success':'is-error'}`} role="status">{state.message}</p>:null}
-      <button className="admin-primary-button" type="submit" disabled={!dirty||pending}>{pending?l('در حال ذخیره…','Saving…'):dirty?l('ذخیرهٔ صفحهٔ خانه','Save homepage'):l('تغییری برای ذخیره نیست','No changes to save')}</button>
+      <button className="admin-primary-button" type="submit" disabled={!dirty||pending}>{pending?l('در حال ذخیره…','Saving…'):l('ذخیره','Save')}</button>
     </form>
+    <div className={`rava-homepage-status status-${page?.status??'empty'}`}><i/><span><b>{status}</b><small>{page&&page.status!=='published'?l('این صفحه تا زمان انتشار عمومی دیده نمی‌شود.','This page stays private until it is published.'):page?l('این صفحه در آدرس اصلی سایت نمایش داده می‌شود.','This page appears at the site’s main address.'):l('هنوز صفحهٔ خانه انتخاب نشده است.','No homepage is selected yet.')}</small></span></div>
+    {state.message&&state.locale===active?<div className={`rava-homepage-result ${state.ok?'is-success':'is-error'}`} role="status"><span>{state.ok?'✓ ':''}{state.message}</span>{state.ok&&page?<Link href={`/preview/sites/${siteId}?page=${page.id}`} target="_blank">{l('دیدن پیش‌نمایش واقعی','Open real preview')}</Link>:null}</div>:null}
    </div>
  </section>
 }
