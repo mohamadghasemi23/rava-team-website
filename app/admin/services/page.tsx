@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { requireRavaStaff } from '@/lib/auth/require-staff'
 
 export const dynamic = 'force-dynamic'
@@ -10,7 +11,7 @@ export default async function ServicesAdminPage() {
     .order('sort_order', { ascending: true })
 
   return <main className="admin-shell">
-    <header className="admin-head"><div><span>RAVA CONTROL CENTER</span><h1>خدمات</h1></div></header>
+    <header className="admin-head"><div><span>RAVA CONTROL CENTER</span><h1>خدمات</h1></div><Link className="admin-link" href="/admin/services/new">سرویس جدید</Link></header>
     <section className="admin-panel">
       <div className="admin-section-title"><h2>خدمات اصلی RAVA</h2><span>{services?.length ?? 0} مورد</span></div>
       {!services?.length ? <div className="admin-empty">هنوز سرویسی در V1 ثبت نشده است.</div> : (
@@ -18,10 +19,10 @@ export default async function ServicesAdminPage() {
           {services.map((service) => <article className="admin-panel" key={service.id}>
             <div className="admin-section-title"><div><b>{service.title}</b><small> /{service.slug}</small></div><span>{service.published ? 'منتشرشده' : 'پیش‌نویس'}</span></div>
             <p>{service.summary || 'بدون خلاصه'}</p>
+            <div className="admin-actions"><Link className="admin-link" href={`/admin/services/${service.id}`}>ویرایش سرویس</Link></div>
           </article>)}
         </div>
       )}
     </section>
-    <section className="admin-panel"><h2>مرحله بعد</h2><p>ویرایش محتوا، ترتیب نمایش و SEO هر سرویس در فرم اختصاصی همین بخش اضافه می‌شود.</p></section>
   </main>
 }
