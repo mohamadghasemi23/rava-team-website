@@ -14,7 +14,7 @@ type NavItem = {
 
 const navigation: NavItem[] = [
   { label: 'داشبورد', href: '/admin', icon: '⌂', keywords: ['dashboard', 'home', 'داشبورد', 'آمار'] },
-  { label: 'صفحه اصلی', icon: '◫', keywords: ['home', 'homepage', 'صفحه اصلی', 'هیرو'], disabled: true },
+  { label: 'صفحه اصلی', href: '/admin/home', icon: '◫', keywords: ['home', 'homepage', 'صفحه اصلی', 'هیرو'] },
   { label: 'پروژه‌ها', href: '/admin/projects', icon: '▦', keywords: ['projects', 'work', 'پروژه', 'نمونه کار'] },
   { label: 'خدمات', href: '/admin/services', icon: '◇', keywords: ['services', 'service', 'خدمات'] },
   { label: 'درباره راوا', icon: '○', keywords: ['about', 'درباره', 'راوا'], disabled: true },
