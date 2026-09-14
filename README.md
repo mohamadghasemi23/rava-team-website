@@ -64,7 +64,7 @@ See `docs/SECURITY.md` and `docs/PRELAUNCH_QA.md`.
 ## Database safety
 `supabase/schema.sql` represents the intended V1 schema for a fresh environment. **Do not apply it blindly to an unknown existing production database.** Inspect and back up the real database first, then prepare a safe migration plan.
 
-`s‌upabase/hardening.sql` contains non-destructive RPC permission hardening to apply after the required functions exist.
+`supabase/hardening.sql` contains non-destructive RPC permission hardening to apply after the required functions exist.
 
 ## Environment
 Copy `.env.example` to `.env.local` and configure values locally/through deployment secrets. Never commit secrets.
