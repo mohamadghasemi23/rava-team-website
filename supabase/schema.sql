@@ -119,7 +119,6 @@ create table public.page_views_daily (
   primary key (day, path)
 );
 
--- Stores only one-way visitor fingerprints for the current day. No raw IP is stored.
 create table public.page_view_visitors_daily (
   day date not null,
   path text not null,
@@ -127,7 +126,6 @@ create table public.page_view_visitors_daily (
   primary key (day, path, visitor_hash)
 );
 
--- Rate-limit buckets for public forms; bucket_key must be a one-way hash, never a raw IP.
 create table public.public_rate_limits (
   bucket text not null,
   bucket_key text not null,
@@ -143,38 +141,15 @@ create index page_views_day_idx on public.page_views_daily (day desc);
 create index rate_limits_window_idx on public.public_rate_limits (window_start desc);
 
 create or replace function public.is_rava_staff()
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1
-    from public.profiles p
-    where p.id = auth.uid()
-      and p.active = true
-      and p.role in ('admin', 'editor')
-  );
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.profiles p where p.id = auth.uid() and p.active = true and p.role in ('admin', 'editor'));
 $$;
 
 create or replace function public.is_rava_admin()
-returns boolean
-language sql
-stable
-security definer
-set search_path = public
-as $$
-  select exists (
-    select 1
-    from public.profiles p
-    where p.id = auth.uid()
-      and p.active = true
-      and p.role = 'admin'
-  );
+returns boolean language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.profiles p where p.id = auth.uid() and p.active = true and p.role = 'admin');
 $$;
 
--- Called only by trusted server code with service-role credentials.
 create or replace function public.record_page_view(p_path text, p_visitor_hash text)
 returns void
 language plpgsql
@@ -183,19 +158,21 @@ set search_path = public
 as $$
 declare
   current_day date := (now() at time zone 'UTC')::date;
-  inserted_visitor boolean := false;
+  inserted_count integer := 0;
+  is_unique boolean := false;
 begin
   insert into public.page_view_visitors_daily(day, path, visitor_hash)
   values (current_day, p_path, p_visitor_hash)
   on conflict do nothing;
 
-  get diagnostics inserted_visitor = row_count;
+  get diagnostics inserted_count = row_count;
+  is_unique := inserted_count > 0;
 
   insert into public.page_views_daily(day, path, views, unique_estimate)
-  values (current_day, p_path, 1, case when inserted_visitor then 1 else 0 end)
+  values (current_day, p_path, 1, case when is_unique then 1 else 0 end)
   on conflict (day, path) do update
   set views = public.page_views_daily.views + 1,
-      unique_estimate = public.page_views_daily.unique_estimate + case when inserted_visitor then 1 else 0 end;
+      unique_estimate = public.page_views_daily.unique_estimate + case when is_unique then 1 else 0 end;
 end;
 $$;
 
@@ -217,7 +194,6 @@ create policy "public read published projects" on public.projects for select to 
 create policy "public read media metadata" on public.media_assets for select to anon, authenticated using (deleted_at is null);
 create policy "public read published project media" on public.project_media for select to anon, authenticated using (exists (select 1 from public.projects p where p.id = project_media.project_id and p.published = true));
 create policy "public read public settings" on public.site_settings for select to anon, authenticated using (is_public = true);
-
 create policy "staff manage media" on public.media_assets for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
 create policy "staff manage site content" on public.site_content for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
 create policy "staff manage services" on public.services for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
@@ -231,13 +207,9 @@ create policy "admin manage settings" on public.site_settings for all to authent
 create policy "staff read own profile" on public.profiles for select to authenticated using (id = auth.uid() or public.is_rava_admin());
 create policy "admin manage profiles" on public.profiles for all to authenticated using (public.is_rava_admin()) with check (public.is_rava_admin());
 
--- Media bucket: public read for website assets, staff-only writes.
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values ('rava-media', 'rava-media', true, 5242880, array['image/jpeg','image/png','image/webp','image/avif'])
-on conflict (id) do update set
-  public = excluded.public,
-  file_size_limit = excluded.file_size_limit,
-  allowed_mime_types = excluded.allowed_mime_types;
+on conflict (id) do update set public = excluded.public, file_size_limit = excluded.file_size_limit, allowed_mime_types = excluded.allowed_mime_types;
 
 create policy "rava media staff insert" on storage.objects for insert to authenticated with check (bucket_id = 'rava-media' and public.is_rava_staff());
 create policy "rava media staff update" on storage.objects for update to authenticated using (bucket_id = 'rava-media' and public.is_rava_staff()) with check (bucket_id = 'rava-media' and public.is_rava_staff());
