@@ -51,6 +51,7 @@ export default function RavaAgencyHome({ home, services, projects, settings }: {
   const stats = (home.stats ?? []).slice(0,3)
   const marqueeItems = useMemo(()=>String(home.marquee || '').split('—').map(x=>x.trim()).filter(Boolean),[home.marquee])
   const heroTitle=splitHeroTitle(home.hero?.title||'تجربه‌های دیجیتال بهتر می‌سازیم.')
+  const socials=[['Instagram',settings.instagram],['Telegram',settings.telegram],['LinkedIn',settings.linkedin]].filter((item):item is [string,string]=>Boolean(item[1]))
 
   useEffect(()=>{
     gsap.registerPlugin(ScrollTrigger)
@@ -159,7 +160,12 @@ export default function RavaAgencyHome({ home, services, projects, settings }: {
 
       <section className={styles.finalCta} id="contact"><span>Got a project?</span><h2>{home.final_cta?.title || 'پروژه‌ای دارید؟ شروع کنیم.'}</h2><p>{home.final_cta?.body}</p><a href="/contact">{home.final_cta?.button || 'شروع پروژه'} ↗</a></section>
 
-      <footer className={styles.footer}><div><a className={styles.brand} href="#top">RAVA <b>TEAM</b></a><p>{settings.footer_text || 'طراحی و توسعه وب، محصولات دیجیتال و راهکارهای خلاقانه.'}</p></div><div className={styles.footerLinks}><a href="/services">خدمات</a><a href="/work">پروژه‌ها</a><a href="/about">درباره راوا</a><a href="/contact">تماس</a></div><div className={styles.footerMeta}><span>{settings.address || 'Shiraz, Iran'}</span>{settings.email && <a href={`mailto:${settings.email}`}>{settings.email}</a>}{settings.enamad_enabled && settings.enamad_image && <a href={settings.enamad_url || '#'} target="_blank" rel="noreferrer"><img src={settings.enamad_image} alt="نماد اعتماد الکترونیکی"/></a>}</div><small>© RAVA TEAM 2026</small></footer>
+      <footer className={styles.footer}>
+        <div><a className={styles.brand} href="#top">RAVA <b>TEAM</b></a><p>{settings.footer_text || 'طراحی و توسعه وب، محصولات دیجیتال و راهکارهای خلاقانه.'}</p></div>
+        <div className={styles.footerLinks}><a href="/services">خدمات</a><a href="/work">پروژه‌ها</a><a href="/about">درباره راوا</a><a href="/contact">تماس</a></div>
+        <div className={styles.footerMeta}><span>{settings.address || 'Shiraz, Iran'}</span>{settings.email && <a href={`mailto:${settings.email}`}>{settings.email}</a>}{settings.phone&&<a href={`tel:${settings.phone}`}>{settings.phone}</a>}{socials.map(([label,url])=><a key={label} href={url} target="_blank" rel="noreferrer">{label}</a>)}{settings.enamad_enabled && settings.enamad_image && <a href={settings.enamad_url || '#'} target="_blank" rel="noreferrer"><img src={settings.enamad_image} alt="نماد اعتماد الکترونیکی"/></a>}</div>
+        <small>© RAVA TEAM 2026</small>
+      </footer>
     </main>
   </div>
 }
