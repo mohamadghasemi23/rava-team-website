@@ -161,6 +161,14 @@ declare
   inserted_count integer := 0;
   is_unique boolean := false;
 begin
+  if p_path is null or length(p_path) = 0 or length(p_path) > 240 then
+    return;
+  end if;
+
+  if p_visitor_hash is null or length(p_visitor_hash) <> 64 then
+    return;
+  end if;
+
   insert into public.page_view_visitors_daily(day, path, visitor_hash)
   values (current_day, p_path, p_visitor_hash)
   on conflict do nothing;
@@ -175,6 +183,43 @@ begin
       unique_estimate = public.page_views_daily.unique_estimate + case when is_unique then 1 else 0 end;
 end;
 $$;
+
+create or replace function public.consume_contact_rate_limit(
+  p_key_hash text,
+  p_window_start timestamptz,
+  p_limit integer default 5
+)
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  next_count integer;
+begin
+  if p_key_hash is null or length(p_key_hash) <> 64 then
+    return false;
+  end if;
+
+  if p_window_start is null or p_limit < 1 or p_limit > 100 then
+    return false;
+  end if;
+
+  insert into public.public_rate_limits(bucket, bucket_key, window_start, request_count)
+  values ('contact', p_key_hash, p_window_start, 1)
+  on conflict (bucket, bucket_key, window_start) do update
+  set request_count = public.public_rate_limits.request_count + 1
+  returning request_count into next_count;
+
+  return next_count <= p_limit;
+end;
+$$;
+
+-- Sensitive RPCs are server-only. The website calls them with the service-role key.
+revoke all on function public.record_page_view(text, text) from public, anon, authenticated;
+grant execute on function public.record_page_view(text, text) to service_role;
+revoke all on function public.consume_contact_rate_limit(text, timestamptz, integer) from public, anon, authenticated;
+grant execute on function public.consume_contact_rate_limit(text, timestamptz, integer) to service_role;
 
 alter table public.profiles enable row level security;
 alter table public.media_assets enable row level security;
