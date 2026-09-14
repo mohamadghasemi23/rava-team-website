@@ -27,7 +27,6 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(baseUrl),
     title: { default: seo.title, template: `%s | RAVA TEAM` },
     description: seo.description,
-    alternates: { canonical: '/' },
     openGraph: {
       title: seo.title,
       description: seo.description,
