@@ -58,7 +58,7 @@ export default async function AdminPage() {
       <article><span>بازدید امروز</span><b>{sumViews(todayViews.data)}</b><small>Analytics</small></article>
       <article><span>۷ روز اخیر</span><b>{sumViews(weekViews.data)}</b><small>بازدید</small></article>
       <article><span>۳۰ روز اخیر</span><b>{sumViews(rawMonth)}</b><small>بازدید</small></article>
-      <Link href="/admin/messages"><article><span>پیام‌های جدید</span><b>{newLeads.count ?? 0}</b><small>مشاهده پیام‌ها ←</small></article></Link>
+      <Link href="/admin/leads"><article><span>پیام‌های جدید</span><b>{newLeads.count ?? 0}</b><small>مشاهده پیام‌ها ←</small></article></Link>
     </section>
 
     <AdminAnalyticsCharts daily={daily} topPages={topPages} />
