@@ -1,9 +1,31 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { findProjectFallback } from '@/lib/public-fallbacks'
 import RavaInnerFrame from '../../components/RavaInnerFrame'
 import styles from '../../components/rava-inner.module.css'
 
-export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{const {slug}=await params;const supabase=await createClient();const {data}=await supabase.from('projects').select('title,summary,seo_title,seo_description,canonical_url').eq('slug',slug).eq('published',true).maybeSingle();if(!data)return{};return{title:data.seo_title||data.title,description:data.seo_description||data.summary,alternates:data.canonical_url?{canonical:data.canonical_url}:undefined}}
+export async function generateMetadata({params}:{params:Promise<{slug:string}>}):Promise<Metadata>{
+  const {slug}=await params
+  const supabase=await createClient()
+  const {data}=await supabase.from('projects').select('title,summary,seo_title,seo_description,canonical_url').eq('slug',slug).eq('published',true).maybeSingle()
+  if(data) return {title:data.seo_title||data.title,description:data.seo_description||data.summary,alternates:data.canonical_url?{canonical:data.canonical_url}:undefined}
+  const fallback=findProjectFallback(slug)
+  return fallback?{title:fallback.title,description:fallback.summary}:{}
+}
 
-export default async function ProjectDetailPage({params}:{params:Promise<{slug:string}>}){const {slug}=await params;const supabase=await createClient();const {data}=await supabase.from('projects').select('id,title,summary,content,project_kind,client_name,project_year,role_text,scope,kpis').eq('slug',slug).eq('published',true).maybeSingle();if(!data)notFound();const content=data.content&&typeof data.content==='object'?data.content as {body?:string}:{};const scope=Array.isArray(data.scope)?data.scope.map(String):[];const kpis=Array.isArray(data.kpis)?data.kpis.map(String):[];return <RavaInnerFrame eyebrow={data.project_kind==='concept'?'CONCEPT PROJECT':'CASE STUDY'} title={data.title} intro={data.summary}><dl className={styles.meta}><div><dt>Client</dt><dd>{data.project_kind==='concept'?'Concept':data.client_name||'RAVA'}</dd></div><div><dt>Year</dt><dd>{data.project_year||2026}</dd></div><div><dt>Role</dt><dd>{data.role_text||'Strategy / Design / Development'}</dd></div><div><dt>Scope</dt><dd>{scope.join(' / ')||'Digital Product'}</dd></div></dl><section className={styles.prose}><p>{content.body||data.summary}</p>{kpis.length>0&&<p><strong>{kpis.join(' · ')}</strong></p>}<p><a href="/contact">شروع یک پروژه با راوا ↗</a></p></section></RavaInnerFrame>}
+export default async function ProjectDetailPage({params}:{params:Promise<{slug:string}>}){
+  const {slug}=await params
+  const supabase=await createClient()
+  const {data}=await supabase.from('projects').select('id,title,summary,content,project_kind,client_name,project_year,role_text,scope,kpis').eq('slug',slug).eq('published',true).maybeSingle()
+  if(data){
+    const content=data.content&&typeof data.content==='object'?data.content as {body?:string}:{}
+    const scope=Array.isArray(data.scope)?data.scope.map(String):[]
+    const kpis=Array.isArray(data.kpis)?data.kpis.map(String):[]
+    return <RavaInnerFrame eyebrow={data.project_kind==='concept'?'CONCEPT PROJECT':'CASE STUDY'} title={data.title} intro={data.summary}><dl className={styles.meta}><div><dt>Client</dt><dd>{data.project_kind==='concept'?'Concept':data.client_name||'RAVA'}</dd></div><div><dt>Year</dt><dd>{data.project_year||2026}</dd></div><div><dt>Role</dt><dd>{data.role_text||'Strategy / Design / Development'}</dd></div><div><dt>Scope</dt><dd>{scope.join(' / ')||'Digital Product'}</dd></div></dl><section className={styles.prose}><p>{content.body||data.summary}</p>{kpis.length>0&&<p><strong>{kpis.join(' · ')}</strong></p>}<p><a href="/contact">شروع یک پروژه با راوا ↗</a></p></section></RavaInnerFrame>
+  }
+
+  const fallback=findProjectFallback(slug)
+  if(!fallback) notFound()
+  return <RavaInnerFrame eyebrow={fallback.project_kind==='concept'?'CONCEPT PROJECT':'CASE STUDY'} title={fallback.title} intro={fallback.summary}><dl className={styles.meta}><div><dt>Client</dt><dd>{fallback.project_kind==='concept'?'Concept':fallback.client_name||'RAVA'}</dd></div><div><dt>Year</dt><dd>{fallback.project_year}</dd></div><div><dt>Role</dt><dd>{fallback.role_text}</dd></div><div><dt>Scope</dt><dd>{fallback.scope.join(' / ')}</dd></div></dl><section className={styles.prose}><p>{fallback.body}</p>{fallback.kpis.length>0&&<p><strong>{fallback.kpis.join(' · ')}</strong></p>}<p><a href="/contact">شروع یک پروژه با راوا ↗</a></p></section></RavaInnerFrame>
+}
