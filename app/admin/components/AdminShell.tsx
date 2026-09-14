@@ -18,7 +18,7 @@ const navigation: NavItem[] = [
   { label: 'پروژه‌ها', href: '/admin/projects', icon: '▦', keywords: ['projects', 'work', 'پروژه', 'نمونه کار'] },
   { label: 'خدمات', href: '/admin/services', icon: '◇', keywords: ['services', 'service', 'خدمات'] },
   { label: 'درباره راوا', href: '/admin/about', icon: '○', keywords: ['about', 'درباره', 'راوا'] },
-  { label: 'پیام‌ها', href: '/admin/messages', icon: '✉', keywords: ['messages', 'leads', 'contact', 'پیام', 'درخواست'] },
+  { label: 'پیام‌ها', href: '/admin/leads', icon: '✉', keywords: ['messages', 'leads', 'contact', 'پیام', 'درخواست'] },
   { label: 'رسانه‌ها', href: '/admin/media', icon: '▧', keywords: ['media', 'image', 'upload', 'رسانه', 'تصویر', 'آپلود'] },
   { label: 'سئو', href: '/admin/seo', icon: '⌕', keywords: ['seo', 'search', 'سئو'] },
   { label: 'تنظیمات', href: '/admin/settings', icon: '⚙', keywords: ['settings', 'enamad', 'footer', 'تنظیمات', 'اینماد'] },
