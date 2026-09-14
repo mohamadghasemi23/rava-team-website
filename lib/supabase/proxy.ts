@@ -33,12 +33,8 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  if (path === '/login' && authenticated) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/admin'
-    url.search = ''
-    return NextResponse.redirect(url)
-  }
-
+  // Do not redirect authenticated users away from /login here.
+  // Staff/active-role authorization lives in the server-side admin guard.
+  // Keeping proxy auth shallow prevents redirect loops for disabled accounts.
   return response
 }
