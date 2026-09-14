@@ -1,5 +1,6 @@
 import RavaAgencyHome from './components/RavaAgencyHome'
 import { createClient } from '@/lib/supabase/server'
+import { publicProjectFallbacks, publicServiceFallbacks } from '@/lib/public-fallbacks'
 
 export const dynamic = 'force-dynamic'
 
@@ -19,22 +20,6 @@ const fallbackHome = {
   ],
   final_cta: { title: 'پروژه‌ای دارید؟ شروع کنیم.', body: 'اگر ایده، کسب‌وکار یا محصولی دارید که نیاز به یک تجربه دیجیتال بهتر دارد، درباره‌اش با ما حرف بزنید.', button: 'شروع پروژه' },
 }
-
-const fallbackServices = [
-  ['طراحی وب','web-design','وب‌سایت‌هایی که فقط زیبا نیستند؛ واضح، سریع و برای تبدیل بازدیدکننده به مشتری طراحی می‌شوند.'],
-  ['توسعه وب','web-development','توسعه سریع، امن و مقیاس‌پذیر با تکنولوژی‌های مدرن و معماری متناسب با نیاز واقعی پروژه.'],
-  ['فروشگاه اینترنتی','ecommerce','فروشگاه‌هایی با تجربه خرید ساده، مدیریت آسان و زیرساخت آماده رشد.'],
-  ['محصولات دیجیتال','digital-products','پنل‌ها، داشبوردها، ابزارهای داخلی و پلتفرم‌های اختصاصی برای مسئله‌های واقعی کسب‌وکار.'],
-  ['برندینگ و محتوا','brand-content','هویت بصری، جهت خلاقانه و محتوایی که برند را یکپارچه و قابل تشخیص می‌کند.'],
-  ['AI و اتوماسیون','ai-automation','استفاده کاربردی از هوش مصنوعی برای ساده‌سازی فرایندها، تحلیل داده و ساخت ابزارهای هوشمند.'],
-].map((item,i)=>({ id:`fallback-service-${i}`, title:item[0], slug:item[1], summary:item[2] }))
-
-const fallbackProjects = [
-  { id:'rava-traffic', title:'RAVA Traffic Engine', slug:'rava-traffic-engine', summary:'محصول داخلی راوا برای زیرساخت رشد ارگانیک، داده و اتوماسیون.', project_kind:'real' as const, client_name:'RAVA', project_year:2026, role_text:'Strategy / Product / Development', scope:['SEO','Automation','Data'], kpis:['In Development','Modular Architecture','Organic Growth'], featured:true, coverUrl:'', gallery:[] },
-  { id:'ali-topol', title:'Ali Topol Store', slug:'ali-topol-store', summary:'فروشگاه اینترنتی پوشاک سایزبزرگ با تمرکز بر تجربه خرید ساده و مدیریت آسان.', project_kind:'real' as const, client_name:'Ali Topol', project_year:2026, role_text:'UX / Development', scope:['E-commerce','UX','Development'], kpis:['In Development'], featured:false, coverUrl:'', gallery:[] },
-  { id:'nova', title:'NOVA', slug:'nova-concept', summary:'کانسپت فروشگاه دیجیتال برای یک برند مد معاصر.', project_kind:'concept' as const, client_name:null, project_year:2026, role_text:'Concept / Design', scope:['E-commerce','Art Direction'], kpis:['Concept Project'], featured:false, coverUrl:'', gallery:[] },
-  { id:'luma', title:'LUMA', slug:'luma-concept', summary:'کانسپت محصول دیجیتال و داشبورد SaaS.', project_kind:'concept' as const, client_name:null, project_year:2026, role_text:'Concept / Product', scope:['SaaS','Dashboard'], kpis:['Concept Project'], featured:false, coverUrl:'', gallery:[] },
-]
 
 function asObject(value: unknown): JsonObject | null { return value && typeof value === 'object' && !Array.isArray(value) ? value as JsonObject : null }
 
@@ -61,7 +46,7 @@ export default async function HomePage() {
       id:p.id, title:p.title, slug:p.slug, summary:p.summary ?? '', project_kind:p.project_kind as 'real'|'concept', client_name:p.client_name, project_year:p.project_year, role_text:p.role_text,
       scope:Array.isArray(p.scope)?p.scope.map(String):[], kpis:Array.isArray(p.kpis)?p.kpis.map(String):[], featured:Boolean(p.featured), coverUrl:p.cover_media_id?mediaMap.get(p.cover_media_id) ?? '':'',
       gallery:galleryRows.filter(g=>g.project_id===p.id).map(g=>mediaMap.get(g.media_id) ?? '').filter(Boolean),
-    })) : fallbackProjects
+    })) : publicProjectFallbacks
 
     const settingMap = Object.fromEntries((settingsResult.data ?? []).map(row=>[row.key,asObject(row.value) ?? {}]))
     const general = settingMap.general ?? {}
@@ -73,10 +58,10 @@ export default async function HomePage() {
 
     const dbHome = asObject(homeRow.data?.content)
     const home = dbHome ? { ...fallbackHome, ...dbHome } : fallbackHome
-    const services = servicesResult.data?.length ? servicesResult.data : fallbackServices
+    const services = servicesResult.data?.length ? servicesResult.data : publicServiceFallbacks
 
     return <RavaAgencyHome home={home as typeof fallbackHome} services={services} projects={projects} settings={settings}/>
   } catch {
-    return <RavaAgencyHome home={fallbackHome} services={fallbackServices} projects={fallbackProjects} settings={{address:'Shiraz, Iran'}}/>
+    return <RavaAgencyHome home={fallbackHome} services={publicServiceFallbacks} projects={publicProjectFallbacks} settings={{address:'Shiraz, Iran'}}/>
   }
 }
