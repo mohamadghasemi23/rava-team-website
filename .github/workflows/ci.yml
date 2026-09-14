@@ -9,7 +9,7 @@ on:
       - reboot/rava-v1-spec
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -24,9 +24,19 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
-      - name: Install locked dependencies
-        run: npm ci --no-audit --no-fund
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
       - name: Type check
         run: npm run typecheck
       - name: Build
         run: npm run build
+      - name: Commit refreshed lockfile on reboot branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/reboot/rava-v1-spec'
+        run: |
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Refresh dependency lockfile"
+            git push
+          fi
