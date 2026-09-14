@@ -29,6 +29,18 @@ const mainNav = [
   { href:'/about', label:'درباره راوا' },
 ]
 
+function splitHeroTitle(value:string){
+  const title=value.trim()||'تجربه‌های دیجیتال بهتر می‌سازیم.'
+  const marker='بهتر'
+  if(title.includes(marker)){
+    const [before,...after]=title.split(marker)
+    return {line1:before.trim(),highlight:marker,line2:after.join(marker).trim()}
+  }
+  const words=title.split(/\s+/)
+  const pivot=Math.max(1,Math.ceil(words.length/2))
+  return {line1:words.slice(0,pivot).join(' '),highlight:'',line2:words.slice(pivot).join(' ')}
+}
+
 export default function RavaAgencyHome({ home, services, projects, settings }: { home:HomeContent; services:Service[]; projects:Project[]; settings:SiteSettings }) {
   const heroRef = useRef<HTMLElement>(null)
   const marqueeRef = useRef<HTMLDivElement>(null)
@@ -38,6 +50,7 @@ export default function RavaAgencyHome({ home, services, projects, settings }: {
   const values = home.values ?? []
   const stats = (home.stats ?? []).slice(0,3)
   const marqueeItems = useMemo(()=>String(home.marquee || '').split('—').map(x=>x.trim()).filter(Boolean),[home.marquee])
+  const heroTitle=splitHeroTitle(home.hero?.title||'تجربه‌های دیجیتال بهتر می‌سازیم.')
 
   useEffect(()=>{
     gsap.registerPlugin(ScrollTrigger)
@@ -97,11 +110,14 @@ export default function RavaAgencyHome({ home, services, projects, settings }: {
         <div className={styles.heroTop}><span className={styles.badge}><i/> {home.hero?.badge || 'آماده همکاری روی پروژه‌های جدید'}</span><span>RAVA DIGITAL STUDIO — SHIRAZ</span></div>
         <span className={styles.star} aria-hidden>✳</span>
         <h1 className={styles.heroTitle}>
-          <span className={styles.heroMask}><span className={styles.heroLineInner}>تجربه‌های دیجیتال</span></span>
-          <span className={styles.heroMask}><span className={styles.heroLineInner}><em>بهتر</em> می‌سازیم.</span></span>
+          <span className={styles.heroMask}><span className={styles.heroLineInner}>{heroTitle.line1}</span></span>
+          {(heroTitle.highlight||heroTitle.line2)&&<span className={styles.heroMask}><span className={styles.heroLineInner}>{heroTitle.highlight&&<><em>{heroTitle.highlight}</em>{' '}</>}{heroTitle.line2}</span></span>}
         </h1>
         <div className={styles.heroBottom}>
-          <p className={styles.heroSub}>{home.hero?.description}</p>
+          <div>
+            <p className={styles.heroSub}>{home.hero?.description}</p>
+            <div className={styles.heroActions}><a href="/contact">{home.hero?.primary_cta||'شروع پروژه'}</a><a href="/work">{home.hero?.secondary_cta||'دیدن نمونه‌کارها'}</a></div>
+          </div>
           <a href="#services" className={styles.scrollCue}>برای دیدن بیشتر اسکرول کنید ↓</a>
         </div>
         <div className={styles.rule}/>
