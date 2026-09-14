@@ -119,43 +119,28 @@ create table public.page_views_daily (
   primary key (day, path)
 );
 
--- Server-only abuse protection. Never exposed through public RLS policies.
-create table public.rate_limit_buckets (
-  key_hash text not null,
+-- Stores only one-way visitor fingerprints for the current day. No raw IP is stored.
+create table public.page_view_visitors_daily (
+  day date not null,
+  path text not null,
+  visitor_hash text not null,
+  primary key (day, path, visitor_hash)
+);
+
+-- Rate-limit buckets for public forms; bucket_key must be a one-way hash, never a raw IP.
+create table public.public_rate_limits (
+  bucket text not null,
+  bucket_key text not null,
   window_start timestamptz not null,
   request_count integer not null default 0 check (request_count >= 0),
-  primary key (key_hash, window_start)
+  primary key (bucket, bucket_key, window_start)
 );
 
 create index projects_home_order_idx on public.projects (show_on_home, sort_order) where published = true;
 create index services_public_order_idx on public.services (sort_order) where published = true;
 create index leads_status_created_idx on public.leads (status, created_at desc);
 create index page_views_day_idx on public.page_views_daily (day desc);
-create index rate_limit_window_idx on public.rate_limit_buckets (window_start);
-
-create or replace function public.consume_contact_rate_limit(
-  p_key_hash text,
-  p_window_start timestamptz,
-  p_limit integer default 5
-)
-returns boolean
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  accepted integer;
-begin
-  insert into public.rate_limit_buckets (key_hash, window_start, request_count)
-  values (p_key_hash, p_window_start, 1)
-  on conflict (key_hash, window_start)
-  do update set request_count = public.rate_limit_buckets.request_count + 1
-  where public.rate_limit_buckets.request_count < p_limit
-  returning request_count into accepted;
-
-  return accepted is not null;
-end;
-$$;
+create index rate_limits_window_idx on public.public_rate_limits (window_start desc);
 
 create or replace function public.is_rava_staff()
 returns boolean
@@ -189,6 +174,31 @@ as $$
   );
 $$;
 
+-- Called only by trusted server code with service-role credentials.
+create or replace function public.record_page_view(p_path text, p_visitor_hash text)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  current_day date := (now() at time zone 'UTC')::date;
+  inserted_visitor boolean := false;
+begin
+  insert into public.page_view_visitors_daily(day, path, visitor_hash)
+  values (current_day, p_path, p_visitor_hash)
+  on conflict do nothing;
+
+  get diagnostics inserted_visitor = row_count;
+
+  insert into public.page_views_daily(day, path, views, unique_estimate)
+  values (current_day, p_path, 1, case when inserted_visitor then 1 else 0 end)
+  on conflict (day, path) do update
+  set views = public.page_views_daily.views + 1,
+      unique_estimate = public.page_views_daily.unique_estimate + case when inserted_visitor then 1 else 0 end;
+end;
+$$;
+
 alter table public.profiles enable row level security;
 alter table public.media_assets enable row level security;
 alter table public.site_content enable row level security;
@@ -198,7 +208,8 @@ alter table public.project_media enable row level security;
 alter table public.leads enable row level security;
 alter table public.site_settings enable row level security;
 alter table public.page_views_daily enable row level security;
-alter table public.rate_limit_buckets enable row level security;
+alter table public.page_view_visitors_daily enable row level security;
+alter table public.public_rate_limits enable row level security;
 
 create policy "public read site content" on public.site_content for select to anon, authenticated using (true);
 create policy "public read published services" on public.services for select to anon, authenticated using (published = true);
@@ -232,5 +243,5 @@ create policy "rava media staff insert" on storage.objects for insert to authent
 create policy "rava media staff update" on storage.objects for update to authenticated using (bucket_id = 'rava-media' and public.is_rava_staff()) with check (bucket_id = 'rava-media' and public.is_rava_staff());
 create policy "rava media staff delete" on storage.objects for delete to authenticated using (bucket_id = 'rava-media' and public.is_rava_staff());
 
--- No anonymous INSERT policy exists for leads, analytics, or rate-limit buckets on purpose.
--- Public forms and page-view tracking MUST go through rate-limited server routes using server-only credentials.
+-- No anonymous INSERT policies exist for leads, analytics or rate limits.
+-- Public routes use server-only service-role credentials, validate payloads and never store raw IP addresses.
