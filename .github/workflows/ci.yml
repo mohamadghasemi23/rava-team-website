@@ -24,6 +24,14 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Git and runtime preflight
+        run: |
+          git status --short --branch
+          git branch --show-current
+          git log -1 --oneline
+          node --version
+          npm --version
+          npx --version
       - name: Install locked dependencies
         run: npm ci --no-audit --no-fund
       - name: Audit high severity dependencies
