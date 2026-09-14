@@ -52,8 +52,16 @@ export default async function HomePage() {
     const general = settingMap.general ?? {}
     const enamad = settingMap.enamad ?? {}
     const settings = {
-      email:String(general.email ?? ''), phone:String(general.phone ?? ''), address:String(general.address ?? 'Shiraz, Iran'), instagram:String(general.instagram ?? ''), linkedin:String(general.linkedin ?? ''), telegram:String(general.telegram ?? ''), footer_text:String(general.footer_text ?? ''),
-      enamad_enabled:Boolean(enamad.enabled), enamad_url:String(enamad.url ?? ''), enamad_image:String(enamad.image_url ?? ''),
+      email:String(general.email ?? ''),
+      phone:String(general.phone ?? ''),
+      address:String(general.address ?? 'Shiraz, Iran'),
+      instagram:String(general.instagram ?? ''),
+      linkedin:String(general.linkedin ?? ''),
+      telegram:String(general.telegram ?? ''),
+      footer_text:String(general.footer_note ?? ''),
+      enamad_enabled:Boolean(enamad.enabled),
+      enamad_url:String(enamad.validation_url ?? ''),
+      enamad_image:String(enamad.logo_url ?? ''),
     }
 
     const dbHome = asObject(homeRow.data?.content)
