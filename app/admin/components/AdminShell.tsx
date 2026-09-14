@@ -20,7 +20,7 @@ const navigation: NavItem[] = [
   { label: 'درباره راوا', href: '/admin/about', icon: '○', keywords: ['about', 'درباره', 'راوا'] },
   { label: 'پیام‌ها', href: '/admin/messages', icon: '✉', keywords: ['messages', 'leads', 'contact', 'پیام', 'درخواست'] },
   { label: 'رسانه‌ها', href: '/admin/media', icon: '▧', keywords: ['media', 'image', 'upload', 'رسانه', 'تصویر', 'آپلود'] },
-  { label: 'سئو', icon: '⌕', keywords: ['seo', 'search', 'سئو'], disabled: true },
+  { label: 'سئو', href: '/admin/seo', icon: '⌕', keywords: ['seo', 'search', 'سئو'] },
   { label: 'تنظیمات', href: '/admin/settings', icon: '⚙', keywords: ['settings', 'enamad', 'footer', 'تنظیمات', 'اینماد'] },
 ]
 
@@ -61,7 +61,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             const active = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))
             return <Link key={item.label} href={item.href} className={`rava-admin-nav-item${active ? ' is-active' : ''}`}><i>{item.icon}</i><span>{item.label}</span></Link>
           }
-          return <div key={item.label} className="rava-admin-nav-item is-disabled" title="در فاز بعدی V1 فعال می‌شود"><i>{item.icon}</i><span>{item.label}</span><small>بعدی</small></div>
+          return <div key={item.label} className="rava-admin-nav-item is-disabled"><i>{item.icon}</i><span>{item.label}</span></div>
         })}
       </nav>
 
