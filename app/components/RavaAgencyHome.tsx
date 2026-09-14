@@ -23,11 +23,17 @@ type Project = {
 type SiteSettings = { email?:string; phone?:string; address?:string; instagram?:string; linkedin?:string; telegram?:string; footer_text?:string; enamad_enabled?:boolean; enamad_url?:string; enamad_image?:string }
 
 const sectionAnim = { hidden:{opacity:0,y:28}, show:{opacity:1,y:0,transition:{duration:.65,ease:'easeOut' as const}} }
+const mainNav = [
+  { href:'/services', label:'خدمات' },
+  { href:'/work', label:'پروژه‌ها' },
+  { href:'/about', label:'درباره راوا' },
+]
 
 export default function RavaAgencyHome({ home, services, projects, settings }: { home:HomeContent; services:Service[]; projects:Project[]; settings:SiteSettings }) {
   const heroRef = useRef<HTMLElement>(null)
   const marqueeRef = useRef<HTMLDivElement>(null)
   const [activeProject,setActiveProject] = useState(0)
+  const [menuOpen,setMenuOpen] = useState(false)
   const featured = projects.find(p=>p.featured) ?? projects[0]
   const values = home.values ?? []
   const stats = (home.stats ?? []).slice(0,3)
@@ -51,16 +57,40 @@ export default function RavaAgencyHome({ home, services, projects, settings }: {
     return ()=>ctx.revert()
   },[])
 
+  useEffect(()=>{
+    if(!menuOpen) return
+    const previousOverflow=document.body.style.overflow
+    document.body.style.overflow='hidden'
+    const onKeyDown=(event:KeyboardEvent)=>{ if(event.key==='Escape') setMenuOpen(false) }
+    window.addEventListener('keydown',onKeyDown)
+    return ()=>{
+      document.body.style.overflow=previousOverflow
+      window.removeEventListener('keydown',onKeyDown)
+    }
+  },[menuOpen])
+
   const projectPreview = projects[Math.min(activeProject,Math.max(0,projects.length-1))]
 
   return <div className={styles.site}>
     <header className={styles.header}>
       <a className={styles.brand} href="#top">RAVA <b>TEAM</b></a>
       <nav className={styles.nav} aria-label="منوی اصلی">
-        <a href="/services">خدمات</a><a href="/work">پروژه‌ها</a><a href="/about">درباره راوا</a>
+        {mainNav.map(item=><a key={item.href} href={item.href}>{item.label}</a>)}
       </nav>
       <a className={styles.headerCta} href="/contact">شروع پروژه</a>
+      <button type="button" className={styles.menuButton} aria-label={menuOpen?'بستن منو':'باز کردن منو'} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={()=>setMenuOpen(open=>!open)}>
+        <span/><span/>
+      </button>
     </header>
+
+    <AnimatePresence>
+      {menuOpen&&<motion.div id="mobile-navigation" className={styles.mobileMenu} initial={{opacity:0,y:-12}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-12}} transition={{duration:.22}}>
+        <nav aria-label="منوی موبایل">
+          {mainNav.map((item,i)=><a key={item.href} href={item.href} onClick={()=>setMenuOpen(false)}><span>{String(i+1).padStart(2,'0')}</span>{item.label}</a>)}
+          <a href="/contact" onClick={()=>setMenuOpen(false)}><span>04</span>شروع پروژه</a>
+        </nav>
+      </motion.div>}
+    </AnimatePresence>
 
     <main className={styles.main} id="top">
       <section ref={heroRef} className={styles.hero}>
