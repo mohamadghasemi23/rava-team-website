@@ -9,7 +9,7 @@ on:
       - reboot/rava-v1-spec
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -30,11 +30,13 @@ jobs:
         run: npm run typecheck
       - name: Build
         run: npm run build
-      - name: Upload generated lockfile
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: package-lock
-          path: package-lock.json
-          if-no-files-found: error
-          retention-days: 1
+      - name: Commit generated lockfile on reboot branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/reboot/rava-v1-spec'
+        run: |
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Lock dependencies from successful CI build"
+            git push
+          fi
