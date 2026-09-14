@@ -1,26 +1,38 @@
 # RAVA Website V1 — Prelaunch QA
 
-This checklist is the release gate for `reboot/rava-v1-spec`. Do not merge to `main` or deploy production until every blocker is verified on a real environment.
+This is the release gate for `reboot/rava-v1-spec`. Do not merge to `main` or deploy production until every remaining environment blocker is verified.
 
-## 1. Build & dependency reproducibility — BLOCKER
-- Run `npm install` on a networked machine and commit the generated `package-lock.json`.
-- After the lockfile exists, replace remaining `latest` package ranges with the exact versions resolved by the lockfile where practical.
-- Run `npm run typecheck`.
-- Run `npm run build`.
-- Fix every TypeScript and Next.js build error before preview deployment.
-- Confirm Node 22 works with the resolved Next.js/Supabase versions.
+## Code-side gates — completed
+- `package-lock.json` is committed.
+- Runtime/dev dependency versions are pinned to the versions proven by CI.
+- Node 22 is the deployment/CI target.
+- CI uses `npm ci --no-audit --no-fund`.
+- `npm run typecheck` and `npm run build` have passed on the reboot branch; re-run after every final code change.
+- Next.js is pinned to `16.3.5`; React/ReactDOM to `19.3.0`.
+- Vazirmatn Variable is self-hosted through `@fontsource-variable/vazirmatn`.
+- Public and inner-page mobile navigation is implemented with Escape close and body scroll lock.
+- Public fallback services/projects share one source and their detail routes no longer dead-end when the database is empty.
+- Contact page uses the final RAVA inner-page system instead of the temporary functional placeholder.
+- Home Hero title and CTAs now use Admin-managed values.
+- About public page renders editable title, intro, body, stats, values and CTA.
+- General footer/contact/social settings and structured Enamad fields are wired to the public UI.
+- Canonical Leads admin route is `/admin/leads`; legacy `/admin/messages` redirects there.
+- Security headers include HSTS, nosniff, referrer policy, permissions policy and frame denial.
 
-## 2. Supabase database — BLOCKER
-- Do not blindly apply `schema.sql` to an unknown existing production database.
-- First inspect the real database and back it up.
-- For a fresh V1 database, apply `supabase/schema.sql` and then `supabase/hardening.sql`.
-- Confirm `profiles` contains the intended RAVA admin user with role `admin` and `active=true`.
-- Verify all RLS policies with anon, editor and admin sessions.
+## Remaining release blockers — require a real environment
+
+### 1. Supabase database
+- Do not blindly apply `schema.sql` to an unknown existing database.
+- Inspect the actual database and migration history first, then export a backup.
+- For a fresh disposable V1 database, apply `supabase/schema.sql` and `supabase/hardening.sql`.
+- For an existing RAVA database, prepare and test a forward migration that preserves required auth/profile/media/project/lead data.
+- Confirm an intended RAVA user exists in `profiles` with `role='admin'` and `active=true`.
+- Verify RLS using anon, editor and admin sessions.
 - Verify `record_page_view` and `consume_contact_rate_limit` are executable only by `service_role`.
-- Verify the `rava-media` bucket exists, is publicly readable, and only active RAVA staff can write/delete.
+- Verify `rava-media` is publicly readable while write/update/delete remain staff-only.
 
-## 3. Environment variables — BLOCKER
-Configure in preview/production only; never commit values:
+### 2. Preview environment
+Configure as deployment secrets; never commit values:
 - `NEXT_PUBLIC_SITE_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
@@ -28,111 +40,87 @@ Configure in preview/production only; never commit values:
 - `CONTACT_RATE_LIMIT_SALT`
 - `ANALYTICS_HASH_SALT`
 
-Use independent, long random salts for Contact and Analytics.
+Use separate long random salts for Contact and Analytics.
 
-## 4. Authentication & admin
-- Unauthenticated `/admin/*` redirects to `/login`.
-- Active `admin` and `editor` accounts can enter.
-- Inactive users and legacy roles cannot enter.
-- Only `admin` can change protected global settings/SEO/Enamad where required.
-- Logout invalidates the session and returns to public/login flow without redirect loops.
-- Admin and login responses are `no-store` in the deployed environment.
+### 3. Authentication/Admin live test
+- Anonymous `/admin/*` redirects to `/login`.
+- Active `admin` and `editor` can enter; inactive/legacy roles cannot.
+- Only `admin` can change protected global Settings/SEO/Enamad.
+- Logout invalidates the session without a redirect loop.
+- `/admin/*` and `/login` responses are `no-store` in the deployed environment.
+- Verify `/admin/leads`, projects, services, home, about, media, SEO and settings with real writes.
 
-## 5. Media
-- Upload accepts only JPG, PNG, WebP and AVIF, max 5 MB.
-- Server signature validation rejects spoofed MIME types.
-- Uploaded media appears in Media Library.
-- Alt text edit persists.
-- Media referenced by project cover/gallery/OG cannot be deleted accidentally.
-- Project cover and gallery ordering persist and render correctly.
+### 4. Media live test
+- Accept only JPG, PNG, WebP and AVIF, max 5 MB.
+- Reject spoofed file signatures.
+- Verify upload, preview, alt text edit, safe delete protection, project cover selection and gallery ordering.
 
-## 6. Contact / Leads
-- Valid contact form creates one `leads` row and appears in Admin Messages.
-- Honeypot submissions do not create leads.
-- Invalid email or missing contact details are rejected.
-- Rate limit blocks excessive submissions within a 10-minute window.
-- No raw visitor IP is stored in `leads`, analytics or rate-limit tables.
-- Lead statuses can be changed from Admin.
+### 5. Contact/Leads live test
+- A valid Contact submission creates one `leads` row and appears in `/admin/leads`.
+- Honeypot submissions do not create rows.
+- Invalid email/missing contact details are rejected.
+- Rate limiting blocks excessive submissions in its 10-minute window.
+- Lead status changes persist.
+- Confirm no raw IP is stored.
 
-## 7. Analytics
-- Public page navigation records page views.
-- `/admin`, `/login`, `/api` and `/_next` are not counted.
-- Dashboard shows Today / 7 days / 30 days.
-- 30-day trend chart is correct.
-- Top-pages chart is correct.
-- Unique estimate does not store raw IP and resets by day.
+### 6. Analytics live test
+- Public navigations record page views.
+- `/admin`, `/login`, `/api` and `/_next` are excluded.
+- Dashboard Today / 7 days / 30 days, trend and top-pages values match database aggregates.
+- Unique estimation resets daily without storing raw IP.
 
-## 8. SEO
-- Global title/description from Admin SEO render in HTML metadata.
+### 7. SEO live test
+- Global Admin SEO renders in metadata.
 - Search Console verification works when configured.
 - `robots.txt` blocks private routes.
-- `sitemap.xml` includes published service/project routes only.
-- Each project/service uses its own metadata and optional canonical.
-- No global canonical forces internal pages to `/`.
-- OG image resolves publicly when configured.
+- `sitemap.xml` resolves and contains the intended public routes.
+- Project/service metadata and optional canonical are correct.
+- OG image resolves publicly.
 
-## 9. Public routes
-Verify 200/404 behavior and navigation for:
-- `/`
-- `/services`
-- `/services/[slug]`
-- `/work`
-- `/work/[slug]`
-- `/about`
-- `/contact`
-- `/login`
-- `/admin`
-
-Unpublished or unknown service/project slugs must return 404.
-
-## 10. Modern Agency visual fidelity
-Compare desktop and mobile against the selected Modern Agency reference. Preserve the reference's hierarchy and interaction logic while keeping RAVA light/RTL:
-- Hero scale and spacing
-- masked headline reveal
-- marquee speed/continuity
-- services row rhythm
-- asymmetric project bento
-- Projects II sticky preview and transition
+### 8. Visual/mobile QA against Modern Agency
+Compare the preview on real desktop/mobile widths. Preserve the reference hierarchy and interaction logic while keeping RAVA light/RTL:
+- Hero scale, wrapping and masked reveal
+- Marquee continuity/speed
+- Services rhythm
+- Asymmetric project Bento
+- Projects II sticky preview/transition
 - Featured Case Study proportions
 - About/values rhythm
-- final CTA/footer
-- reduced-motion fallback
+- Final CTA/footer
+- Mobile menu and tap targets
+- Mixed Persian/English text and numerals
+- No horizontal overflow at 320, 375, 768, 1024 and large desktop widths
+- `prefers-reduced-motion` fallback
 
 Do not invent new homepage sections during QA.
 
-## 11. Persian / RTL QA
-- Use a production Persian font (Vazirmatn preferred) rather than system-font fallback.
-- Check mixed Persian/English strings, numerals, URLs and email addresses.
-- Verify mobile menu/navigation and tap targets.
-- Verify no horizontal overflow at 320px, 375px, 768px, 1024px and large desktop widths.
+### 9. Performance
+- Run Lighthouse on Home, Project Detail, Service Detail and Contact.
+- Review LCP/CLS/INP, font loading and image sizes.
+- Replace raw image rendering with optimized delivery where it materially improves LCP without breaking Supabase media.
+- Confirm no simulated loading or unnecessary client work remains.
 
-## 12. Performance
-- Run Lighthouse on Home, Work detail, Service detail and Contact.
-- Check LCP/CLS/INP and image sizes.
-- Prefer optimized image rendering where it materially improves LCP while retaining Supabase media support.
-- Make GSAP/Framer animations respect `prefers-reduced-motion`.
-- Confirm no unnecessary client-side loading or simulated loading states remain.
+### 10. Security
+- Confirm `SUPABASE_SERVICE_ROLE_KEY` never appears in browser bundles/public logs.
+- Reconfirm RLS on managed/private tables.
+- Confirm public writes happen only through controlled server endpoints.
+- Confirm Enamad/content cannot store arbitrary executable HTML/script.
+- Confirm Netlify security headers over HTTPS.
+- Add/test a stricter CSP only on Preview, because real Supabase media origins and runtime styling must be accounted for before enforcing it.
 
-## 13. Security
-- Confirm `SUPABASE_SERVICE_ROLE_KEY` never appears in client bundles or public logs.
-- Confirm RLS remains enabled on all private/managed tables.
-- Confirm public forms write only through controlled server routes.
-- Confirm no arbitrary HTML/script can be stored for Enamad or content fields.
-- Confirm security response headers on Netlify.
-- Add a stricter CSP only after preview testing because GSAP/React styles and external media origins must be accounted for correctly.
-
-## 14. Content truthfulness
+### 11. Final content
 - Never present Concept Projects as client work.
 - Do not publish unverified statistics as factual achievements.
-- Replace fallback/demo content with approved RAVA content before launch where necessary.
-- Ensure RAVA Website is presented consistently as RAVA's own project.
+- Replace or approve fallback/demo content before production.
+- Add approved real project imagery/alt text.
+- Confirm final contact/social/footer/Enamad values.
 
 ## Release order
-1. Create lockfile and pass typecheck/build.
-2. Inspect/backup real Supabase; apply safe V1 database plan.
-3. Configure preview environment variables.
-4. Deploy preview.
-5. Run functional/security/visual/mobile QA.
-6. Fix all blockers.
-7. Re-run build + QA.
-8. Only then open/merge the reboot PR into `main` and deploy production.
+1. Final reboot CI green.
+2. Inspect and back up real Supabase.
+3. Build/test safe database migration on disposable/staging environment.
+4. Configure Preview secrets and deploy Preview.
+5. Run functional, security, visual, responsive and Lighthouse QA.
+6. Fix every blocker and re-run CI/Preview QA.
+7. Open the reboot PR into `main`.
+8. Merge only after approval, then deploy production.
