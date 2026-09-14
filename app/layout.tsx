@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import '@fontsource-variable/vazirmatn'
 import './globals.css'
 import AnalyticsTracker from './components/AnalyticsTracker'
 import { createClient } from '@/lib/supabase/server'
