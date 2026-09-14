@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react'
 import { setProjectCover, addProjectMedia, removeProjectMedia, moveProjectMedia } from './media-actions'
 
-type Asset = { id:string; storage_path:string; file_name:string; alt_text:string }
+type Asset = { id:string; storage_path:string; file_name:string; alt_text:string; public_url:string }
 type GalleryItem = { media_id:string; sort_order:number; caption:string|null; media_assets:Asset|null }
 
 export default function ProjectMediaEditor({ projectId, assets, coverMediaId, gallery }: { projectId:string; assets:Asset[]; coverMediaId:string|null; gallery:GalleryItem[] }) {
@@ -13,7 +13,6 @@ export default function ProjectMediaEditor({ projectId, assets, coverMediaId, ga
   const [items,setItems]=useState(gallery)
 
   const byId=useMemo(()=>Object.fromEntries(assets.map(a=>[a.id,a])),[assets])
-  const url=(asset?:Asset|null)=>asset?`/api/media/public?path=${encodeURIComponent(asset.storage_path)}`:''
 
   async function run(fn:()=>Promise<void>){
     setBusy(true);setMessage('')
@@ -62,7 +61,7 @@ export default function ProjectMediaEditor({ projectId, assets, coverMediaId, ga
         {assets.map(asset=><option value={asset.id} key={asset.id}>{asset.file_name}</option>)}
       </select>
     </label>
-    {cover&&byId[cover]?<div className="admin-media-picker-preview"><img src={url(byId[cover])} alt={byId[cover].alt_text||byId[cover].file_name}/></div>:null}
+    {cover&&byId[cover]?<div className="admin-media-picker-preview"><img src={byId[cover].public_url} alt={byId[cover].alt_text||byId[cover].file_name}/></div>:null}
 
     <label>افزودن تصویر به گالری
       <select defaultValue="" disabled={busy} onChange={e=>{const value=e.target.value;e.currentTarget.value='';void add(value)}}>
@@ -76,7 +75,7 @@ export default function ProjectMediaEditor({ projectId, assets, coverMediaId, ga
         const asset=item.media_assets??byId[item.media_id]
         if(!asset)return null
         return <article className="admin-media-card" key={item.media_id}>
-          <img src={url(asset)} alt={asset.alt_text||asset.file_name}/>
+          <img src={asset.public_url} alt={asset.alt_text||asset.file_name}/>
           <div className="admin-media-meta"><b>{index+1}. {asset.file_name}</b><small>{asset.alt_text||'Alt Text ندارد'}</small></div>
           <div className="admin-media-actions">
             <button type="button" className="admin-muted-button" disabled={busy||index===0} onClick={()=>move(item.media_id,-1)}>بالاتر</button>
