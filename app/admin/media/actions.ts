@@ -23,10 +23,6 @@ function signatureMatches(bytes: Uint8Array, mime: string) {
   return false
 }
 
-function publicUrl(supabase: Awaited<ReturnType<typeof requireRavaStaff>>['supabase'], path: string) {
-  return supabase.storage.from('rava-media').getPublicUrl(path).data.publicUrl
-}
-
 export async function uploadMedia(formData: FormData): Promise<MediaActionResult<Record<string, unknown>>> {
   const { supabase, user } = await requireRavaStaff()
   const file = formData.get('file')
@@ -67,11 +63,12 @@ export async function uploadMedia(formData: FormData): Promise<MediaActionResult
     return { ok: false, message: 'ثبت تصویر در کتابخانه انجام نشد.' }
   }
 
+  const publicUrl = supabase.storage.from('rava-media').getPublicUrl(storagePath).data.publicUrl
   revalidatePath('/admin/media')
   return {
     ok: true,
     message: 'تصویر با موفقیت آپلود شد.',
-    data: { ...inserted.data, public_url: publicUrl(supabase, storagePath) },
+    data: { ...inserted.data, public_url: publicUrl },
   }
 }
 
