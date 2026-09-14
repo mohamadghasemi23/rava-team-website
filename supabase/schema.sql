@@ -166,111 +166,37 @@ alter table public.leads enable row level security;
 alter table public.site_settings enable row level security;
 alter table public.page_views_daily enable row level security;
 
--- Public website reads only content intended for visitors.
-create policy "public read site content"
-on public.site_content for select
-to anon, authenticated
-using (true);
+create policy "public read site content" on public.site_content for select to anon, authenticated using (true);
+create policy "public read published services" on public.services for select to anon, authenticated using (published = true);
+create policy "public read published projects" on public.projects for select to anon, authenticated using (published = true);
+create policy "public read media metadata" on public.media_assets for select to anon, authenticated using (deleted_at is null);
+create policy "public read published project media" on public.project_media for select to anon, authenticated using (exists (select 1 from public.projects p where p.id = project_media.project_id and p.published = true));
+create policy "public read public settings" on public.site_settings for select to anon, authenticated using (is_public = true);
 
-create policy "public read published services"
-on public.services for select
-to anon, authenticated
-using (published = true);
+create policy "staff manage media" on public.media_assets for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
+create policy "staff manage site content" on public.site_content for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
+create policy "staff manage services" on public.services for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
+create policy "staff manage projects" on public.projects for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
+create policy "staff manage project media" on public.project_media for all to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
+create policy "staff read leads" on public.leads for select to authenticated using (public.is_rava_staff());
+create policy "staff update leads" on public.leads for update to authenticated using (public.is_rava_staff()) with check (public.is_rava_staff());
+create policy "staff read analytics" on public.page_views_daily for select to authenticated using (public.is_rava_staff());
+create policy "staff read settings" on public.site_settings for select to authenticated using (public.is_rava_staff());
+create policy "admin manage settings" on public.site_settings for all to authenticated using (public.is_rava_admin()) with check (public.is_rava_admin());
+create policy "staff read own profile" on public.profiles for select to authenticated using (id = auth.uid() or public.is_rava_admin());
+create policy "admin manage profiles" on public.profiles for all to authenticated using (public.is_rava_admin()) with check (public.is_rava_admin());
 
-create policy "public read published projects"
-on public.projects for select
-to anon, authenticated
-using (published = true);
+-- Media bucket: public read for website assets, staff-only writes.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('rava-media', 'rava-media', true, 5242880, array['image/jpeg','image/png','image/webp','image/avif'])
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
 
-create policy "public read media metadata"
-on public.media_assets for select
-to anon, authenticated
-using (deleted_at is null);
-
-create policy "public read published project media"
-on public.project_media for select
-to anon, authenticated
-using (
-  exists (
-    select 1 from public.projects p
-    where p.id = project_media.project_id and p.published = true
-  )
-);
-
-create policy "public read public settings"
-on public.site_settings for select
-to anon, authenticated
-using (is_public = true);
-
--- Staff content management.
-create policy "staff manage media"
-on public.media_assets for all
-to authenticated
-using (public.is_rava_staff())
-with check (public.is_rava_staff());
-
-create policy "staff manage site content"
-on public.site_content for all
-to authenticated
-using (public.is_rava_staff())
-with check (public.is_rava_staff());
-
-create policy "staff manage services"
-on public.services for all
-to authenticated
-using (public.is_rava_staff())
-with check (public.is_rava_staff());
-
-create policy "staff manage projects"
-on public.projects for all
-to authenticated
-using (public.is_rava_staff())
-with check (public.is_rava_staff());
-
-create policy "staff manage project media"
-on public.project_media for all
-to authenticated
-using (public.is_rava_staff())
-with check (public.is_rava_staff());
-
-create policy "staff read leads"
-on public.leads for select
-to authenticated
-using (public.is_rava_staff());
-
-create policy "staff update leads"
-on public.leads for update
-to authenticated
-using (public.is_rava_staff())
-with check (public.is_rava_staff());
-
-create policy "staff read analytics"
-on public.page_views_daily for select
-to authenticated
-using (public.is_rava_staff());
-
--- Settings are stricter: editors can read all settings, only admins can change them.
-create policy "staff read settings"
-on public.site_settings for select
-to authenticated
-using (public.is_rava_staff());
-
-create policy "admin manage settings"
-on public.site_settings for all
-to authenticated
-using (public.is_rava_admin())
-with check (public.is_rava_admin());
-
-create policy "staff read own profile"
-on public.profiles for select
-to authenticated
-using (id = auth.uid() or public.is_rava_admin());
-
-create policy "admin manage profiles"
-on public.profiles for all
-to authenticated
-using (public.is_rava_admin())
-with check (public.is_rava_admin());
+create policy "rava media staff insert" on storage.objects for insert to authenticated with check (bucket_id = 'rava-media' and public.is_rava_staff());
+create policy "rava media staff update" on storage.objects for update to authenticated using (bucket_id = 'rava-media' and public.is_rava_staff()) with check (bucket_id = 'rava-media' and public.is_rava_staff());
+create policy "rava media staff delete" on storage.objects for delete to authenticated using (bucket_id = 'rava-media' and public.is_rava_staff());
 
 -- No anonymous INSERT policy exists for leads or analytics on purpose.
 -- Public forms and page-view tracking MUST go through rate-limited server routes.
