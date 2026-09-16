@@ -10,10 +10,10 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
   const password = String(formData.get('password') ?? '')
 
   if (!email || !password) return { error: 'ایمیل و رمز عبور را وارد کنید.' }
+  if (email.length > 254 || password.length > 256) return { error: 'اطلاعات ورود معتبر نیست.' }
 
   const supabase = await createClient()
   const { error } = await supabase.auth.signInWithPassword({ email, password })
-
   if (error) return { error: 'ایمیل یا رمز عبور صحیح نیست.' }
 
   const { data: claimsData, error: claimsError } = await supabase.auth.getClaims()
@@ -30,9 +30,9 @@ export async function login(_state: LoginState, formData: FormData): Promise<Log
     .eq('id', userId)
     .single()
 
-  if (!profile?.active) {
+  if (!profile?.active || !['admin', 'editor'].includes(profile.role)) {
     await supabase.auth.signOut()
-    return { error: 'این حساب غیرفعال است.' }
+    return { error: 'این حساب اجازه ورود به پنل را ندارد.' }
   }
 
   redirect('/admin')
