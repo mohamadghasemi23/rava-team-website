@@ -41,12 +41,21 @@ function splitHeroTitle(value:string){
   return {line1:words.slice(0,pivot).join(' '),highlight:'',line2:words.slice(pivot).join(' ')}
 }
 
+function ProjectVisual({project,index,className}:{project:Project;index:number;className?:string}){
+  return <div className={`${styles.projectVisual} ${styles[`art${index%5}`] || ''} ${className || ''}`} aria-hidden="true">
+    <span>RAVA / {String(index+1).padStart(2,'0')}</span>
+    <strong>{project.title}</strong>
+    <small>{project.project_kind==='concept'?'CONCEPT PROJECT':'SELECTED WORK'}</small>
+  </div>
+}
+
 export default function RavaAgencyHome({ home, services, projects, settings }: { home:HomeContent; services:Service[]; projects:Project[]; settings:SiteSettings }) {
   const heroRef = useRef<HTMLElement>(null)
   const marqueeRef = useRef<HTMLDivElement>(null)
   const [activeProject,setActiveProject] = useState(0)
   const [menuOpen,setMenuOpen] = useState(false)
   const featured = projects.find(p=>p.featured) ?? projects[0]
+  const featuredIndex = Math.max(0,projects.findIndex(p=>p.id===featured?.id))
   const values = home.values ?? []
   const stats = (home.stats ?? []).slice(0,3)
   const marqueeItems = useMemo(()=>String(home.marquee || '').split('—').map(x=>x.trim()).filter(Boolean),[home.marquee])
@@ -134,21 +143,21 @@ export default function RavaAgencyHome({ home, services, projects, settings }: {
 
       <motion.section className={styles.section} variants={sectionAnim} initial="hidden" whileInView="show" viewport={{once:true,margin:'-80px'}}>
         <SectionHead eyebrow="Selected work" title="Projects"/>
-        <div className={styles.bento}>{projects.slice(0,6).map((p,i)=><a href={`/work/${p.slug}`} className={`${styles.tile} ${styles[`tile${i%6}`] || ''}`} key={p.id}>{p.coverUrl && <img src={p.coverUrl} alt={p.title}/>}<div className={styles.tileShade}/><div className={styles.tileTop}><span>{p.project_kind==='concept'?'CONCEPT':'RAVA PROJECT'}</span><small>{p.project_year || '2026'}</small></div><div className={styles.tileBottom}><h3>{p.title}</h3><p>{p.summary}</p></div></a>)}</div>
+        <div className={styles.bento}>{projects.slice(0,6).map((p,i)=><a href={`/work/${p.slug}`} className={`${styles.tile} ${styles[`tile${i%6}`] || ''}`} key={p.id}>{p.coverUrl ? <img src={p.coverUrl} alt={p.title}/> : <ProjectVisual project={p} index={i}/>}<div className={styles.tileShade}/><div className={styles.tileTop}><span>{p.project_kind==='concept'?'CONCEPT':'RAVA PROJECT'}</span><small>{p.project_year || '2026'}</small></div><div className={styles.tileBottom}><h3>{p.title}</h3><p>{p.summary}</p></div></a>)}</div>
       </motion.section>
 
       <motion.section className={styles.section} variants={sectionAnim} initial="hidden" whileInView="show" viewport={{once:true,margin:'-80px'}}>
         <SectionHead eyebrow="Selected work" title="Projects II"/>
         <div className={styles.projectSplit}>
           <ul className={styles.projectList}>{projects.map((p,i)=><li key={p.id}><a href={`/work/${p.slug}`} onMouseEnter={()=>setActiveProject(i)} onFocus={()=>setActiveProject(i)}><span>{String(i+1).padStart(2,'0')}</span><b>{p.title}</b><small>{p.project_kind==='concept'?'Concept':'Project'}</small></a></li>)}</ul>
-          <div className={styles.stickyPreview}><AnimatePresence mode="wait">{projectPreview && <motion.a href={`/work/${projectPreview.slug}`} key={projectPreview.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-16}} transition={{duration:.35}} className={styles.previewCard}>{projectPreview.coverUrl && <img src={projectPreview.coverUrl} alt={projectPreview.title}/>}<div className={styles.previewShade}/><div><span>{projectPreview.project_kind==='concept'?'CONCEPT PROJECT':'SELECTED WORK'}</span><h3>{projectPreview.title}</h3><p>{projectPreview.summary}</p></div></motion.a>}</AnimatePresence></div>
+          <div className={styles.stickyPreview}><AnimatePresence mode="wait">{projectPreview && <motion.a href={`/work/${projectPreview.slug}`} key={projectPreview.id} initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-16}} transition={{duration:.35}} className={styles.previewCard}>{projectPreview.coverUrl ? <img src={projectPreview.coverUrl} alt={projectPreview.title}/> : <ProjectVisual project={projectPreview} index={activeProject}/>}<div className={styles.previewShade}/><div><span>{projectPreview.project_kind==='concept'?'CONCEPT PROJECT':'SELECTED WORK'}</span><h3>{projectPreview.title}</h3><p>{projectPreview.summary}</p></div></motion.a>}</AnimatePresence></div>
         </div>
       </motion.section>
 
       {featured && <motion.section className={styles.section} variants={sectionAnim} initial="hidden" whileInView="show" viewport={{once:true,margin:'-80px'}}>
         <SectionHead eyebrow="Featured Case Study" title={featured.title}/>
         <div className={styles.caseStudy}>
-          <div className={styles.caseMedia}>{(featured.gallery[0] || featured.coverUrl) && <img src={featured.gallery[0] || featured.coverUrl} alt={featured.title}/>}</div>
+          <div className={styles.caseMedia}>{(featured.gallery[0] || featured.coverUrl) ? <img src={featured.gallery[0] || featured.coverUrl} alt={featured.title}/> : <ProjectVisual project={featured} index={featuredIndex}/>}</div>
           <div className={styles.caseCopy}><p>{featured.summary}</p><dl><div><dt>Client</dt><dd>{featured.client_name || 'RAVA'}</dd></div><div><dt>Year</dt><dd>{featured.project_year || 2026}</dd></div><div><dt>Role</dt><dd>{featured.role_text || 'Strategy / Design / Development'}</dd></div><div><dt>Scope</dt><dd>{featured.scope.join(' / ') || 'Digital Product'}</dd></div></dl><div className={styles.kpis}>{featured.kpis.slice(0,3).map((k,i)=><div key={i}><b>{k}</b></div>)}</div><a href={`/work/${featured.slug}`}>مشاهده مطالعه موردی ↗</a></div>
         </div>
       </motion.section>}
