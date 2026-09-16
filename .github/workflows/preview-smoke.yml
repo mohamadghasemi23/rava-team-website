@@ -1,0 +1,58 @@
+name: Preview Smoke
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Wait for Netlify preview
+        env:
+          BASE_URL: https://deploy-preview-${{ github.event.pull_request.number }}--gilded-cascaron-5beb6f.netlify.app
+        run: |
+          for attempt in $(seq 1 30); do
+            code=$(curl -L -sS -o /tmp/home.html -w '%{http_code}' "$BASE_URL/" || true)
+            if [ "$code" = "200" ]; then
+              echo "Preview ready: $BASE_URL"
+              exit 0
+            fi
+            echo "Preview not ready yet (HTTP $code, attempt $attempt/30)"
+            sleep 6
+          done
+          echo "Preview did not become ready"
+          exit 1
+
+      - name: Public route smoke
+        env:
+          BASE_URL: https://deploy-preview-${{ github.event.pull_request.number }}--gilded-cascaron-5beb6f.netlify.app
+        run: |
+          set -euo pipefail
+          for path in / /services /services/web-design /work /work/rava-traffic-engine /work/nova-concept /about /contact /robots.txt /sitemap.xml; do
+            code=$(curl -L -sS -o /dev/null -w '%{http_code}' "$BASE_URL$path")
+            echo "$path -> $code"
+            test "$code" = "200"
+          done
+          code=$(curl -L -sS -o /dev/null -w '%{http_code}' "$BASE_URL/definitely-not-a-real-route")
+          echo "/definitely-not-a-real-route -> $code"
+          test "$code" = "404"
+
+      - name: Contact endpoint smoke
+        env:
+          BASE_URL: https://deploy-preview-${{ github.event.pull_request.number }}--gilded-cascaron-5beb6f.netlify.app
+        run: |
+          set -euo pipefail
+          response=$(curl -sS -w '\n%{http_code}' -X POST "$BASE_URL/api/contact" \
+            -H 'content-type: application/json' \
+            --data '{"name":"RAVA Preview Smoke","email":"preview-smoke@rava.invalid","phone":"","service_interest":"web-design","message":"Automated preview smoke test for the RAVA contact flow.","company_website":"","source_path":"/contact"}')
+          body=$(printf '%s' "$response" | sed '$d')
+          code=$(printf '%s' "$response" | tail -n1)
+          echo "Contact HTTP $code"
+          echo "$body"
+          test "$code" = "200"
+          printf '%s' "$body" | grep -q '"ok":true'
