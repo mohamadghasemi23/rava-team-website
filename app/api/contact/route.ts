@@ -54,8 +54,8 @@ export async function POST(request: NextRequest) {
 
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const publishableKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
-    const gatewayToken = process.env.CONTACT_RPC_GATEWAY_TOKEN
-    const rateSalt = process.env.CONTACT_RATE_LIMIT_SALT
+    const gatewayToken = process.env.CONTACT_RPC_GATEWAY_TOKEN || process.env.CONTACT_RPC_GATEWAY_TOKEN_PREVIEW
+    const rateSalt = process.env.CONTACT_RATE_LIMIT_SALT || process.env.CONTACT_RATE_LIMIT_SALT_PREVIEW
     if (!url || !publishableKey || !gatewayToken || !rateSalt) {
       console.error('Contact server configuration is incomplete', {
         hasUrl: Boolean(url),
