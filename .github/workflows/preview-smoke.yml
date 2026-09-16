@@ -18,7 +18,7 @@ jobs:
         run: |
           for attempt in $(seq 1 50); do
             body=$(curl -L -sS -H 'cache-control: no-cache' "$BASE_URL/api/health?attempt=$attempt" || true)
-            if printf '%s' "$body" | grep -q '"contact_flow":"gateway-rpc-v2"'; then
+            if printf '%s' "$body" | grep -q '"contact_flow":"gateway-rpc-v3"'; then
               echo "Current preview ready: $BASE_URL"
               exit 0
             fi
