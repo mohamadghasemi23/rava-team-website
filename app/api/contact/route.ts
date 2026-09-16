@@ -57,8 +57,13 @@ export async function POST(request: NextRequest) {
     const gatewayToken = process.env.CONTACT_RPC_GATEWAY_TOKEN
     const rateSalt = process.env.CONTACT_RATE_LIMIT_SALT
     if (!url || !publishableKey || !gatewayToken || !rateSalt) {
-      console.error('Contact server configuration is incomplete')
-      return NextResponse.json({ ok: false, message: 'ارسال پیام موقتاً در دسترس نیست.' }, { status: 503 })
+      console.error('Contact server configuration is incomplete', {
+        hasUrl: Boolean(url),
+        hasPublishableKey: Boolean(publishableKey),
+        hasGatewayToken: Boolean(gatewayToken),
+        hasRateSalt: Boolean(rateSalt),
+      })
+      return NextResponse.json({ ok: false, code: 'contact_config', message: 'ارسال پیام موقتاً در دسترس نیست.' }, { status: 503 })
     }
 
     const clientKey = fingerprint(request, rateSalt)
@@ -79,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Contact RPC failed', { code: error.code, message: error.message })
-      return NextResponse.json({ ok: false, message: 'ارسال پیام موقتاً در دسترس نیست.' }, { status: 503 })
+      return NextResponse.json({ ok: false, code: 'contact_rpc', message: 'ارسال پیام موقتاً در دسترس نیست.' }, { status: 503 })
     }
 
     const result = data && typeof data === 'object' && !Array.isArray(data)
@@ -88,12 +93,12 @@ export async function POST(request: NextRequest) {
 
     if (!result?.ok) {
       const status = result?.code === 'rate_limit' ? 429 : 400
-      return NextResponse.json({ ok: false, message: result?.message || 'اطلاعات فرم نامعتبر است.' }, { status })
+      return NextResponse.json({ ok: false, code: result?.code || 'contact_validation', message: result?.message || 'اطلاعات فرم نامعتبر است.' }, { status })
     }
 
     return NextResponse.json({ ok: true, message: result.message || 'پیام شما دریافت شد. با شما در ارتباط خواهیم بود.' })
   } catch (error) {
     console.error('Contact endpoint failed', error)
-    return NextResponse.json({ ok: false, message: 'خطای غیرمنتظره‌ای رخ داد.' }, { status: 500 })
+    return NextResponse.json({ ok: false, code: 'contact_unexpected', message: 'خطای غیرمنتظره‌ای رخ داد.' }, { status: 500 })
   }
 }
