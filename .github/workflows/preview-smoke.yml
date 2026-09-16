@@ -10,22 +10,22 @@ permissions:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 6
+    timeout-minutes: 8
     steps:
-      - name: Wait for Netlify preview
+      - name: Wait for current Netlify preview
         env:
           BASE_URL: https://deploy-preview-${{ github.event.pull_request.number }}--gilded-cascaron-5beb6f.netlify.app
         run: |
-          for attempt in $(seq 1 30); do
-            code=$(curl -L -sS -o /tmp/home.html -w '%{http_code}' "$BASE_URL/" || true)
-            if [ "$code" = "200" ]; then
-              echo "Preview ready: $BASE_URL"
+          for attempt in $(seq 1 50); do
+            body=$(curl -L -sS -H 'cache-control: no-cache' "$BASE_URL/api/health?attempt=$attempt" || true)
+            if printf '%s' "$body" | grep -q '"contact_flow":"gateway-rpc-v1"'; then
+              echo "Current preview ready: $BASE_URL"
               exit 0
             fi
-            echo "Preview not ready yet (HTTP $code, attempt $attempt/30)"
+            echo "Waiting for current preview marker (attempt $attempt/50)"
             sleep 6
           done
-          echo "Preview did not become ready"
+          echo "Current preview did not become ready"
           exit 1
 
       - name: Public route smoke
